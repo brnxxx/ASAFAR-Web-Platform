@@ -1,0 +1,277 @@
+/* ================= BACKGROUND ================= */
+
+.profile-background {
+    -fx-background-color: radial-gradient(
+            center 50% 40%, radius 80%,
+            #0b2d4a 0%,
+            #071c2e 100%
+    );
+}
+
+/* ================= CARD ================= */
+
+.profile-card {
+    -fx-background-color: linear-gradient(
+            to bottom right,
+            #102c44,
+            #0c2438
+    );
+    -fx-background-radius: 30;
+    -fx-padding: 35;
+
+    -fx-border-color: rgba(255,255,255,0.05);
+    -fx-border-radius: 30;
+
+    -fx-effect: dropshadow(
+            gaussian,
+            rgba(0, 180, 255, 0.25),
+            35,
+            0.3,
+            0,
+            0
+    );
+}
+
+/* ================= AVATAR ================= */
+
+.avatar-ring {
+    -fx-fill: linear-gradient(to bottom right, #2FA8FF, #00E5FF);
+}
+
+.avatar-inner {
+    -fx-fill: #0E2240;
+}
+
+/* ================= NAME ================= */
+
+.profile-name {
+    -fx-text-fill: white;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+}
+
+/* ================= BADGES BASE ================= */
+
+.badge-base {
+    -fx-padding: 5 16;
+    -fx-background-radius: 20;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+/* ================= ROLE CLIENT ================= */
+
+.badge-client {
+    -fx-background-color: linear-gradient(to right, #1e88e5, #1565c0);
+    -fx-effect: dropshadow(gaussian, rgba(30,136,229,0.5), 10, 0.5, 0, 0);
+}
+
+/* ================= ROLE ADMIN ================= */
+
+.badge-admin {
+    -fx-background-color: linear-gradient(to right, #7b1fa2, #512da8);
+}
+
+/* ================= STATUS ACTIF ================= */
+
+.badge-active {
+    -fx-background-color: linear-gradient(to right, #00c853, #00a844);
+    -fx-effect: dropshadow(gaussian, rgba(0,200,83,0.5), 10, 0.5, 0, 0);
+}
+
+/* ================= STATUS BLOQUE ================= */
+
+.badge-blocked {
+    -fx-background-color: linear-gradient(to right, #e53935, #c62828);
+}
+
+/* ================= SECTIONS ================= */
+
+.section-card {
+    -fx-background-color: rgba(255,255,255,0.04);
+    -fx-background-radius: 22;
+    -fx-padding: 25;
+    -fx-border-color: rgba(255,255,255,0.05);
+    -fx-border-radius: 22;
+}
+
+.section-title {
+    -fx-text-fill: #5fa8d3;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 2px;
+}
+
+/* ================= INFO ================= */
+
+.info-label {
+    -fx-text-fill: #8fb3cc;
+    -fx-font-size: 11px;
+}
+
+.info-value {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+}
+
+.info-icon {
+    -fx-font-size: 18px;
+    -fx-text-fill: #2FA8FF;
+}
+
+/* ================= BUTTON PRINCIPAL ================= */
+
+.btn-edit-full {
+    -fx-background-color: linear-gradient(to right, #f9a825, #f57f17);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-padding: 14 30;
+    -fx-font-size: 15px;
+    -fx-effect: dropshadow(gaussian, rgba(249,168,37,0.5), 20, 0.5, 0, 0);
+}
+
+/* ================= BUTTONS BAS ================= */
+
+.btn-logout {
+    -fx-background-color: #1c3a55;
+    -fx-text-fill: #9fd3ff;
+    -fx-background-radius: 15;
+    -fx-padding: 10 30;
+}
+
+.btn-delete {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ff5252;
+    -fx-border-color: rgba(255,82,82,0.4);
+    -fx-border-radius: 15;
+    -fx-padding: 10 30;
+}
+
+/* ================= SMALL BUTTON ================= */
+
+.btn-small {
+    -fx-background-color: rgba(47,168,255,0.15);
+    -fx-text-fill: #2FA8FF;
+    -fx-background-radius: 12;
+}
+
+/* ================= CLOSE BTN ================= */
+
+.close-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #A7E3FF;
+    -fx-font-size: 14px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*     css du modif profiol   */
+
+/* ==============================
+   DIALOG BACKGROUND
+============================== */
+
+.dialog-pane {
+    -fx-background-color: #0B2D4A;
+    -fx-background-radius: 20;
+    -fx-padding: 30;
+}
+
+/* ==============================
+   LABELS
+============================== */
+
+.label {
+    -fx-text-fill: #9fd3ff;
+    -fx-font-size: 13px;
+}
+
+/* ==============================
+   INPUT FIELDS
+============================== */
+
+.text-field {
+    -fx-background-color: #1E3A55;
+    -fx-text-fill: white;
+    -fx-background-radius: 12;
+    -fx-padding: 8 12;
+    -fx-border-color: transparent;
+}
+
+.text-field:focused {
+    -fx-border-color: #00c8ff;
+    -fx-border-radius: 12;
+    -fx-border-width: 2;
+}
+
+/* ==============================
+   ERROR STYLE
+============================== */
+
+.field-error {
+    -fx-border-color: #ff4d4d;
+    -fx-border-width: 2;
+}
+
+.error-label {
+    -fx-text-fill: #ff4d4d;
+    -fx-font-size: 11px;
+}
+
+/* ==============================
+   BUTTONS
+============================== */
+
+.button {
+    -fx-background-radius: 12;
+    -fx-padding: 8 18;
+    -fx-font-weight: bold;
+}
+
+.button:default {
+    -fx-background-color: linear-gradient(to right, #ff8c00, #ff6a00);
+    -fx-text-fill: white;
+}
+
+.button:cancel {
+    -fx-background-color: #2E5A7A;
+    -fx-text-fill: white;
+}
+
+.button:hover {
+    -fx-opacity: 0.85;
+}
+.error-label {
+    -fx-text-fill: #ff4d4d;
+    -fx-font-size: 11px;
+}
+
+.field-error {
+    -fx-border-color: #ff4d4d;
+    -fx-border-width: 2;
+    -fx-border-radius: 6;
+}
+
+
+

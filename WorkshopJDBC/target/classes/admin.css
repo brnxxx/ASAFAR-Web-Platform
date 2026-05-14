@@ -1,0 +1,437 @@
+
+/* =====================================================
+   ROOT BACKGROUND
+===================================================== */
+
+.admin-root {
+    -fx-background-color: linear-gradient(to bottom right, #091a2f, #060f1e);
+}
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+.sidebar {
+    -fx-background-color: linear-gradient(to bottom, #0b2340, #071729);
+    -fx-border-color: rgba(30, 120, 190, 0.18);
+    -fx-border-width: 0 1 0 0;
+}
+
+/* =====================================================
+   STATS CARDS
+===================================================== */
+
+.stat-card {
+    -fx-background-color: linear-gradient(to bottom right,
+    rgba(18, 58, 100, 0.92),
+    rgba(10, 32, 60, 0.88));
+    -fx-background-radius: 18;
+    -fx-padding: 22 28 22 28;
+    -fx-effect: dropshadow(gaussian, rgba(0, 160, 230, 0.28), 18, 0.3, 0, 3);
+    -fx-border-color: rgba(30, 140, 210, 0.22);
+    -fx-border-width: 1;
+    -fx-border-radius: 18;
+}
+
+.stat-card-gold {
+    -fx-background-color: linear-gradient(to bottom right,
+    rgba(160, 90, 0, 0.88),
+    rgba(110, 58, 0, 0.92));
+    -fx-background-radius: 18;
+    -fx-padding: 22 28 22 28;
+    -fx-effect: dropshadow(gaussian, rgba(220, 140, 0, 0.35), 18, 0.3, 0, 3);
+    -fx-border-color: rgba(240, 160, 30, 0.30);
+    -fx-border-width: 1;
+    -fx-border-radius: 18;
+}
+
+.stat-card-danger {
+    -fx-background-color: linear-gradient(to bottom right,
+    rgba(120, 25, 45, 0.88),
+    rgba(80, 15, 28, 0.92));
+    -fx-background-radius: 18;
+    -fx-padding: 22 28 22 28;
+    -fx-effect: dropshadow(gaussian, rgba(220, 50, 70, 0.3), 18, 0.3, 0, 3);
+    -fx-border-color: rgba(220, 60, 80, 0.25);
+    -fx-border-width: 1;
+    -fx-border-radius: 18;
+}
+
+.stat-number {
+    -fx-text-fill: #d6eeff;
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+}
+
+.stat-number-gold {
+    -fx-text-fill: #ffe8b0;
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+}
+
+.stat-label {
+    -fx-text-fill: rgba(160, 205, 240, 0.75);
+    -fx-font-size: 13px;
+}
+
+.stat-label-gold {
+    -fx-text-fill: rgba(255, 215, 130, 0.75);
+    -fx-font-size: 13px;
+}
+
+/* =====================================================
+   TABLE CONTAINER
+===================================================== */
+
+.admin-table-container {
+    -fx-background-color: linear-gradient(to bottom right,
+    rgba(14, 38, 68, 0.95),
+    rgba(9, 26, 50, 0.92));
+    -fx-background-radius: 20;
+    -fx-padding: 28;
+    -fx-effect: dropshadow(gaussian, rgba(0, 140, 210, 0.18), 16, 0.2, 0, 2);
+    -fx-border-color: rgba(30, 120, 190, 0.18);
+    -fx-border-width: 1;
+    -fx-border-radius: 20;
+}
+
+.section-title {
+    -fx-text-fill: #c8e8ff;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+/* =====================================================
+   TABLE
+===================================================== */
+
+.admin-table {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-effect: dropshadow(gaussian, rgba(0, 150, 220, 0.18), 20, 0.25, 0, 2);
+}
+
+.admin-table .virtual-flow .clipped-container .sheet {
+    -fx-background-color: transparent;
+}
+
+.admin-table .column-header-background {
+    -fx-background-color: linear-gradient(to right,
+    rgba(12, 45, 80, 0.95),
+    rgba(16, 60, 100, 0.95));
+    -fx-background-radius: 12 12 0 0;
+    -fx-padding: 10 12;
+}
+
+.admin-table .column-header,
+.admin-table .filler {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.admin-table .column-header .label {
+    -fx-text-fill: rgba(180, 220, 255, 0.9);
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-padding: 0 4;
+}
+
+.admin-table .table-row-cell {
+    -fx-background-color: rgba(18, 48, 82, 0.45);
+    -fx-background-radius: 8;
+    -fx-padding: 8 4;
+    -fx-text-fill: #e8f5ff;
+    -fx-border-color: transparent;
+}
+
+.admin-table .table-row-cell:odd {
+    -fx-background-color: rgba(22, 58, 98, 0.45);
+}
+
+.admin-table .table-row-cell:hover {
+    -fx-background-color: rgba(30, 100, 170, 0.35);
+}
+
+.admin-table .table-row-cell:selected {
+    -fx-background-color: rgba(0, 160, 230, 0.28);
+    -fx-background-insets: 0;
+}
+
+.admin-table .table-cell {
+    -fx-text-fill: #e4f3ff;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10 14;
+    -fx-border-color: transparent;
+    -fx-font-size: 13px;
+}
+
+.admin-table .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 8;
+}
+
+.admin-table .scroll-bar:vertical .track {
+    -fx-background-color: rgba(255, 255, 255, 0.04);
+    -fx-background-radius: 8;
+}
+
+.admin-table .scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(0, 160, 220, 0.45);
+    -fx-background-radius: 8;
+}
+
+.admin-table .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: rgba(0, 190, 255, 0.65);
+}
+
+.admin-table .scroll-bar .increment-button,
+.admin-table .scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-pref-height: 0;
+    -fx-pref-width: 0;
+}
+
+/* =====================================================
+   STATUS BADGES
+===================================================== */
+
+.status-actif {
+    -fx-background-color: rgba(0, 210, 140, 0.15);
+    -fx-text-fill: #00e0a0;
+    -fx-padding: 5 16;
+    -fx-background-radius: 20;
+    -fx-border-color: rgba(0, 210, 140, 0.30);
+    -fx-border-width: 1;
+    -fx-border-radius: 20;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.status-bloque {
+    -fx-background-color: rgba(220, 120, 0, 0.15);
+    -fx-text-fill: #f0a030;
+    -fx-padding: 5 16;
+    -fx-background-radius: 20;
+    -fx-border-color: rgba(220, 130, 0, 0.28);
+    -fx-border-width: 1;
+    -fx-border-radius: 20;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+/* =====================================================
+   BOUTON PRINCIPAL
+===================================================== */
+
+.btn-primary {
+    -fx-background-color: linear-gradient(to right,
+    rgba(0, 150, 230, 0.90),
+    rgba(0, 110, 200, 0.90));
+    -fx-background-radius: 20;
+    -fx-text-fill: #e8f6ff;
+    -fx-padding: 9 22;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 150, 220, 0.4), 14, 0.35, 0, 2);
+    -fx-border-color: rgba(0, 180, 255, 0.25);
+    -fx-border-width: 1;
+    -fx-border-radius: 20;
+    -fx-cursor: hand;
+}
+
+.btn-primary:hover {
+    -fx-background-color: linear-gradient(to right,
+    rgba(0, 175, 255, 0.95),
+    rgba(0, 135, 220, 0.95));
+    -fx-effect: dropshadow(gaussian, rgba(0, 170, 255, 0.55), 18, 0.4, 0, 2);
+}
+
+/* =====================================================
+   BOUTONS ICONES
+===================================================== */
+
+.btn-icon-edit {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-background-radius: 20;
+    -fx-padding: 6;
+}
+
+.btn-icon-edit:hover {
+    -fx-background-color: rgba(0, 160, 230, 0.18);
+    -fx-background-radius: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0, 160, 220, 0.25), 10, 0.3, 0, 0);
+}
+
+.btn-icon-delete {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-background-radius: 20;
+    -fx-padding: 6;
+}
+
+.btn-icon-delete:hover {
+    -fx-background-color: rgba(220, 50, 60, 0.18);
+    -fx-background-radius: 20;
+    -fx-effect: dropshadow(gaussian, rgba(220, 50, 60, 0.25), 10, 0.3, 0, 0);
+}
+
+/* =====================================================
+   ★ CARTE LATÉRALE — ÉCLAIRAGE DRAMATIQUE
+===================================================== */
+
+.stats-side-card {
+    /* Fond profond avec légère teinte bleue */
+    -fx-background-color: linear-gradient(to bottom right,
+    rgba(10, 30, 58, 0.97),
+    rgba(6, 18, 38, 0.99));
+    -fx-background-radius: 22;
+    -fx-padding: 26;
+
+    /* Double halo : cyan proche + bleu large */
+    -fx-effect:
+            dropshadow(gaussian, rgba(0, 200, 255, 0.55), 28, 0.45, 0, 0),
+            dropshadow(gaussian, rgba(0, 100, 200, 0.30), 55, 0.25, 0, 0);
+
+    /* Bordure lumineuse cyan */
+    -fx-border-color: rgba(0, 210, 255, 0.38);
+    -fx-border-width: 1;
+    -fx-border-radius: 22;
+}
+
+/* =====================================================
+   ★ PIE CHART — CERCLE VIBRANT & ÉCLAIRÉ
+===================================================== */
+
+.chart {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+/* Halo général autour du cercle entier */
+.chart-pie {
+    -fx-effect:
+            dropshadow(gaussian, rgba(0, 0, 0, 0.70), 12, 0.4, 0, 0),
+            dropshadow(gaussian, rgba(0, 200, 255, 0.50), 30, 0.5, 0, 0);
+}
+
+/* ── Segment Actifs : bleu électrique ─────────────── */
+.default-color0.chart-pie {
+    -fx-pie-color: #00c8ff;
+
+    /* Halo cyan intense sur ce segment */
+    -fx-effect:
+            dropshadow(gaussian, rgba(0, 0, 0, 0.65), 10, 0.4, 0, 0),
+            dropshadow(gaussian, rgba(0, 210, 255, 0.80), 35, 0.65, 0, 0),
+            dropshadow(gaussian, rgba(0, 150, 230, 0.45), 60, 0.35, 0, 0);
+}
+
+/* ── Segment Bloqués : amber chaud ───────────────── */
+.default-color1.chart-pie {
+    -fx-pie-color: #ff9f00;
+
+    /* Halo amber intense */
+    -fx-effect:
+            dropshadow(gaussian, rgba(0, 0, 0, 0.65), 10, 0.4, 0, 0),
+            dropshadow(gaussian, rgba(255, 160, 0, 0.80), 35, 0.65, 0, 0),
+            dropshadow(gaussian, rgba(220, 100, 0, 0.45), 60, 0.35, 0, 0);
+}
+
+.chart-plot-background,
+.chart-content {
+    -fx-background-color: transparent;
+}
+
+.chart-legend {
+    -fx-background-color: transparent;
+    -fx-padding: 10 0 0 0;
+}
+
+.chart-legend-item {
+    -fx-text-fill: rgba(170, 215, 250, 0.85);
+    -fx-font-size: 12px;
+}
+
+/* =====================================================
+   ★ LÉGENDE — COULEURS COHÉRENTES AVEC LE CHART
+===================================================== */
+
+.legend-active {
+    /* Cyan électrique aligné avec default-color0 */
+    -fx-text-fill: #00d4ff;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0, 210, 255, 0.60), 8, 0.5, 0, 0);
+}
+
+.legend-blocked {
+    /* Amber vif aligné avec default-color1 */
+    -fx-text-fill: #ffaa10;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(255, 160, 0, 0.55), 8, 0.5, 0, 0);
+}
+
+/* =====================================================
+   TEXTE CENTRAL DU CHART (label % si Label ajouté)
+===================================================== */
+
+.chart-pie-label {
+    -fx-text-fill: #e0f5ff;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.chart-pie-label-line {
+    -fx-stroke: rgba(0, 200, 255, 0.40);
+    -fx-stroke-width: 1;
+}
+
+
+
+
+/* ================= WEATHER + TIME CARD ================= */
+
+.weather-time-card {
+    -fx-background-color: rgba(20, 50, 80, 0.6);
+    -fx-background-radius: 20;
+    -fx-padding: 20 20 10 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,170,255,0.25), 20, 0.3, 0, 0);
+}
+
+/* Icône météo */
+.weather-icon {
+    -fx-font-size: 26px;
+}
+
+/* Température */
+.weather-temp {
+    -fx-text-fill: white;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+}
+
+/* Ville */
+.weather-city {
+    -fx-text-fill: #9ccfff;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+/* Icône heure */
+.time-icon {
+    -fx-font-size: 18px;
+}
+
+/* Texte heure */
+.time-text {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+/* Date */
+.date-text {
+    -fx-text-fill: #9ccfff;
+    -fx-font-size: 14px;
+}

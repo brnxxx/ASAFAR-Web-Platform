@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+
+<BorderPane prefHeight="800" prefWidth="1300" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.SidebarController">
+
+    <!-- ================= LEFT SIDEBAR ================= -->
+    <left>
+        <StackPane fx:id="leftContainer" maxWidth="300" minWidth="100" onMouseEntered="#expandSidebar" onMouseExited="#collapseSidebar" prefWidth="100">
+
+            <VBox alignment="TOP_CENTER" spacing="30" styleClass="sidebar">
+
+                <padding>
+                    <Insets left="15" right="15" top="20" />
+                </padding>
+
+                <!-- LOGO TOP-LEFT -->
+                <ImageView fx:id="logo" fitHeight="60" preserveRatio="true">
+                    <image>
+                        <Image url="@/images/logo.png" />
+                    </image>
+                </ImageView>
+
+                <!-- MENU -->
+                <Button fx:id="btnAccueil" styleClass="menu-btn" text="ACCUEIL">
+                    <graphic>
+                        <ImageView fitHeight="18" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/home.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+                <Button fx:id="btnHebergement" styleClass="menu-btn" text="HÉBERGEMENTS">
+                    <graphic>
+                        <ImageView fitHeight="18" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/building.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+                <Button fx:id="btnLoisirs" styleClass="menu-btn" text="LOISIRS">
+                    <graphic>
+                        <ImageView fitHeight="18" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/parc.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+                <Button fx:id="btnTransport" styleClass="menu-btn" text="TRANSPORTS">
+                    <graphic>
+                        <ImageView fitHeight="18" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/transport.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+                <Button fx:id="btnAvis" prefHeight="50.0" prefWidth="250.0" styleClass="menu-btn-active" text="AVIS &amp; RÉCLAMATIONS">
+                    <graphic>
+                        <ImageView fitHeight="18" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/avis.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+            </VBox>
+        </StackPane>
+    </left>
+
+    <!-- ================= CENTER AREA ================= -->
+    <center>
+        <VBox spacing="0">
+
+            <!-- TOP BAR -->
+            <HBox fx:id="topBar"
+                  alignment="CENTER_RIGHT"
+                  spacing="25"
+                  styleClass="topbar-fused">
+
+                <padding>
+                    <Insets top="15" right="25" bottom="15" left="25"/>
+                </padding>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <HBox alignment="CENTER" spacing="10">
+                    <Circle radius="18" styleClass="user-avatar"/>
+                    <Button fx:id="btnLogout" styleClass="top-icon-btn">
+                        <graphic>
+                            <ImageView fitHeight="20" preserveRatio="true">
+                                <image>
+                                    <Image url="@/images/logout.png"/>
+                                </image>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+                </HBox>
+
+            </HBox>
+
+            <!-- CONTENT -->
+            <StackPane styleClass="content"
+                       VBox.vgrow="ALWAYS"/>
+
+        </VBox>
+    </center>
+
+
+
+</BorderPane>
