@@ -1,0 +1,138 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ title }} - Admin ASAFAR{% endblock %}
+
+{% block page_title %}
+    <i class="fas fa-newspaper"></i> {{ title }}
+{% endblock %}
+
+{% block breadcrumb %}
+    <a href="{{ path('admin_publications') }}">Publications</a> / {{ title }}
+{% endblock %}
+
+{% block content %}
+<div style="max-width: 980px; margin: 0 auto;">
+    <div style="
+        background: linear-gradient(135deg, rgba(8, 29, 57, 0.99) 0%, rgba(5, 20, 43, 0.99) 100%);
+        border: 1px solid rgba(130, 190, 255, 0.10);
+        border-radius: 28px;
+        box-shadow: 0 22px 60px rgba(0,0,0,0.28);
+        padding: 30px;
+    ">
+        <div style="margin-bottom: 24px;">
+            <h3 style="margin: 0; color: #f4f8ff; font-size: 30px; font-weight: 800;">{{ title }}</h3>
+            <p style="margin: 8px 0 0; color: #a8bfdc;">Page de secours pour la création ou la modification hors popup.</p>
+        </div>
+
+        {{ form_start(postForm, {
+            'action': post is defined and post.id is not null ? path('admin_publication_edit', {'id': post.id}) : path('admin_publication_create'),
+            'method': 'POST',
+            'multipart': true
+        }) }}
+            {{ form_errors(postForm) }}
+
+            <div style="display:grid; grid-template-columns: 1fr 240px; gap: 16px; margin-bottom: 16px;">
+                <div>
+                    {{ form_label(postForm.titre, 'Titre', {'label_attr': {'style': 'display:block; color:#dbeafe; margin-bottom:8px; font-weight:700;'}}) }}
+                    {{ form_widget(postForm.titre, {'attr': {'placeholder': 'Titre du post...', 'class': 'admin-form-input'}}) }}
+                    {{ form_errors(postForm.titre) }}
+                </div>
+
+                <div>
+                    {{ form_label(postForm.type, 'Type', {'label_attr': {'style': 'display:block; color:#dbeafe; margin-bottom:8px; font-weight:700;'}}) }}
+                    {{ form_widget(postForm.type, {'attr': {'class': 'admin-form-input'}}) }}
+                    {{ form_errors(postForm.type) }}
+                </div>
+            </div>
+
+            <div style="margin-bottom:16px;">
+                {{ form_label(postForm.contenu, 'Contenu', {'label_attr': {'style': 'display:block; color:#dbeafe; margin-bottom:8px; font-weight:700;'}}) }}
+                {{ form_widget(postForm.contenu, {'attr': {'placeholder': 'Texte de la publication...', 'rows': 7, 'class': 'admin-form-textarea'}}) }}
+                {{ form_errors(postForm.contenu) }}
+            </div>
+
+            <div style="
+                margin-bottom: 20px;
+                border: 2px dashed rgba(0, 213, 166, 0.22);
+                background: rgba(255,255,255,0.02);
+                border-radius: 20px;
+                padding: 18px;
+                text-align: center;
+            ">
+                <div style="color:#ffbf1b; font-weight:800; margin-bottom:6px;">📷 Image</div>
+                <div style="color:#a8bfdc; font-size:13px; margin-bottom:14px;">Choisis une image depuis ton appareil</div>
+
+                {{ form_widget(postForm.imagePath, {'attr': {'accept': 'image/*', 'class': 'admin-form-file'}}) }}
+                {{ form_errors(postForm.imagePath) }}
+            </div>
+
+            <div style="display:flex; justify-content:flex-start; gap:12px; margin-top:24px;">
+                <button type="submit" class="admin-form-btn admin-form-btn-primary">Enregistrer</button>
+                <a href="{{ path('admin_publications') }}" class="admin-form-btn admin-form-btn-secondary">Annuler</a>
+            </div>
+        {{ form_end(postForm) }}
+    </div>
+</div>
+
+<style>
+.admin-form-input,
+.admin-form-textarea,
+.admin-form-file {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid rgba(255,255,255,0.09);
+    background: rgba(255,255,255,0.05);
+    color: #f4f8ff;
+    border-radius: 16px;
+    padding: 14px 16px;
+    outline: none;
+    font-size: 14px;
+}
+
+.admin-form-textarea {
+    min-height: 160px;
+    resize: vertical;
+}
+
+.admin-form-input::placeholder,
+.admin-form-textarea::placeholder {
+    color: rgba(244,248,255,0.42);
+}
+
+.admin-form-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 22px;
+    border-radius: 16px;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 15px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.admin-form-btn:hover {
+    transform: translateY(-2px);
+}
+
+.admin-form-btn-primary {
+    background: linear-gradient(135deg, #ffbf1b 0%, #ff9f0a 100%);
+    color: #08233f;
+    box-shadow: 0 14px 30px rgba(255, 191, 27, 0.24);
+}
+
+.admin-form-btn-secondary {
+    background: rgba(255,255,255,0.04);
+    color: #dbeafe;
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+@media (max-width: 768px) {
+    div[style*="grid-template-columns: 1fr 240px"] {
+        grid-template-columns: 1fr !important;
+    }
+}
+</style>
+{% endblock %}

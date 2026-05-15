@@ -1,0 +1,1084 @@
+<?php
+
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Extension\CoreExtension;
+use Twig\Extension\SandboxExtension;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+use Twig\TemplateWrapper;
+
+/* paiement/historique.html.twig */
+class __TwigTemplate_ee2389e134ead993e82ef5f81b150eb2 extends Template
+{
+    private Source $source;
+    /**
+     * @var array<string, Template>
+     */
+    private array $macros = [];
+
+    public function __construct(Environment $env)
+    {
+        parent::__construct($env);
+
+        $this->source = $this->getSourceContext();
+
+        $this->blocks = [
+            'body' => [$this, 'block_body'],
+        ];
+    }
+
+    protected function doGetParent(array $context): bool|string|Template|TemplateWrapper
+    {
+        // line 1
+        return "base.html.twig";
+    }
+
+    protected function doDisplay(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "paiement/historique.html.twig"));
+
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "paiement/historique.html.twig"));
+
+        $this->parent = $this->load("base.html.twig", 1);
+        yield from $this->parent->unwrap()->yield($context, array_merge($this->blocks, $blocks));
+        
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
+
+        
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
+
+    }
+
+    // line 3
+    /**
+     * @return iterable<null|scalar|\Stringable>
+     */
+    public function block_body(array $context, array $blocks = []): iterable
+    {
+        $macros = $this->macros;
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2 = $this->extensions["Symfony\\Bundle\\WebProfilerBundle\\Twig\\WebProfilerExtension"];
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->enter($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
+
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
+
+        // line 4
+        yield "
+<div class=\"particles-bg\">
+    <div class=\"particle\" style=\"left: 5%;\"></div>
+    <div class=\"particle\" style=\"left: 15%; animation-delay: 2s; width: 8px; height: 8px;\"></div>
+    <div class=\"particle\" style=\"left: 30%; animation-delay: 4s;\"></div>
+    <div class=\"particle\" style=\"left: 50%; animation-delay: 1s; width: 5px; height: 5px;\"></div>
+    <div class=\"particle\" style=\"left: 70%; animation-delay: 3s;\"></div>
+    <div class=\"particle\" style=\"left: 90%; animation-delay: 2.5s; width: 7px; height: 7px;\"></div>
+</div>
+
+<!-- ===== HERO ===== -->
+<section class=\"hero-paiement\">
+    <div class=\"overlay\"></div>
+    <div class=\"hero-content\">
+        <span class=\"hero-badge\">
+            <i class=\"fas fa-credit-card\"></i>
+            Espace personnel
+        </span>
+        <h1>Historique des paiements</h1>
+        <p class=\"hero-sub\">Retrouvez tous vos paiements et réservations confirmées</p>
+    </div>
+</section>
+
+<!-- ===== CONTENT ===== -->
+<main class=\"main-content\">
+
+    ";
+        // line 30
+        $context['_parent'] = $context;
+        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 30, $this->source); })()), "flashes", ["success"], "method", false, false, false, 30));
+        foreach ($context['_seq'] as $context["_key"] => $context["message"]) {
+            // line 31
+            yield "        <div class=\"flash flash-success\"><i class=\"fas fa-check-circle\"></i> ";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["message"], "html", null, true);
+            yield "</div>
+    ";
+        }
+        $_parent = $context['_parent'];
+        unset($context['_seq'], $context['_key'], $context['message'], $context['_parent']);
+        $context = array_intersect_key($context, $_parent) + $_parent;
+        // line 33
+        yield "    ";
+        $context['_parent'] = $context;
+        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 33, $this->source); })()), "flashes", ["warning"], "method", false, false, false, 33));
+        foreach ($context['_seq'] as $context["_key"] => $context["message"]) {
+            // line 34
+            yield "        <div class=\"flash flash-warning\"><i class=\"fas fa-exclamation-triangle\"></i> ";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["message"], "html", null, true);
+            yield "</div>
+    ";
+        }
+        $_parent = $context['_parent'];
+        unset($context['_seq'], $context['_key'], $context['message'], $context['_parent']);
+        $context = array_intersect_key($context, $_parent) + $_parent;
+        // line 36
+        yield "    ";
+        $context['_parent'] = $context;
+        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 36, $this->source); })()), "flashes", ["danger"], "method", false, false, false, 36));
+        foreach ($context['_seq'] as $context["_key"] => $context["message"]) {
+            // line 37
+            yield "        <div class=\"flash flash-danger\"><i class=\"fas fa-times-circle\"></i> ";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["message"], "html", null, true);
+            yield "</div>
+    ";
+        }
+        $_parent = $context['_parent'];
+        unset($context['_seq'], $context['_key'], $context['message'], $context['_parent']);
+        $context = array_intersect_key($context, $_parent) + $_parent;
+        // line 39
+        yield "
+    ";
+        // line 40
+        if (Twig\Extension\CoreExtension::testEmpty((isset($context["paiements"]) || array_key_exists("paiements", $context) ? $context["paiements"] : (function () { throw new RuntimeError('Variable "paiements" does not exist.', 40, $this->source); })()))) {
+            // line 41
+            yield "
+        <!-- ÉTAT VIDE -->
+        <div class=\"empty-state\">
+            <div class=\"empty-icon\">
+                <i class=\"fas fa-receipt\"></i>
+            </div>
+            <h2>Aucun paiement trouvé</h2>
+            <p>Vous n'avez pas encore effectué de paiement.<br>Réservez une excursion pour commencer !</p>
+            <a href=\"/\" class=\"btn-explore\">
+                <i class=\"fas fa-compass\"></i>
+                Explorer les excursions
+            </a>
+        </div>
+
+    ";
+        } else {
+            // line 56
+            yield "
+        <!-- STATS RAPIDES -->
+        <div class=\"stats-bar\">
+            <div class=\"stat-pill\">
+                <i class=\"fas fa-receipt\"></i>
+                <span>";
+            // line 61
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), (isset($context["paiements"]) || array_key_exists("paiements", $context) ? $context["paiements"] : (function () { throw new RuntimeError('Variable "paiements" does not exist.', 61, $this->source); })())), "html", null, true);
+            yield " paiement";
+            yield (((Twig\Extension\CoreExtension::length($this->env->getCharset(), (isset($context["paiements"]) || array_key_exists("paiements", $context) ? $context["paiements"] : (function () { throw new RuntimeError('Variable "paiements" does not exist.', 61, $this->source); })())) > 1)) ? ("s") : (""));
+            yield "</span>
+            </div>
+            <div class=\"stat-pill\">
+                <i class=\"fas fa-check-circle\"></i>
+                <span>
+                    ";
+            // line 66
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), Twig\Extension\CoreExtension::filter($this->env, (isset($context["paiements"]) || array_key_exists("paiements", $context) ? $context["paiements"] : (function () { throw new RuntimeError('Variable "paiements" does not exist.', 66, $this->source); })()), function ($__p__) use ($context, $macros) { $context["p"] = $__p__; return (CoreExtension::getAttribute($this->env, $this->source, (isset($context["p"]) || array_key_exists("p", $context) ? $context["p"] : (function () { throw new RuntimeError('Variable "p" does not exist.', 66, $this->source); })()), "statut", [], "any", false, false, false, 66) == "PAYE"); })), "html", null, true);
+            yield " confirmé";
+            yield (((Twig\Extension\CoreExtension::length($this->env->getCharset(), Twig\Extension\CoreExtension::filter($this->env, (isset($context["paiements"]) || array_key_exists("paiements", $context) ? $context["paiements"] : (function () { throw new RuntimeError('Variable "paiements" does not exist.', 66, $this->source); })()), function ($__p__) use ($context, $macros) { $context["p"] = $__p__; return (CoreExtension::getAttribute($this->env, $this->source, (isset($context["p"]) || array_key_exists("p", $context) ? $context["p"] : (function () { throw new RuntimeError('Variable "p" does not exist.', 66, $this->source); })()), "statut", [], "any", false, false, false, 66) == "PAYE"); })) > 1)) ? ("s") : (""));
+            yield "
+                </span>
+            </div>
+            <div class=\"stat-pill highlight\">
+                <i class=\"fas fa-coins\"></i>
+                <span>
+                    ";
+            // line 72
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(Twig\Extension\CoreExtension::reduce($this->env, Twig\Extension\CoreExtension::map($this->env, Twig\Extension\CoreExtension::filter($this->env, (isset($context["paiements"]) || array_key_exists("paiements", $context) ? $context["paiements"] : (function () { throw new RuntimeError('Variable "paiements" does not exist.', 72, $this->source); })()), function ($__p__) use ($context, $macros) { $context["p"] = $__p__; return (CoreExtension::getAttribute($this->env, $this->source, (isset($context["p"]) || array_key_exists("p", $context) ? $context["p"] : (function () { throw new RuntimeError('Variable "p" does not exist.', 72, $this->source); })()), "statut", [], "any", false, false, false, 72) == "PAYE"); }), function ($__p__) use ($context, $macros) { $context["p"] = $__p__; return CoreExtension::getAttribute($this->env, $this->source, (isset($context["p"]) || array_key_exists("p", $context) ? $context["p"] : (function () { throw new RuntimeError('Variable "p" does not exist.', 72, $this->source); })()), "montant", [], "any", false, false, false, 72); }), function ($__carry__, $__v__) use ($context, $macros) { $context["carry"] = $__carry__; $context["v"] = $__v__; return ((isset($context["carry"]) || array_key_exists("carry", $context) ? $context["carry"] : (function () { throw new RuntimeError('Variable "carry" does not exist.', 72, $this->source); })()) + (isset($context["v"]) || array_key_exists("v", $context) ? $context["v"] : (function () { throw new RuntimeError('Variable "v" does not exist.', 72, $this->source); })())); }, 0), 2, ".", " "), "html", null, true);
+            yield " TND total
+                </span>
+            </div>
+        </div>
+
+        <!-- TABLEAU -->
+        <div class=\"table-wrapper\">
+            <table class=\"paiement-table\">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Réservation</th>
+                        <th>Date</th>
+                        <th>Montant</th>
+                        <th>Réduction</th>
+                        <th>Méthode</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ";
+            // line 93
+            $context['_parent'] = $context;
+            $context['_seq'] = CoreExtension::ensureTraversable((isset($context["paiements"]) || array_key_exists("paiements", $context) ? $context["paiements"] : (function () { throw new RuntimeError('Variable "paiements" does not exist.', 93, $this->source); })()));
+            foreach ($context['_seq'] as $context["_key"] => $context["paiement"]) {
+                // line 94
+                yield "                    <tr class=\"paiement-row\">
+                        <td class=\"td-id\">#";
+                // line 95
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["paiement"], "id", [], "any", false, false, false, 95), "html", null, true);
+                yield "</td>
+
+                        <td class=\"td-resa\">
+                            <span class=\"resa-badge\">
+                                <i class=\"fas fa-ticket-alt\"></i>
+                                Résa #";
+                // line 100
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["paiement"], "idReservation", [], "any", false, false, false, 100), "html", null, true);
+                yield "
+                            </span>
+                        </td>
+
+                        <td class=\"td-date\">
+                            ";
+                // line 105
+                if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["paiement"], "datePaiement", [], "any", false, false, false, 105)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                    // line 106
+                    yield "                                <span class=\"date-main\">";
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["paiement"], "datePaiement", [], "any", false, false, false, 106), "d/m/Y"), "html", null, true);
+                    yield "</span>
+                                <span class=\"date-time\">";
+                    // line 107
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["paiement"], "datePaiement", [], "any", false, false, false, 107), "H:i"), "html", null, true);
+                    yield "</span>
+                            ";
+                } else {
+                    // line 109
+                    yield "                                <span class=\"date-none\">—</span>
+                            ";
+                }
+                // line 111
+                yield "                        </td>
+
+                        <td class=\"td-montant\">
+                            ";
+                // line 114
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatNumber(CoreExtension::getAttribute($this->env, $this->source, $context["paiement"], "montant", [], "any", false, false, false, 114), 2, ".", " "), "html", null, true);
+                yield "
+                            <span class=\"currency\">TND</span>
+                        </td>
+
+                        <td class=\"td-reduction\">
+                            ";
+                // line 119
+                if ((CoreExtension::getAttribute($this->env, $this->source, $context["paiement"], "reduction", [], "any", true, true, false, 119) && (CoreExtension::getAttribute($this->env, $this->source, $context["paiement"], "reduction", [], "any", false, false, false, 119) > 0))) {
+                    // line 120
+                    yield "                                <span class=\"reduction-badge\">-";
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["paiement"], "reduction", [], "any", false, false, false, 120), "html", null, true);
+                    yield "%</span>
+                            ";
+                } else {
+                    // line 122
+                    yield "                                <span class=\"no-reduction\">—</span>
+                            ";
+                }
+                // line 124
+                yield "                        </td>
+
+                        <td class=\"td-methode\">
+                            <span class=\"methode-pill\">
+                                <i class=\"fas fa-credit-card\"></i>
+                                ";
+                // line 129
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::upper($this->env->getCharset(), ((CoreExtension::getAttribute($this->env, $this->source, $context["paiement"], "methode", [], "any", true, true, false, 129)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, $context["paiement"], "methode", [], "any", false, false, false, 129), "card")) : ("card"))), "html", null, true);
+                yield "
+                            </span>
+                        </td>
+
+                        <td class=\"td-statut\">
+                            ";
+                // line 134
+                if ((CoreExtension::getAttribute($this->env, $this->source, $context["paiement"], "statut", [], "any", false, false, false, 134) == "PAYE")) {
+                    // line 135
+                    yield "                                <span class=\"statut-badge statut-paye\">
+                                    <i class=\"fas fa-check-circle\"></i> Payé
+                                </span>
+                            ";
+                } elseif ((CoreExtension::getAttribute($this->env, $this->source,                 // line 138
+$context["paiement"], "statut", [], "any", false, false, false, 138) == "REMBOURSE")) {
+                    // line 139
+                    yield "                                <span class=\"statut-badge statut-rembourse\">
+                                    <i class=\"fas fa-undo\"></i> Remboursé
+                                </span>
+                            ";
+                } elseif ((CoreExtension::getAttribute($this->env, $this->source,                 // line 142
+$context["paiement"], "statut", [], "any", false, false, false, 142) == "ECHEC")) {
+                    // line 143
+                    yield "                                <span class=\"statut-badge statut-echec\">
+                                    <i class=\"fas fa-times-circle\"></i> Échec
+                                </span>
+                            ";
+                } else {
+                    // line 147
+                    yield "                                <span class=\"statut-badge statut-autre\">
+                                    ";
+                    // line 148
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["paiement"], "statut", [], "any", false, false, false, 148), "html", null, true);
+                    yield "
+                                </span>
+                            ";
+                }
+                // line 151
+                yield "                        </td>
+
+                        <td class=\"td-actions\">
+                            <a href=\"";
+                // line 154
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_paiement_detail", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["paiement"], "id", [], "any", false, false, false, 154)]), "html", null, true);
+                yield "\"
+                               class=\"btn-action btn-detail\" title=\"Voir le détail\">
+                                <i class=\"fas fa-eye\"></i>
+                            </a>
+
+                            ";
+                // line 159
+                if (($this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_ADMIN") && (CoreExtension::getAttribute($this->env, $this->source, $context["paiement"], "statut", [], "any", false, false, false, 159) == "PAYE"))) {
+                    // line 160
+                    yield "                                <form method=\"POST\"
+                                      action=\"";
+                    // line 161
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_paiement_rembourser", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["paiement"], "id", [], "any", false, false, false, 161)]), "html", null, true);
+                    yield "\"
+                                      onsubmit=\"return confirm('Confirmer le remboursement ?')\"
+                                      style=\"display:inline;\">
+                                    <button type=\"submit\" class=\"btn-action btn-rembourser\" title=\"Rembourser\">
+                                        <i class=\"fas fa-undo\"></i>
+                                    </button>
+                                </form>
+                            ";
+                }
+                // line 169
+                yield "                        </td>
+                    </tr>
+                    ";
+            }
+            $_parent = $context['_parent'];
+            unset($context['_seq'], $context['_key'], $context['paiement'], $context['_parent']);
+            $context = array_intersect_key($context, $_parent) + $_parent;
+            // line 172
+            yield "                </tbody>
+            </table>
+        </div>
+
+    ";
+        }
+        // line 177
+        yield "
+</main>
+
+<style>
+/* ── Particles ── */
+.particles-bg {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none; z-index: 0; overflow: hidden;
+}
+.particles-bg .particle {
+    position: absolute; width: 6px; height: 6px;
+    background: #FFC107; border-radius: 50%;
+    opacity: 0.1; animation: particleFloat 15s infinite linear;
+}
+@keyframes particleFloat {
+    0%   { transform: translateY(100vh) rotate(0deg);   opacity: 0; }
+    10%  { opacity: 0.15; }
+    90%  { opacity: 0.15; }
+    100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+}
+
+/* ── Hero ── */
+.hero-paiement {
+    position: relative;
+    height: 32vh; min-height: 220px;
+    margin-top: 80px;
+    background: linear-gradient(135deg, #0B2D4A 0%, #08203A 60%, #061828 100%);
+    display: flex; align-items: center;
+    overflow: hidden;
+}
+.hero-paiement .overlay {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(255,193,7,0.08) 0%, transparent 70%);
+}
+.hero-content {
+    position: relative; z-index: 2;
+    padding: 0 80px;
+}
+.hero-badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: linear-gradient(135deg, #FFC107, #FF9800);
+    color: #0B2D4A; padding: 8px 22px; border-radius: 30px;
+    font-size: 13px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 1px; margin-bottom: 18px;
+}
+.hero-content h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px; font-weight: 800;
+    color: white; margin: 0 0 10px;
+}
+.hero-sub {
+    font-size: 16px; color: rgba(255,255,255,0.6); margin: 0;
+}
+
+/* ── Main ── */
+.main-content {
+    position: relative; z-index: 2;
+    max-width: 1400px; margin: 0 auto;
+    padding: 60px 80px;
+}
+
+/* ── Flash messages ── */
+.flash {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 22px; border-radius: 14px;
+    margin-bottom: 20px; font-size: 15px; font-weight: 500;
+}
+.flash-success { background: rgba(76,175,80,0.12); border: 1px solid rgba(76,175,80,0.3); color: #81C784; }
+.flash-warning { background: rgba(255,193,7,0.10); border: 1px solid rgba(255,193,7,0.3);  color: #FFD54F; }
+.flash-danger  { background: rgba(244,67,54,0.10);  border: 1px solid rgba(244,67,54,0.3);  color: #E57373; }
+
+/* ── Empty state ── */
+.empty-state {
+    text-align: center; padding: 100px 40px;
+}
+.empty-icon {
+    width: 100px; height: 100px;
+    background: rgba(255,193,7,0.08);
+    border: 1px solid rgba(255,193,7,0.2);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 30px;
+}
+.empty-icon i { font-size: 40px; color: #FFC107; }
+.empty-state h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px; color: white; margin: 0 0 14px;
+}
+.empty-state p { font-size: 16px; color: rgba(255,255,255,0.55); line-height: 1.7; margin: 0 0 30px; }
+.btn-explore {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 16px 32px;
+    background: linear-gradient(135deg, #FFC107, #FF9800);
+    color: #0B2D4A; border-radius: 16px;
+    font-size: 15px; font-weight: 700; text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(255,193,7,0.3);
+}
+.btn-explore:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(255,193,7,0.45); }
+
+/* ── Stats bar ── */
+.stats-bar {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    margin-bottom: 36px;
+}
+.stat-pill {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 12px 22px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,193,7,0.15);
+    border-radius: 30px; font-size: 14px;
+    color: rgba(255,255,255,0.75);
+}
+.stat-pill i { color: #FFC107; }
+.stat-pill.highlight {
+    background: rgba(255,193,7,0.08);
+    border-color: rgba(255,193,7,0.35);
+    color: #FFC107; font-weight: 600;
+}
+
+/* ── Table ── */
+.table-wrapper {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,193,7,0.12);
+    border-radius: 24px;
+    overflow: hidden;
+}
+.paiement-table {
+    width: 100%; border-collapse: collapse;
+}
+.paiement-table thead tr {
+    background: rgba(255,193,7,0.06);
+    border-bottom: 1px solid rgba(255,193,7,0.15);
+}
+.paiement-table th {
+    padding: 18px 20px; text-align: left;
+    font-size: 12px; font-weight: 600;
+    color: rgba(255,193,7,0.8);
+    text-transform: uppercase; letter-spacing: 1.5px;
+}
+.paiement-row {
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: background 0.2s ease;
+}
+.paiement-row:last-child { border-bottom: none; }
+.paiement-row:hover { background: rgba(255,193,7,0.03); }
+.paiement-table td { padding: 18px 20px; vertical-align: middle; }
+
+/* cells */
+.td-id { font-size: 13px; color: rgba(255,255,255,0.35); font-weight: 600; }
+
+.resa-badge {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 6px 14px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px; font-size: 13px; color: rgba(255,255,255,0.8);
+}
+.resa-badge i { color: #FFC107; font-size: 11px; }
+
+.date-main { display: block; font-size: 14px; color: white; font-weight: 500; }
+.date-time  { display: block; font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+.date-none  { color: rgba(255,255,255,0.25); }
+
+.td-montant {
+    font-size: 18px; font-weight: 700;
+    background: linear-gradient(135deg, #FFC107, #FF9800);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.currency { font-size: 12px; font-weight: 500; }
+
+.reduction-badge {
+    display: inline-block; padding: 4px 10px;
+    background: rgba(76,175,80,0.12);
+    border: 1px solid rgba(76,175,80,0.3);
+    border-radius: 20px; font-size: 12px;
+    color: #81C784; font-weight: 600;
+}
+.no-reduction { color: rgba(255,255,255,0.25); font-size: 14px; }
+
+.methode-pill {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 6px 14px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px; font-size: 12px;
+    color: rgba(255,255,255,0.7); font-weight: 600;
+}
+.methode-pill i { font-size: 10px; color: #FFC107; }
+
+/* statut badges */
+.statut-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px; border-radius: 20px;
+    font-size: 12px; font-weight: 600;
+}
+.statut-paye     { background: rgba(76,175,80,0.12);  border: 1px solid rgba(76,175,80,0.3);  color: #81C784; }
+.statut-rembourse{ background: rgba(33,150,243,0.12); border: 1px solid rgba(33,150,243,0.3); color: #64B5F6; }
+.statut-echec    { background: rgba(244,67,54,0.12);  border: 1px solid rgba(244,67,54,0.3);  color: #E57373; }
+.statut-autre    { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.6); }
+
+/* actions */
+.td-actions { display: flex; gap: 8px; align-items: center; }
+.btn-action {
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 10px; border: none; cursor: pointer;
+    font-size: 14px; transition: all 0.25s ease; text-decoration: none;
+}
+.btn-detail {
+    background: rgba(255,193,7,0.1);
+    border: 1px solid rgba(255,193,7,0.25);
+    color: #FFC107;
+}
+.btn-detail:hover {
+    background: rgba(255,193,7,0.2);
+    border-color: #FFC107;
+    transform: translateY(-2px);
+}
+.btn-rembourser {
+    background: rgba(33,150,243,0.1);
+    border: 1px solid rgba(33,150,243,0.25);
+    color: #64B5F6;
+}
+.btn-rembourser:hover {
+    background: rgba(33,150,243,0.2);
+    border-color: #64B5F6;
+    transform: translateY(-2px);
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+    .main-content { padding: 40px; }
+    .hero-content { padding: 0 40px; }
+    .hero-content h1 { font-size: 36px; }
+    .table-wrapper { overflow-x: auto; }
+    .paiement-table { min-width: 700px; }
+}
+@media (max-width: 640px) {
+    .main-content { padding: 24px 16px; }
+    .hero-content { padding: 0 24px; }
+    .hero-content h1 { font-size: 28px; }
+    .stats-bar { flex-direction: column; }
+}
+</style>
+
+";
+        
+        $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
+
+        
+        $__internal_5a27a8ba21ca79b61932376b2fa922d2->leave($__internal_5a27a8ba21ca79b61932376b2fa922d2_prof);
+
+        yield from [];
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function getTemplateName(): string
+    {
+        return "paiement/historique.html.twig";
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function isTraitable(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function getDebugInfo(): array
+    {
+        return array (  373 => 177,  366 => 172,  358 => 169,  347 => 161,  344 => 160,  342 => 159,  334 => 154,  329 => 151,  323 => 148,  320 => 147,  314 => 143,  312 => 142,  307 => 139,  305 => 138,  300 => 135,  298 => 134,  290 => 129,  283 => 124,  279 => 122,  273 => 120,  271 => 119,  263 => 114,  258 => 111,  254 => 109,  249 => 107,  244 => 106,  242 => 105,  234 => 100,  226 => 95,  223 => 94,  219 => 93,  195 => 72,  184 => 66,  174 => 61,  167 => 56,  150 => 41,  148 => 40,  145 => 39,  136 => 37,  131 => 36,  122 => 34,  117 => 33,  108 => 31,  104 => 30,  76 => 4,  63 => 3,  40 => 1,);
+    }
+
+    public function getSourceContext(): Source
+    {
+        return new Source("{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<div class=\"particles-bg\">
+    <div class=\"particle\" style=\"left: 5%;\"></div>
+    <div class=\"particle\" style=\"left: 15%; animation-delay: 2s; width: 8px; height: 8px;\"></div>
+    <div class=\"particle\" style=\"left: 30%; animation-delay: 4s;\"></div>
+    <div class=\"particle\" style=\"left: 50%; animation-delay: 1s; width: 5px; height: 5px;\"></div>
+    <div class=\"particle\" style=\"left: 70%; animation-delay: 3s;\"></div>
+    <div class=\"particle\" style=\"left: 90%; animation-delay: 2.5s; width: 7px; height: 7px;\"></div>
+</div>
+
+<!-- ===== HERO ===== -->
+<section class=\"hero-paiement\">
+    <div class=\"overlay\"></div>
+    <div class=\"hero-content\">
+        <span class=\"hero-badge\">
+            <i class=\"fas fa-credit-card\"></i>
+            Espace personnel
+        </span>
+        <h1>Historique des paiements</h1>
+        <p class=\"hero-sub\">Retrouvez tous vos paiements et réservations confirmées</p>
+    </div>
+</section>
+
+<!-- ===== CONTENT ===== -->
+<main class=\"main-content\">
+
+    {% for message in app.flashes('success') %}
+        <div class=\"flash flash-success\"><i class=\"fas fa-check-circle\"></i> {{ message }}</div>
+    {% endfor %}
+    {% for message in app.flashes('warning') %}
+        <div class=\"flash flash-warning\"><i class=\"fas fa-exclamation-triangle\"></i> {{ message }}</div>
+    {% endfor %}
+    {% for message in app.flashes('danger') %}
+        <div class=\"flash flash-danger\"><i class=\"fas fa-times-circle\"></i> {{ message }}</div>
+    {% endfor %}
+
+    {% if paiements is empty %}
+
+        <!-- ÉTAT VIDE -->
+        <div class=\"empty-state\">
+            <div class=\"empty-icon\">
+                <i class=\"fas fa-receipt\"></i>
+            </div>
+            <h2>Aucun paiement trouvé</h2>
+            <p>Vous n'avez pas encore effectué de paiement.<br>Réservez une excursion pour commencer !</p>
+            <a href=\"/\" class=\"btn-explore\">
+                <i class=\"fas fa-compass\"></i>
+                Explorer les excursions
+            </a>
+        </div>
+
+    {% else %}
+
+        <!-- STATS RAPIDES -->
+        <div class=\"stats-bar\">
+            <div class=\"stat-pill\">
+                <i class=\"fas fa-receipt\"></i>
+                <span>{{ paiements|length }} paiement{{ paiements|length > 1 ? 's' : '' }}</span>
+            </div>
+            <div class=\"stat-pill\">
+                <i class=\"fas fa-check-circle\"></i>
+                <span>
+                    {{ paiements|filter(p => p.statut == 'PAYE')|length }} confirmé{{ paiements|filter(p => p.statut == 'PAYE')|length > 1 ? 's' : '' }}
+                </span>
+            </div>
+            <div class=\"stat-pill highlight\">
+                <i class=\"fas fa-coins\"></i>
+                <span>
+                    {{ paiements|filter(p => p.statut == 'PAYE')|map(p => p.montant)|reduce((carry, v) => carry + v, 0)|number_format(2, '.', ' ') }} TND total
+                </span>
+            </div>
+        </div>
+
+        <!-- TABLEAU -->
+        <div class=\"table-wrapper\">
+            <table class=\"paiement-table\">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Réservation</th>
+                        <th>Date</th>
+                        <th>Montant</th>
+                        <th>Réduction</th>
+                        <th>Méthode</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for paiement in paiements %}
+                    <tr class=\"paiement-row\">
+                        <td class=\"td-id\">#{{ paiement.id }}</td>
+
+                        <td class=\"td-resa\">
+                            <span class=\"resa-badge\">
+                                <i class=\"fas fa-ticket-alt\"></i>
+                                Résa #{{ paiement.idReservation }}
+                            </span>
+                        </td>
+
+                        <td class=\"td-date\">
+                            {% if paiement.datePaiement %}
+                                <span class=\"date-main\">{{ paiement.datePaiement|date('d/m/Y') }}</span>
+                                <span class=\"date-time\">{{ paiement.datePaiement|date('H:i') }}</span>
+                            {% else %}
+                                <span class=\"date-none\">—</span>
+                            {% endif %}
+                        </td>
+
+                        <td class=\"td-montant\">
+                            {{ paiement.montant|number_format(2, '.', ' ') }}
+                            <span class=\"currency\">TND</span>
+                        </td>
+
+                        <td class=\"td-reduction\">
+                            {% if paiement.reduction is defined and paiement.reduction > 0 %}
+                                <span class=\"reduction-badge\">-{{ paiement.reduction }}%</span>
+                            {% else %}
+                                <span class=\"no-reduction\">—</span>
+                            {% endif %}
+                        </td>
+
+                        <td class=\"td-methode\">
+                            <span class=\"methode-pill\">
+                                <i class=\"fas fa-credit-card\"></i>
+                                {{ paiement.methode|default('card')|upper }}
+                            </span>
+                        </td>
+
+                        <td class=\"td-statut\">
+                            {% if paiement.statut == 'PAYE' %}
+                                <span class=\"statut-badge statut-paye\">
+                                    <i class=\"fas fa-check-circle\"></i> Payé
+                                </span>
+                            {% elseif paiement.statut == 'REMBOURSE' %}
+                                <span class=\"statut-badge statut-rembourse\">
+                                    <i class=\"fas fa-undo\"></i> Remboursé
+                                </span>
+                            {% elseif paiement.statut == 'ECHEC' %}
+                                <span class=\"statut-badge statut-echec\">
+                                    <i class=\"fas fa-times-circle\"></i> Échec
+                                </span>
+                            {% else %}
+                                <span class=\"statut-badge statut-autre\">
+                                    {{ paiement.statut }}
+                                </span>
+                            {% endif %}
+                        </td>
+
+                        <td class=\"td-actions\">
+                            <a href=\"{{ path('app_paiement_detail', {'id': paiement.id}) }}\"
+                               class=\"btn-action btn-detail\" title=\"Voir le détail\">
+                                <i class=\"fas fa-eye\"></i>
+                            </a>
+
+                            {% if is_granted('ROLE_ADMIN') and paiement.statut == 'PAYE' %}
+                                <form method=\"POST\"
+                                      action=\"{{ path('app_paiement_rembourser', {'id': paiement.id}) }}\"
+                                      onsubmit=\"return confirm('Confirmer le remboursement ?')\"
+                                      style=\"display:inline;\">
+                                    <button type=\"submit\" class=\"btn-action btn-rembourser\" title=\"Rembourser\">
+                                        <i class=\"fas fa-undo\"></i>
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    {% endif %}
+
+</main>
+
+<style>
+/* ── Particles ── */
+.particles-bg {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none; z-index: 0; overflow: hidden;
+}
+.particles-bg .particle {
+    position: absolute; width: 6px; height: 6px;
+    background: #FFC107; border-radius: 50%;
+    opacity: 0.1; animation: particleFloat 15s infinite linear;
+}
+@keyframes particleFloat {
+    0%   { transform: translateY(100vh) rotate(0deg);   opacity: 0; }
+    10%  { opacity: 0.15; }
+    90%  { opacity: 0.15; }
+    100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+}
+
+/* ── Hero ── */
+.hero-paiement {
+    position: relative;
+    height: 32vh; min-height: 220px;
+    margin-top: 80px;
+    background: linear-gradient(135deg, #0B2D4A 0%, #08203A 60%, #061828 100%);
+    display: flex; align-items: center;
+    overflow: hidden;
+}
+.hero-paiement .overlay {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(255,193,7,0.08) 0%, transparent 70%);
+}
+.hero-content {
+    position: relative; z-index: 2;
+    padding: 0 80px;
+}
+.hero-badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: linear-gradient(135deg, #FFC107, #FF9800);
+    color: #0B2D4A; padding: 8px 22px; border-radius: 30px;
+    font-size: 13px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 1px; margin-bottom: 18px;
+}
+.hero-content h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px; font-weight: 800;
+    color: white; margin: 0 0 10px;
+}
+.hero-sub {
+    font-size: 16px; color: rgba(255,255,255,0.6); margin: 0;
+}
+
+/* ── Main ── */
+.main-content {
+    position: relative; z-index: 2;
+    max-width: 1400px; margin: 0 auto;
+    padding: 60px 80px;
+}
+
+/* ── Flash messages ── */
+.flash {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 22px; border-radius: 14px;
+    margin-bottom: 20px; font-size: 15px; font-weight: 500;
+}
+.flash-success { background: rgba(76,175,80,0.12); border: 1px solid rgba(76,175,80,0.3); color: #81C784; }
+.flash-warning { background: rgba(255,193,7,0.10); border: 1px solid rgba(255,193,7,0.3);  color: #FFD54F; }
+.flash-danger  { background: rgba(244,67,54,0.10);  border: 1px solid rgba(244,67,54,0.3);  color: #E57373; }
+
+/* ── Empty state ── */
+.empty-state {
+    text-align: center; padding: 100px 40px;
+}
+.empty-icon {
+    width: 100px; height: 100px;
+    background: rgba(255,193,7,0.08);
+    border: 1px solid rgba(255,193,7,0.2);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 30px;
+}
+.empty-icon i { font-size: 40px; color: #FFC107; }
+.empty-state h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px; color: white; margin: 0 0 14px;
+}
+.empty-state p { font-size: 16px; color: rgba(255,255,255,0.55); line-height: 1.7; margin: 0 0 30px; }
+.btn-explore {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 16px 32px;
+    background: linear-gradient(135deg, #FFC107, #FF9800);
+    color: #0B2D4A; border-radius: 16px;
+    font-size: 15px; font-weight: 700; text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(255,193,7,0.3);
+}
+.btn-explore:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(255,193,7,0.45); }
+
+/* ── Stats bar ── */
+.stats-bar {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    margin-bottom: 36px;
+}
+.stat-pill {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 12px 22px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,193,7,0.15);
+    border-radius: 30px; font-size: 14px;
+    color: rgba(255,255,255,0.75);
+}
+.stat-pill i { color: #FFC107; }
+.stat-pill.highlight {
+    background: rgba(255,193,7,0.08);
+    border-color: rgba(255,193,7,0.35);
+    color: #FFC107; font-weight: 600;
+}
+
+/* ── Table ── */
+.table-wrapper {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,193,7,0.12);
+    border-radius: 24px;
+    overflow: hidden;
+}
+.paiement-table {
+    width: 100%; border-collapse: collapse;
+}
+.paiement-table thead tr {
+    background: rgba(255,193,7,0.06);
+    border-bottom: 1px solid rgba(255,193,7,0.15);
+}
+.paiement-table th {
+    padding: 18px 20px; text-align: left;
+    font-size: 12px; font-weight: 600;
+    color: rgba(255,193,7,0.8);
+    text-transform: uppercase; letter-spacing: 1.5px;
+}
+.paiement-row {
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: background 0.2s ease;
+}
+.paiement-row:last-child { border-bottom: none; }
+.paiement-row:hover { background: rgba(255,193,7,0.03); }
+.paiement-table td { padding: 18px 20px; vertical-align: middle; }
+
+/* cells */
+.td-id { font-size: 13px; color: rgba(255,255,255,0.35); font-weight: 600; }
+
+.resa-badge {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 6px 14px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px; font-size: 13px; color: rgba(255,255,255,0.8);
+}
+.resa-badge i { color: #FFC107; font-size: 11px; }
+
+.date-main { display: block; font-size: 14px; color: white; font-weight: 500; }
+.date-time  { display: block; font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+.date-none  { color: rgba(255,255,255,0.25); }
+
+.td-montant {
+    font-size: 18px; font-weight: 700;
+    background: linear-gradient(135deg, #FFC107, #FF9800);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.currency { font-size: 12px; font-weight: 500; }
+
+.reduction-badge {
+    display: inline-block; padding: 4px 10px;
+    background: rgba(76,175,80,0.12);
+    border: 1px solid rgba(76,175,80,0.3);
+    border-radius: 20px; font-size: 12px;
+    color: #81C784; font-weight: 600;
+}
+.no-reduction { color: rgba(255,255,255,0.25); font-size: 14px; }
+
+.methode-pill {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 6px 14px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px; font-size: 12px;
+    color: rgba(255,255,255,0.7); font-weight: 600;
+}
+.methode-pill i { font-size: 10px; color: #FFC107; }
+
+/* statut badges */
+.statut-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px; border-radius: 20px;
+    font-size: 12px; font-weight: 600;
+}
+.statut-paye     { background: rgba(76,175,80,0.12);  border: 1px solid rgba(76,175,80,0.3);  color: #81C784; }
+.statut-rembourse{ background: rgba(33,150,243,0.12); border: 1px solid rgba(33,150,243,0.3); color: #64B5F6; }
+.statut-echec    { background: rgba(244,67,54,0.12);  border: 1px solid rgba(244,67,54,0.3);  color: #E57373; }
+.statut-autre    { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.6); }
+
+/* actions */
+.td-actions { display: flex; gap: 8px; align-items: center; }
+.btn-action {
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 10px; border: none; cursor: pointer;
+    font-size: 14px; transition: all 0.25s ease; text-decoration: none;
+}
+.btn-detail {
+    background: rgba(255,193,7,0.1);
+    border: 1px solid rgba(255,193,7,0.25);
+    color: #FFC107;
+}
+.btn-detail:hover {
+    background: rgba(255,193,7,0.2);
+    border-color: #FFC107;
+    transform: translateY(-2px);
+}
+.btn-rembourser {
+    background: rgba(33,150,243,0.1);
+    border: 1px solid rgba(33,150,243,0.25);
+    color: #64B5F6;
+}
+.btn-rembourser:hover {
+    background: rgba(33,150,243,0.2);
+    border-color: #64B5F6;
+    transform: translateY(-2px);
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+    .main-content { padding: 40px; }
+    .hero-content { padding: 0 40px; }
+    .hero-content h1 { font-size: 36px; }
+    .table-wrapper { overflow-x: auto; }
+    .paiement-table { min-width: 700px; }
+}
+@media (max-width: 640px) {
+    .main-content { padding: 24px 16px; }
+    .hero-content { padding: 0 24px; }
+    .hero-content h1 { font-size: 28px; }
+    .stats-bar { flex-direction: column; }
+}
+</style>
+
+{% endblock %}
+", "paiement/historique.html.twig", "C:\\Users\\ibrnx\\Downloads\\projet final symf+java\\integfinal\\integfinal\\templates\\paiement\\historique.html.twig");
+    }
+}

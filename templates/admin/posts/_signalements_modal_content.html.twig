@@ -1,0 +1,61 @@
+{% if reports is empty %}
+    <div style="padding: 30px; text-align: center; color: #a8bfdc;">
+        Aucun signalement trouvé.
+    </div>
+{% else %}
+    <div style="display:grid; gap:14px;">
+        {% for report in reports %}
+            <div style="background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.06); border-radius:18px; padding:18px;">
+                <div style="display:flex; justify-content:space-between; gap:12px; margin-bottom:10px; flex-wrap:wrap;">
+                    <div>
+                        <div style="font-size:18px; font-weight:800; color:#f4f8ff;">
+                            {{ report.post_titre ?? 'Post supprimé ou introuvable' }}
+                        </div>
+                        <div style="color:#a8bfdc; font-size:13px; margin-top:4px;">
+                            Post ID: {{ report.post_id }} ·
+                            Auteur: {{ report.auteur_nom ? report.auteur_nom ~ ' ' ~ report.auteur_prenom : 'Inconnu' }} ·
+                            Type: {{ report.post_type ?? '-' }}
+                        </div>
+                    </div>
+
+                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                        <span style="padding:8px 12px; border-radius:999px; background: rgba(255,191,27,0.14); color:#ffcf57; font-weight:700; font-size:12px;">
+                            {{ report.statut }}
+                        </span>
+                        <span style="color:#a8bfdc; font-size:12px;">
+                            {{ report.created_at }}
+                        </span>
+                    </div>
+                </div>
+
+                <div style="margin-bottom:10px; color:#8fd2ff; font-weight:700;">
+                    Raison : {{ report.raison }}
+                </div>
+
+                <div style="color:#edf4ff; line-height:1.6; margin-bottom:16px;">
+                    {{ report.details ?: 'Aucun détail fourni.' }}
+                </div>
+
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                    <button
+                        type="button"
+                        class="pub-btn pub-btn-secondary mark-report-treated-btn"
+                        data-report-id="{{ report.id }}"
+                    >
+                        <i class="fas fa-check"></i>
+                        Marquer traité
+                    </button>
+
+                    <button
+                        type="button"
+                        class="pub-btn pub-btn-danger delete-report-btn"
+                        data-report-id="{{ report.id }}"
+                    >
+                        <i class="fas fa-trash"></i>
+                        Supprimer
+                    </button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}

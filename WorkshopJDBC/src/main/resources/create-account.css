@@ -1,0 +1,112 @@
+/* ================= BACKGROUND ================= */
+
+.background {
+    -fx-background-color: linear-gradient(to bottom right, #0b2d4a, #051c2f);
+}
+
+/* ================= CARD ================= */
+
+.card {
+    -fx-background-color: #0e2240;
+    -fx-background-radius: 30;
+    -fx-padding: 40;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 40, 0.4, 0, 15);
+}
+
+/* ================= TITLE ================= */
+
+.title {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+/* ================= INPUTS ================= */
+
+/* ================= INPUT BASE ================= */
+
+.input-field {
+    -fx-background-color: #183a5a;
+    -fx-text-fill: white;
+    -fx-background-radius: 25;
+    -fx-padding: 10 15;
+    -fx-border-radius: 25;
+    -fx-border-color: transparent;
+}
+
+/* FOCUS */
+.input-field:focused {
+    -fx-border-color: #2FA8FF;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(47,168,255,0.6), 12,0.4,0,0);
+}
+
+/* ERREUR */
+.field-error {
+    -fx-border-color: #ff4d4d;
+    -fx-border-width: 2;
+}
+
+/* VALIDE */
+.field-valid {
+    -fx-border-color: #00e676;
+    -fx-border-width: 2;
+}
+
+
+/* ================= SUCCESS ================= */
+
+.field-valid {
+    -fx-border-color: #00c853;
+    -fx-border-width: 2;
+    -fx-border-radius: 25;
+}
+
+/* ================= ERROR ================= */
+
+.field-error {
+    -fx-border-color: #ff5252;
+    -fx-border-width: 2;
+    -fx-border-radius: 25;
+}
+
+/* ================= BUTTON ================= */
+
+.btn-create {
+    -fx-background-color: linear-gradient(to right, #ffc107, #ff9800);
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-background-radius: 25;
+    -fx-padding: 12 30;
+    -fx-effect: dropshadow(gaussian, rgba(255,193,7,0.6), 20, 0.5, 0, 0);
+}
+
+.btn-create:hover {
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* ================= LINK ================= */
+
+.link-login {
+    -fx-text-fill: #2fa8ff;
+    -fx-underline: true;
+}
+/* BACKGROUND */
+.auth-background {
+    -fx-background-color: linear-gradient(to bottom right, #0B2D4A, #021625);
+    -fx-alignment: center;
+
+}
+
+/* CARD */
+.auth-card {
+    -fx-background-color: #0E2240;
+    -fx-background-radius: 25;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 40, 0.4, 0, 10);
+}
+.error-text {
+    -fx-text-fill: #ff5c5c;
+    -fx-font-size: 11px;
+    -fx-padding: 0 0 0 10;
+}

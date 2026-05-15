@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<body style="font-family: Arial;">
+
+<h2 style="color:#0B2D4A;">Paiement confirmé ✅</h2>
+
+<p>Bonjour {{ user.nom ?? 'Client' }},</p>
+
+<p>
+    Votre réservation a été confirmée avec succès.
+</p>
+
+<p>
+    <strong>Réservation :</strong> #{{ reservation.idReservation }} <br>
+    <strong>Montant :</strong> {{ reservation.montantTotal }} TND
+</p>
+
+<p>
+    <strong>Excursion :</strong> {{ excursion.titre }} <br>
+    <strong>Lieu :</strong> {{ excursion.lieu }}
+</p>
+
+<hr>
+
+<p style="color:gray;">
+    Merci pour votre confiance ✈️
+</p>
+
+</body>
+</html>

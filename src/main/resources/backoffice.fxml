@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+
+<BorderPane prefHeight="900.0" prefWidth="1400.0"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            stylesheets="@style.css,@admin.css,@modifadmin.css"
+            fx:controller="tn.esprit.controllers.BackofficeController">
+
+    <!-- ================= SIDEBAR ================= -->
+    <left>
+        <StackPane fx:id="leftContainer"
+                   prefWidth="100.0"
+                   minWidth="100.0"
+                   maxWidth="300.0"
+                   onMouseEntered="#expandSidebar"
+                   onMouseExited="#collapseSidebar">
+
+            <VBox alignment="TOP_CENTER"
+                  spacing="30.0"
+                  styleClass="sidebar">
+
+                <padding>
+                    <Insets top="25.0" right="15.0" left="15.0"/>
+                </padding>
+
+                <ImageView fx:id="logo"
+                           fitHeight="55.0"
+                           preserveRatio="true">
+                    <image>
+                        <Image url="@/images/logo.png"/>
+                    </image>
+                </ImageView>
+
+                <Button fx:id="btnAccueil"
+                        text="ACCUEIL"
+                        styleClass="menu-btn">
+                    <graphic>
+                        <ImageView fitHeight="18.0" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/home.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button fx:id="btnutilisateur"
+                        text="utilisateur"
+                        styleClass="menu-btn-active"
+                        onAction="#openUsers">
+                    <graphic>
+                        <ImageView fitHeight="18.0" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/util.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+                <Button fx:id="btnHebergement"
+                        text="HÉBERGEMENTS"
+                        styleClass="menu-btn">
+                    <graphic>
+                        <ImageView fitHeight="18.0" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/building.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+                <Button fx:id="btnLoisirs"
+                        text="LOISIRS"
+                        styleClass="menu-btn">
+                    <graphic>
+                        <ImageView fitHeight="18.0" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/parc.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+                <Button fx:id="btnTransport"
+                        text="TRANSPORTS"
+                        styleClass="menu-btn">
+                    <graphic>
+                        <ImageView fitHeight="18.0" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/transport.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+                <Button fx:id="btnAvis"
+                        text="RÉCLAMATIONS"
+                        styleClass="menu-btn"
+                        onAction="#openReclamations">
+
+                <graphic>
+                        <ImageView fitHeight="18.0" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/avis.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+            </VBox>
+        </StackPane>
+    </left>
+
+    <!-- ================= CENTER ================= -->
+    <center>
+        <StackPane styleClass="admin-root">
+
+            <VBox spacing="30.0"
+                  maxWidth="1200.0"
+                  StackPane.alignment="TOP_CENTER">
+
+                <padding>
+                    <Insets top="30.0" right="40.0" bottom="30.0" left="40.0"/>
+                </padding>
+
+                <!-- ================= STATS ================= -->
+                <HBox spacing="50.0">
+
+                    <VBox styleClass="stat-card" prefWidth="220.0">
+                        <Label fx:id="lblTotalUsers"
+                               text="0"
+                               styleClass="stat-number"/>
+                        <Label text="Utilisateurs"
+                               styleClass="stat-label"/>
+                    </VBox>
+
+                    <VBox styleClass="stat-card" prefWidth="220.0">
+                        <Label fx:id="lblAdmins"
+                               text="0"
+                               styleClass="stat-number"/>
+                        <Label text="Admins"
+                               styleClass="stat-label"/>
+                    </VBox>
+
+                    <VBox styleClass="stat-card-gold" prefWidth="260.0">
+                        <Label fx:id="lblBlocked"
+                               text="0"
+                               styleClass="stat-number-gold"/>
+                        <Label text="Bloqués"
+                               styleClass="stat-label"/>
+                    </VBox>
+                    <VBox spacing="15" styleClass="weather-time-card">
+
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="☀" styleClass="weather-icon"/>
+                            <Label fx:id="lblTemperature"
+                                   text="22°C"
+                                   styleClass="weather-temp"/>
+                            <Label text="TUNIS"
+                                   styleClass="weather-city"/>
+                        </HBox>
+
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="🕒" styleClass="time-icon"/>
+                            <Label fx:id="lblTime"
+                                   text="18:42:15"
+                                   styleClass="time-text"/>
+                        </HBox>
+
+                        <Label fx:id="lblDate"
+                               text="12 Feb 2026"
+                               styleClass="date-text"/>
+                    </VBox>
+                </HBox>
+
+                <!-- ================= TABLE + RIGHT SIDE ================= -->
+                <HBox spacing="30.0" VBox.vgrow="ALWAYS">
+
+                    <!-- TABLE -->
+                    <VBox spacing="20.0"
+                          styleClass="admin-table-container"
+                          HBox.hgrow="ALWAYS">
+
+                        <HBox alignment="CENTER_LEFT">
+                            <Label text="Gestion des Utilisateurs"
+                                   styleClass="section-title"/>
+
+                            <Region HBox.hgrow="ALWAYS"/>
+
+                            <Button fx:id="btnAddUser"
+                                    text="+"
+                                    styleClass="btn-primary"/>
+                        </HBox>
+
+                        <TableView fx:id="tableUsers"
+                                   styleClass="admin-table"
+                                   VBox.vgrow="ALWAYS">
+
+                            <columns>
+                                <TableColumn fx:id="colNom" text="Nom" prefWidth="120.0"/>
+                                <TableColumn fx:id="colPrenom" text="Prénom" prefWidth="120.0"/>
+                                <TableColumn fx:id="colEmail" text="Email" prefWidth="220.0"/>
+                                <TableColumn fx:id="colTelephone" text="Téléphone" prefWidth="120.0"/>
+                                <TableColumn fx:id="colRole" text="Rôle" prefWidth="120.0"/>
+                                <TableColumn fx:id="colStatut" text="Statut" prefWidth="100.0"/>
+                                <TableColumn fx:id="colActions" text="Action" prefWidth="140.0"/>
+                            </columns>
+
+                        </TableView>
+
+                    </VBox>
+
+                    <!-- RIGHT SIDE -->
+                    <VBox spacing="25"
+                          prefWidth="350"
+                          styleClass="stats-side-card">
+
+                        <!-- WEATHER -->
+
+
+                        <!-- TITLE -->
+                        <Label text="Répartition des Utilisateurs"
+                               styleClass="section-title"/>
+
+                        <!-- PIE -->
+                        <StackPane prefHeight="260"
+                                   alignment="CENTER">
+
+                            <PieChart fx:id="pieChart"
+                                      legendVisible="false"
+                                      labelsVisible="false"
+                                      prefWidth="220"
+                                      prefHeight="220"/>
+
+                            <Circle radius="75"
+                                    fill="linear-gradient(to bottom, #0f2c4f, #081f3a)"
+                                    stroke="rgba(255,255,255,0.25)"
+                                    strokeWidth="2"/>
+
+                            <Label fx:id="lblPercent"
+                                   style="-fx-font-size: 30px;
+                                          -fx-text-fill: white;
+                                          -fx-font-weight: bold;"/>
+                        </StackPane>
+
+                        <VBox spacing="10">
+                            <Label text="Actifs"
+                                   styleClass="legend-active"/>
+                            <Label text="Bloqués"
+                                   styleClass="legend-blocked"/>
+                        </VBox>
+                        <VBox spacing="10" prefWidth="350">
+                            <Label text="Assistant IA Admin"/>
+
+                            <TextArea fx:id="aiInput"
+                                      promptText="Posez une commande..."
+                                      prefHeight="80"/>
+
+                            <Button text="Envoyer"
+                                    onAction="#handleAIRequest"/>
+
+                            <TextArea fx:id="aiResponse"
+                                      editable="false"
+                                      prefHeight="120"/>
+                        </VBox>
+
+
+                    </VBox>
+
+                </HBox>
+
+            </VBox>
+
+        </StackPane>
+    </center>
+</BorderPane>

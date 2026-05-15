@@ -1,0 +1,230 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Réservations{% endblock %}
+{% block page_icon %}fas fa-ticket-alt{% endblock %}
+{% block page_title %}Gestion des Réservations{% endblock %}
+{% block breadcrumb %}Réservations{% endblock %}
+
+{% block content %}
+
+<div class="stats-grid">
+    <div class="stat-card blue">
+        <div class="stat-icon blue"><i class="fas fa-ticket-alt"></i></div>
+        <div class="stat-value">{{ stats.total }}</div>
+        <div class="stat-label">Total</div>
+    </div>
+
+    <div class="stat-card green">
+        <div class="stat-icon green"><i class="fas fa-check"></i></div>
+        <div class="stat-value">{{ stats.confirmed }}</div>
+        <div class="stat-label">Payées</div>
+    </div>
+
+    <div class="stat-card amber">
+        <div class="stat-icon amber"><i class="fas fa-clock"></i></div>
+        <div class="stat-value">{{ stats.pending }}</div>
+        <div class="stat-label">En attente</div>
+    </div>
+</div>
+<div class="toolbar">
+
+    
+
+    <!-- 🎯 FILTRES -->
+    <div class="filter-group">
+
+        <a href="{{ path('admin_reservation_index') }}"
+           class="filter-btn {{ currentStatus is empty ? 'active' : '' }}">
+            Toutes
+        </a>
+
+        <a href="{{ path('admin_reservation_index', {statut: 'CONFIRMEE'}) }}"
+           class="filter-btn {{ currentStatus == 'CONFIRMEE' ? 'active' : '' }}">
+            Confirmées
+        </a>
+
+        <a href="{{ path('admin_reservation_index', {statut: 'EN_ATTENTE'}) }}"
+           class="filter-btn {{ currentStatus == 'EN_ATTENTE' ? 'active' : '' }}">
+            En attente
+        </a>
+
+        <a href="{{ path('admin_reservation_index', {statut: 'ANNULEE'}) }}"
+           class="filter-btn {{ currentStatus == 'ANNULEE' ? 'active' : '' }}">
+            Annulées
+        </a>
+    </div>
+
+    <!-- 🔽 TRI -->
+    <div class="sort-dropdown">
+
+    <button class="sort-toggle">
+        <i class="fas fa-sort"></i>
+    </button>
+
+    <div class="sort-menu">
+        <a href="{{ path('admin_reservation_index', {sort: 'date', statut: currentStatus, search: search}) }}">
+            Date
+        </a>
+
+        <a href="{{ path('admin_reservation_index', {sort: 'prix', statut: currentStatus, search: search}) }}">
+            Prix
+        </a>
+
+        <a href="{{ path('admin_reservation_index', {sort: 'titre', statut: currentStatus, search: search}) }}">
+            Titre
+        </a>
+    </div>
+
+</div>
+
+</div>
+<div class="table-container">
+    <div class="table-header">
+        <div class="table-title">
+            <i class="fas fa-list"></i> Liste des réservations
+        </div>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Utilisateur</th>
+            <th>Excursion</th>
+            <th>Date</th>
+            <th>Total</th>
+            <th>Statut</th>
+        </tr>
+        </thead>
+
+        <tbody>
+{% for row in data %}
+    <tr>
+
+        <td>
+            {{ row.user ? row.user.nom ~ ' ' ~ row.user.prenom : 'Utilisateur inconnu' }}
+        </td>
+
+        <td>
+            {{ row.excursion ? row.excursion.titre : 'Excursion supprimée' }}
+        </td>
+
+        <td>
+            {{ row.reservation.dateReservation|date('d/m/Y') }}
+        </td>
+
+        <td>
+            {{ row.reservation.montantTotal }} TND
+        </td>
+
+        <td>
+            {% if row.reservation.statut == 'CONFIRMEE' %}
+                <span class="badge badge-green">Payée</span>
+            {% elseif row.reservation.statut == 'EN_ATTENTE' %}
+                <span class="badge badge-amber">En attente</span>
+            {% else %}
+                <span class="badge badge-warning">Annulée</span>
+            {% endif %}
+        </td>
+
+    </tr>
+{% endfor %}
+</tbody>
+    </table>
+</div>
+<style>
+.badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.badge-green {
+    background: rgba(40, 167, 69, 0.15);
+    color: #28a745;
+    border: 1px solid rgba(40, 167, 69, 0.4);
+}
+
+.badge-amber {
+    background: rgba(255, 193, 7, 0.15);
+    color: #ffc107;
+    border: 1px solid rgba(255, 193, 7, 0.4);
+}
+
+.badge-warning {
+    background: rgba(220, 53, 69, 0.15);
+    color: #dc3545;
+    border: 1px solid rgba(220, 53, 69, 0.4);
+}
+
+
+.filter-btn, .sort-btn {
+    padding: 6px 12px;
+    border-radius: 20px;
+    margin-right: 5px;
+    background: #0f2a3d;
+    color: #ccc;
+    text-decoration: none;
+}
+
+.filter-btn.active, .sort-btn.active {
+    background: #1E6FA8;
+    color: white;
+}
+.sort-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.sort-toggle {
+    background: #0f2a3d;
+    border: none;
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.sort-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 45px;
+    background: #0f2a3d;
+    border-radius: 12px;
+    padding: 10px 0;
+    min-width: 150px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    z-index: 100;
+}
+
+.sort-menu a {
+    display: block;
+    padding: 10px 15px;
+    color: #ccc;
+    text-decoration: none;
+}
+
+.sort-menu a:hover {
+    background: #1E6FA8;
+    color: white;
+}
+
+
+</style>
+
+<script>
+document.querySelector('.sort-toggle').addEventListener('click', function () {
+    const menu = document.querySelector('.sort-menu');
+    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+});
+
+// fermer si clic ailleurs
+document.addEventListener('click', function (e) {
+    if (!e.target.closest('.sort-dropdown')) {
+        document.querySelector('.sort-menu').style.display = 'none';
+    }
+});
+</script>
+{% endblock %}

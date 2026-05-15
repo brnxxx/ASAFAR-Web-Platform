@@ -1,0 +1,105 @@
+<div class="table-container">
+    <div class="table-header">
+        <div class="table-title">
+            <i class="fas fa-list"></i>
+            Liste des Excursions
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Titre</th>
+                <th>Catégorie</th>
+                <th>Lieu</th>
+                <th>Nombre de place disponibles</th>
+                <th>Description</th>
+                <th>Prix Adulte</th>
+                <th>Prix Enfant</th>
+                <th>Prix Bébé</th>
+                <th>Date</th>
+                <th style="text-align: right;">Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {% if excursions is defined and excursions|length > 0 %}
+            {% for e in excursions %}
+                <tr>
+
+                    <td>
+                        <img src="{{ asset('images/loisirs/' ~ e.imageUrl) }}" alt="{{ e.titre }}"
+                             width="60"
+                             style="border-radius:8px;">
+                    </td>
+
+                    <td>{{ e.titre }}</td>
+
+                    <td>
+                        {% if e.categorie %}
+                            {% set colors = ['blue', 'green', 'amber', 'purple'] %}
+                            {% set color = colors[e.categorie.id % colors|length] %}
+                            <span class="badge badge-{{ color }}">{{ e.categorie.nom }}</span>
+                        {% else %}
+                            <span class="badge badge-warning">Sans catégorie</span>
+                        {% endif %}
+                    </td>
+
+                    <td>{{ e.lieu }}</td>
+
+                    <td>{{ e.nombrePlacesDisponibles }}</td>
+
+                    <td>{{ e.description ? e.description|slice(0, 40) ~ '...' : '—' }}</td>
+
+                    <td class="price price-adulte"><strong>{{ e.prixAdulte }} DT</strong></td>
+                    <td class="price price-enfant">{{ e.prixEnfant }} DT</td>
+                    <td class="price price-bebe">{{ e.prixBebe }} DT</td>
+
+                    <td>{{ e.date ? e.date|date('d/m/Y') : 'N/A' }}</td>
+
+                    <td>
+                        <div class="action-buttons">
+
+                            <button type="button" class="btn-action btn-edit"
+                                onclick='openEditModal({
+                                    id: "{{ e.idExcursion }}",
+                                    titre: "{{ e.titre|e('js') }}",
+                                    lieu: "{{ e.lieu|e('js') }}",
+                                    description: "{{ e.description|e('js') }}",
+                                    date: "{{ e.date ? e.date|date('Y-m-d') : '' }}",
+                                    duree: "{{ e.duree }}",
+                                    places: "{{ e.nombrePlacesDisponibles }}",
+                                    prixA: "{{ e.prixAdulte }}",
+                                    prixE: "{{ e.prixEnfant }}",
+                                    prixB: "{{ e.prixBebe }}",
+                                    categorie: "{{ e.categorie ? e.categorie.id : '' }}"
+                                })'>
+                                <i class="fas fa-edit"></i>
+                            </button>
+
+                            <a href="{{ path('admin_excursion_delete', {id: e.idExcursion}) }}"
+                               class="btn-action btn-delete"
+                               onclick="return confirm('Supprimer cette excursion ?')">
+                                <i class="fas fa-trash"></i>
+                            </a>
+
+                        </div>
+                    </td>
+
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="11">
+                    <div class="empty-state">
+                        <i class="fas fa-map"></i>
+                        <h3>Aucune excursion</h3>
+                        <p>Il n'y a pas encore d'excursions.</p>
+                    </div>
+                </td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
+</div>

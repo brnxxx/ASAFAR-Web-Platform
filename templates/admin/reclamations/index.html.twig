@@ -1,0 +1,967 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Réclamations - Admin ASAFAR{% endblock %}
+
+{% block page_icon %}fas fa-comment-dots{% endblock %}
+{% block page_title %}Gestion des Réclamations{% endblock %}
+{% block breadcrumb %}Réclamations{% endblock %}
+
+{% block content %}
+<style>
+/* ══════════════════════════════════════
+   STATS GRID — même style que utilisateurs
+══════════════════════════════════════ */
+.rec-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+.rec-stat-card {
+    background: linear-gradient(135deg, rgba(11,45,74,0.6) 0%, rgba(7,27,46,0.8) 100%);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+.rec-stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.2), var(--shadow-glow-blue);
+    border-color: rgba(47,168,255,0.3);
+}
+
+.rec-stat-icon {
+    width: 42px; height: 42px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+}
+
+.rec-stat-value {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1;
+}
+
+.rec-stat-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+.icon-total     { background: rgba(99,102,241,0.2);  color: #818cf8; }
+.icon-attente   { background: rgba(245,158,11,0.2);  color: #fbbf24; }
+.icon-traitee   { background: rgba(52,211,153,0.2);  color: #34d399; }
+.icon-refusee   { background: rgba(239,68,68,0.2);   color: #f87171; }
+.icon-transport { background: rgba(59,130,246,0.2);  color: #60a5fa; }
+.icon-heberg    { background: rgba(168,85,247,0.2);  color: #c084fc; }
+.icon-loisir    { background: rgba(20,184,166,0.2);  color: #2dd4bf; }
+
+/* ══════════════════════════════════════
+   TOOLBAR — même style que utilisateurs
+══════════════════════════════════════ */
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.toolbar-left, .toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border-subtle);
+    background: var(--glass-bg);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--text-secondary);
+    text-decoration: none;
+    white-space: nowrap;
+}
+.filter-btn:hover {
+    background: rgba(47,168,255,0.1);
+    border-color: rgba(47,168,255,0.3);
+    color: var(--text-primary);
+}
+.filter-btn.active {
+    background: linear-gradient(135deg, var(--sky-blue), #1e6fa8);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(47,168,255,0.3);
+}
+.filter-btn.active-attente { background: linear-gradient(135deg, #f59e0b, #d97706); color:white; border-color:transparent; }
+.filter-btn.active-traitee { background: linear-gradient(135deg, #10b981, #059669); color:white; border-color:transparent; }
+.filter-btn.active-refusee { background: linear-gradient(135deg, #ef4444, #dc2626); color:white; border-color:transparent; }
+
+.search-box-inline {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.search-box-inline i {
+    position: absolute;
+    left: 14px;
+    color: var(--text-muted);
+    font-size: 13px;
+    pointer-events: none;
+}
+.search-box-inline input {
+    width: 220px;
+    padding: 10px 16px 10px 38px;
+    background: var(--glass-bg);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    color: var(--text-primary);
+    font-size: 13px;
+    font-family: inherit;
+    transition: all 0.3s ease;
+    outline: none;
+}
+.search-box-inline input:focus {
+    border-color: var(--sky-blue);
+    box-shadow: 0 0 0 3px rgba(47,168,255,0.15);
+    width: 280px;
+}
+.search-box-inline input::placeholder { color: var(--text-muted); }
+
+/* ══════════════════════════════════════
+   TABLE — même style que utilisateurs
+══════════════════════════════════════ */
+.table-container {
+    background: linear-gradient(135deg, rgba(11,45,74,0.5) 0%, rgba(7,27,46,0.7) 100%);
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border-subtle);
+    background: linear-gradient(135deg, rgba(30,111,168,0.1) 0%, rgba(11,45,74,0.2) 100%);
+}
+
+.table-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.table-title i { color: var(--amber); }
+
+.table-info {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+table { width: 100%; border-collapse: collapse; }
+
+thead th {
+    padding: 14px 16px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    background: rgba(7,27,46,0.4);
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+tbody td {
+    padding: 16px;
+    font-size: 13px;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-subtle);
+    vertical-align: middle;
+}
+
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover td {
+    background: rgba(47,168,255,0.04);
+}
+
+/* Badges */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+.badge-EN_ATTENTE { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+.badge-TRAITEE    { background: rgba(52,211,153,0.15);  color: #34d399; border: 1px solid rgba(52,211,153,0.3); }
+.badge-REFUSEE    { background: rgba(239,68,68,0.15);   color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+
+.type-badge {
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+.type-TRANSPORT   { background: rgba(59,130,246,0.15);  color: #60a5fa; }
+.type-HEBERGEMENT { background: rgba(168,85,247,0.15);  color: #c084fc; }
+.type-LOISIR      { background: rgba(20,184,166,0.15);  color: #2dd4bf; }
+
+/* Action buttons */
+.action-buttons { display: flex; gap: 6px; align-items: center; justify-content: flex-end; }
+
+.btn-action {
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    border: 1px solid var(--border-subtle);
+    background: var(--glass-bg);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    color: var(--text-secondary);
+}
+.btn-action:hover { transform: scale(1.1); }
+.btn-action.btn-view  { color: #818cf8; border-color: rgba(99,102,241,0.3); }
+.btn-action.btn-view:hover  { background: rgba(99,102,241,0.12); }
+.btn-action.btn-reply { color: #34d399; border-color: rgba(52,211,153,0.3); }
+.btn-action.btn-reply:hover { background: rgba(52,211,153,0.12); }
+.btn-action.btn-delete { color: #f87171; border-color: rgba(239,68,68,0.3); }
+.btn-action.btn-delete:hover { background: rgba(239,68,68,0.12); }
+
+.rec-sujet {
+    max-width: 180px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+/* Statut select inline */
+.statut-select-inline {
+    background: var(--glass-bg);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    padding: 4px 8px;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s ease;
+}
+.statut-select-inline:focus {
+    border-color: var(--sky-blue);
+}
+.statut-select-inline option { background: #071b2e; color: var(--text-primary); }
+
+/* Pagination */
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    border-top: 1px solid var(--border-subtle);
+}
+.pagination-info { font-size: 13px; color: var(--text-secondary); }
+.pagination { display: flex; gap: 6px; }
+
+.page-btn {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    border: 1px solid var(--border-subtle);
+    background: var(--glass-bg);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+}
+.page-btn:hover { background: rgba(47,168,255,0.1); color: var(--text-primary); }
+.page-btn.current {
+    background: linear-gradient(135deg, var(--sky-blue), #1e6fa8);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(47,168,255,0.3);
+}
+
+/* Empty state */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+}
+.empty-state-icon {
+    font-size: 48px;
+    opacity: 0.2;
+    margin-bottom: 16px;
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(5,20,33,0.85);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 20px;
+}
+.modal-overlay.active { display: flex; }
+
+.modal {
+    background: linear-gradient(135deg, rgba(11,45,74,0.98) 0%, rgba(7,27,46,0.98) 100%);
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 25px 80px rgba(0,0,0,0.5), var(--shadow-glow-blue);
+    animation: modalSlide 0.3s ease;
+    overflow: hidden;
+}
+@keyframes modalSlide {
+    from { opacity:0; transform: translateY(-30px) scale(0.95); }
+    to   { opacity:1; transform: translateY(0) scale(1); }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, rgba(30,111,168,0.2) 0%, rgba(11,45,74,0.4) 100%);
+    border-bottom: 1px solid var(--border-subtle);
+}
+.modal-header h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.modal-header h3 i { color: var(--amber); }
+
+.modal-close {
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--glass-bg);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.modal-close:hover {
+    background: linear-gradient(135deg, #EF4444, #DC2626);
+    color: white;
+    border-color: transparent;
+    transform: rotate(90deg);
+}
+
+.modal-body { padding: 24px; }
+
+.modal-subtitle {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+    padding: 10px 14px;
+    background: var(--glass-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border-subtle);
+}
+
+.modal-textarea {
+    width: 100%;
+    min-height: 130px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+    outline: none;
+    background: var(--glass-bg);
+    color: var(--text-primary);
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+.modal-textarea:focus {
+    border-color: var(--sky-blue);
+    box-shadow: 0 0 0 3px rgba(47,168,255,0.15);
+}
+.modal-textarea::placeholder { color: var(--text-muted); }
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 16px 24px;
+    border-top: 1px solid var(--border-subtle);
+    background: rgba(7,27,46,0.3);
+}
+
+/* Toast */
+.admin-toast {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    padding: 14px 20px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: white;
+    z-index: 99999;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+.admin-toast.show    { transform: translateY(0); opacity: 1; }
+.admin-toast.success { background: linear-gradient(135deg, #059669, #10b981); }
+.admin-toast.error   { background: linear-gradient(135deg, #dc2626, #ef4444); }
+.badge-danger  { background: rgba(239,68,68,0.15);   color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+.badge-info    { background: rgba(47,168,255,0.15);  color: #60a5fa; border: 1px solid rgba(47,168,255,0.3); }
+.badge-success { background: rgba(52,211,153,0.15);  color: #34d399; border: 1px solid rgba(52,211,153,0.3); }
+</style>
+{# ════ STATS ════ #}
+<div class="rec-stats-grid">
+    <div class="rec-stat-card">
+        <div class="rec-stat-icon icon-total"><i class="fas fa-list-alt"></i></div>
+        <div class="rec-stat-value">{{ stats.total }}</div>
+        <div class="rec-stat-label">Total</div>
+    </div>
+    <div class="rec-stat-card">
+        <div class="rec-stat-icon icon-attente"><i class="fas fa-clock"></i></div>
+        <div class="rec-stat-value">{{ stats.en_attente }}</div>
+        <div class="rec-stat-label">En attente</div>
+    </div>
+    <div class="rec-stat-card">
+        <div class="rec-stat-icon icon-traitee"><i class="fas fa-check-circle"></i></div>
+        <div class="rec-stat-value">{{ stats.traitee }}</div>
+        <div class="rec-stat-label">Traitées</div>
+    </div>
+    <div class="rec-stat-card">
+        <div class="rec-stat-icon icon-refusee"><i class="fas fa-times-circle"></i></div>
+        <div class="rec-stat-value">{{ stats.refusee }}</div>
+        <div class="rec-stat-label">Refusées</div>
+    </div>
+    <div class="rec-stat-card">
+        <div class="rec-stat-icon icon-transport"><i class="fas fa-plane"></i></div>
+        <div class="rec-stat-value">{{ stats.transport }}</div>
+        <div class="rec-stat-label">Transport</div>
+    </div>
+    <div class="rec-stat-card">
+        <div class="rec-stat-icon icon-heberg"><i class="fas fa-hotel"></i></div>
+        <div class="rec-stat-value">{{ stats.hebergement }}</div>
+        <div class="rec-stat-label">Hébergement</div>
+    </div>
+    <div class="rec-stat-card">
+        <div class="rec-stat-icon icon-loisir"><i class="fas fa-compass"></i></div>
+        <div class="rec-stat-value">{{ stats.loisir }}</div>
+        <div class="rec-stat-label">Loisirs</div>
+    </div>
+</div>
+
+{% set currentPageSafe = pagination ? pagination.currentPageNumber : (currentPage ?? 1) %}
+{% set safeFilter = filter ?? 'all' %}
+{% set safeType = type ?? 'all' %}
+{% set safeSearch = search ?? '' %}
+
+<div class="toolbar">
+    <div class="toolbar-left">
+
+        <a href="{{ path('admin_reclamations', {
+            page: currentPageSafe,
+            filter:'all',
+            type:safeType,
+            search:safeSearch
+        }) }}"
+           class="filter-btn {{ safeFilter == 'all' ? 'active' : '' }}">
+            <i class="fas fa-border-all"></i> Toutes
+        </a>
+
+        <a href="{{ path('admin_reclamations', {
+            page: currentPageSafe,
+            filter:'EN_ATTENTE',
+            type:safeType,
+            search:safeSearch
+        }) }}"
+           class="filter-btn {{ safeFilter == 'EN_ATTENTE' ? 'active-attente' : '' }}">
+            <i class="fas fa-clock"></i> En attente
+        </a>
+
+        <a href="{{ path('admin_reclamations', {
+            page: currentPageSafe,
+            filter:'TRAITEE',
+            type:safeType,
+            search:safeSearch
+        }) }}"
+           class="filter-btn {{ safeFilter == 'TRAITEE' ? 'active-traitee' : '' }}">
+            <i class="fas fa-check"></i> Traitées
+        </a>
+
+        <a href="{{ path('admin_reclamations', {
+            page: currentPageSafe,
+            filter:'REFUSEE',
+            type:safeType,
+            search:safeSearch
+        }) }}"
+           class="filter-btn {{ safeFilter == 'REFUSEE' ? 'active-refusee' : '' }}">
+            <i class="fas fa-times"></i> Refusées
+        </a>
+
+        <span style="width:1px; height:20px; background:var(--border-subtle); display:inline-block;"></span>
+
+        <a href="{{ path('admin_reclamations', {
+            page: currentPageSafe,
+            filter:safeFilter,
+            type:'all',
+            search:safeSearch
+        }) }}"
+           class="filter-btn {{ safeType == 'all' ? 'active' : '' }}">
+           Tous types
+        </a>
+
+        <a href="{{ path('admin_reclamations', {
+            page: currentPageSafe,
+            filter:safeFilter,
+            type:'TRANSPORT',
+            search:safeSearch
+        }) }}"
+           class="filter-btn {{ safeType == 'TRANSPORT' ? 'active' : '' }}">
+            <i class="fas fa-plane"></i> Transport
+        </a>
+
+        <a href="{{ path('admin_reclamations', {
+            page: currentPageSafe,
+            filter:safeFilter,
+            type:'HEBERGEMENT',
+            search:safeSearch
+        }) }}"
+           class="filter-btn {{ safeType == 'HEBERGEMENT' ? 'active' : '' }}">
+            <i class="fas fa-hotel"></i> Hébergement
+        </a>
+
+        <a href="{{ path('admin_reclamations', {
+            page: currentPageSafe,
+            filter:safeFilter,
+            type:'LOISIR',
+            search:safeSearch
+        }) }}"
+           class="filter-btn {{ safeType == 'LOISIR' ? 'active' : '' }}">
+            <i class="fas fa-compass"></i> Loisirs
+        </a>
+
+    </div>
+
+    <div class="toolbar-right">
+
+        <form method="GET" action="{{ path('admin_reclamations') }}" style="display:flex;">
+            <input type="hidden" name="filter" value="{{ safeFilter }}">
+            <input type="hidden" name="type" value="{{ safeType }}">
+            <input type="hidden" name="page" value="{{ currentPageSafe }}"> {# 🔥 IMPORTANT #}
+
+            <div class="search-box-inline">
+                <i class="fas fa-search"></i>
+                <input type="text" name="search" value="{{ safeSearch }}"
+                       placeholder="Rechercher..." onchange="this.form.submit()">
+            </div>
+        </form>
+
+<a href="{{ path('admin_reclamations_export') }}" class="export-btn">
+    <i class="fas fa-file-excel"></i> Export Excel
+</a>
+
+<style>
+.export-btn {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 4px 12px rgba(16,185,129,0.3);
+    transition: all 0.2s ease;
+}
+.export-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16,185,129,0.4);
+}
+</style>
+
+    </div>
+</div>
+{# ════ TABLE ════ #}
+<div class="table-container">
+    <div class="table-header">
+        <div class="table-title">
+            <i class="fas fa-comment-dots"></i> Liste des Réclamations
+        </div>
+        <div class="table-info">
+            {% if total > 0 %}
+    {% if pagination %}
+        Affichage de {{ ((pagination.currentPageNumber-1)*pagination.itemNumberPerPage)+1 }}
+        – {{ min(pagination.currentPageNumber*pagination.itemNumberPerPage, total) }}
+    {% else %}
+        Affichage de {{ ((currentPage-1)*10)+1 }}
+        – {{ min(currentPage*10, total) }}
+    {% endif %}
+{% else %}
+    Aucune réclamation trouvée
+{% endif %}
+        </div>
+    </div>
+
+    {% if reclamations|length > 0 %}
+    <table>
+        <thead>
+            <tr>
+                <th>Sujet</th>
+                <th>Type</th>
+                <th>Statut</th>
+                <th>Priorité</th>
+                <th>Date</th>
+                <th>Utilisateur</th>
+<th>Réponse</th>
+<th>Satisfaction</th>
+<th style="text-align:right;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rec in reclamations %}
+            <tr id="row-{{ rec.idReclamation }}">
+                <td>
+                    <div class="rec-sujet" title="{{ rec.sujet }}">{{ rec.sujet }}</div>
+                    <div style="font-size:11px; color:var(--text-muted); margin-top:3px;">
+                        {{ rec.description|slice(0,55) }}...
+                    </div>
+                </td>
+                <td>
+                    <span class="type-badge type-{{ rec.typeReclamation }}">
+                        {{ rec.typeReclamation }}
+                    </span>
+                </td>
+                <td>
+                    <span class="badge badge-{{ rec.statut }}" id="badge-{{ rec.idReclamation }}">
+                        <i class="fas {{ rec.statut == 'EN_ATTENTE' ? 'fa-clock' : (rec.statut == 'TRAITEE' ? 'fa-check' : 'fa-times') }}"></i>
+                        {{ rec.statut|replace({'_': ' '}) }}
+                    </span>
+                </td>
+                <td>
+                    <span class="badge {{ rec.priorite == 'URGENT' ? 'badge-danger' : (rec.priorite == 'NORMAL' ? 'badge-info' : 'badge-success') }}">
+                        <i class="fas {{ rec.priorite == 'URGENT' ? 'fa-arrow-up' : (rec.priorite == 'NORMAL' ? 'fa-minus' : 'fa-arrow-down') }}"></i>
+                        {{ rec.priorite }}
+                    </span>
+                </td>
+                <td style="font-size:12px; color:var(--text-secondary); white-space:nowrap;">
+                    {{ rec.dateReclamation|date('d/m/Y') }}
+                </td>
+                <td style="font-size:12px; color:var(--text-secondary);">
+                    {{ userEmail[rec.idReclamation] ?? '—' }}
+                </td>
+                <td>
+                    {% if rec.reponseAdmin %}
+                        <span style="font-size:11px; color:#34d399; display:flex; align-items:center; gap:4px;">
+                            <i class="fas fa-check-circle"></i> Répondu
+                        </span>
+                    {% else %}
+                        <span style="font-size:11px; color:var(--text-muted);">—</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if rec.statut == 'TRAITEE' %}
+                        {% if rec.satisfait is null %}
+                            <span style="color:rgba(255,255,255,0.4); font-size:12px;">—</span>
+                        {% elseif rec.satisfait == true %}
+                            <span style="color:#34d399; font-size:12px;">👍 Satisfait</span>
+                        {% else %}
+                            <span style="color:#f87171; font-size:12px;">👎 Insatisfait</span>
+                        {% endif %}
+                    {% else %}
+                        <span style="color:rgba(255,255,255,0.3); font-size:12px;">—</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <div class="action-buttons">
+                        <a href="{{ path('admin_reclamation_view', {id: rec.idReclamation}) }}"
+                           class="btn-action btn-view">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <button class="btn-action btn-reply"
+                                onclick="openReplyModal({{ rec.idReclamation }}, '{{ rec.sujet|e('js') }}', '{{ rec.reponseAdmin ? rec.reponseAdmin|e('js') : '' }}')">
+                            <i class="fas fa-reply"></i>
+                        </button>
+                        <button class="btn-action btn-delete"
+                                onclick="deleteRec({{ rec.idReclamation }})">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+ {# ==== VARIABLES SAFE ==== #}
+{% set current = pagination ? pagination.currentPageNumber : (currentPage ?? 1) %}
+{% set maxPages = pagination ? pagination.pageCount : (pages ?? 1) %}
+{% set perPage = pagination ? pagination.itemNumberPerPage : 10 %}
+{% set safeFilter = filter ?? 'all' %}
+{% set safeType = type ?? 'all' %}
+{% set safeSearch = search ?? '' %}
+
+<div class="pagination-container">
+
+    <div class="pagination-info">
+        {% if total > 0 %}
+            Affichage de {{ ((current-1)*perPage)+1 }}
+            – {{ min(current*perPage, total) }}
+            sur {{ total }} réclamations
+        {% else %}
+            Aucune réclamation trouvée
+        {% endif %}
+    </div>
+
+    <div class="pagination">
+
+        {# PREVIOUS #}
+        <a href="?page={{ current > 1 ? current-1 : 1 }}&filter={{ safeFilter }}&type={{ safeType }}&search={{ safeSearch }}"
+           class="page-btn {{ current <= 1 ? 'disabled' : '' }}"
+           style="{{ current <= 1 ? 'opacity:0.4;' : '' }}">
+            <i class="fas fa-chevron-left"></i>
+        </a>
+
+        {# NUMÉROS #}
+        {% for p in 1..maxPages %}
+
+    {% if p == current %}
+        <span class="page-btn current">{{ p }}</span>
+
+    {% elseif p == 1 or p == maxPages or (p >= current-1 and p <= current+1) %}
+        <a href="?page={{ p }}&filter={{ safeFilter }}&type={{ safeType }}&search={{ safeSearch }}"
+           class="page-btn">
+            {{ p }}
+        </a>
+
+    {% elseif p == current-2 or p == current+2 %}
+        <span class="page-btn" style="opacity:0.5;">…</span>
+    {% endif %}
+
+{% endfor %}
+
+        {# NEXT #}
+        <a href="?page={{ current < maxPages ? current+1 : maxPages }}&filter={{ safeFilter }}&type={{ safeType }}&search={{ safeSearch }}"
+           class="page-btn"
+           style="{{ current >= maxPages ? 'opacity:0.4;' : '' }}">
+            <i class="fas fa-chevron-right"></i>
+        </a>
+
+    </div>
+</div>
+
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon"><i class="fas fa-inbox"></i></div>
+        <h3 style="color:var(--text-secondary); margin:0 0 8px;">Aucune réclamation trouvée</h3>
+        <p style="font-size:13px; margin:0;">Modifiez vos filtres ou revenez plus tard.</p>
+    </div>
+    {% endif %}
+</div>
+
+{# ════ MODAL RÉPONSE ════ #}
+<div class="modal-overlay" id="replyModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3><i class="fas fa-reply"></i> Répondre à la réclamation</h3>
+            <button class="modal-close" onclick="closeReplyModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="modal-subtitle" id="modalSubtitle">—</div>
+            <textarea class="modal-textarea" id="replyText"
+                      placeholder="Rédigez votre réponse à l'utilisateur..."></textarea>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeReplyModal()">Annuler</button>
+            <button class="btn btn-primary" id="replyConfirmBtn" onclick="submitReply()">
+                <i class="fas fa-paper-plane"></i> Envoyer
+            </button>
+        </div>
+    </div>
+</div>
+
+{# Toast #}
+<div class="admin-toast" id="adminToast">
+    <i id="toastIcon" class="fas fa-check-circle"></i>
+    <span id="toastMsg"></span>
+</div>
+<script>
+document.querySelectorAll('.page-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        console.log("CLICK OK");
+    });
+});
+</script>
+<script>
+let currentRecId = null;
+
+function openReplyModal(id, sujet, existingReply) {
+    currentRecId = id;
+    document.getElementById('modalSubtitle').textContent = '📋 ' + sujet;
+    document.getElementById('replyText').value = existingReply || '';
+    document.getElementById('replyModal').classList.add('active');
+    setTimeout(() => document.getElementById('replyText').focus(), 300);
+}
+
+function closeReplyModal() {
+    document.getElementById('replyModal').classList.remove('active');
+}
+
+document.getElementById('replyModal').addEventListener('click', function(e) {
+    if (e.target === this) closeReplyModal();
+});
+
+function submitReply() {
+    const reponse = document.getElementById('replyText').value.trim();
+    const btn     = document.getElementById('replyConfirmBtn');
+
+    if (!reponse || reponse.length < 5) {
+        showToast('La réponse est trop courte (min 5 caractères)', 'error'); return;
+    }
+
+    btn.disabled    = true;
+    btn.innerHTML   = '<i class="fas fa-spinner fa-spin"></i> Envoi...';
+
+fetch(`/admin/reclamations/${currentRecId}/repondre`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ reponse })
+})
+    .then(r => r.json())
+    .then(data => {
+        btn.disabled  = false;
+        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Envoyer';
+        if (data.success) {
+            closeReplyModal();
+            showToast('Réponse envoyée avec succès ✅', 'success');
+            updateBadge(currentRecId, 'TRAITEE');
+            setTimeout(() => location.reload(), 1600);
+        } else {
+            showToast(data.message || 'Erreur', 'error');
+        }
+    })
+    .catch(() => {
+        btn.disabled  = false;
+        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Envoyer';
+        showToast('Erreur de connexion', 'error');
+    });
+}
+
+function changeStatut(id, statut) {
+fetch(`/admin/reclamations/reclamation/${id}/statut`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ statut })
+})
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            updateBadge(id, statut);
+            showToast('Statut mis à jour', 'success');
+        } else {
+            showToast('Erreur', 'error');
+        }
+    });
+}
+
+function updateBadge(id, statut) {
+    const badge = document.getElementById('badge-' + id);
+    if (!badge) return;
+    const icons  = { EN_ATTENTE: 'fa-clock', TRAITEE: 'fa-check', REFUSEE: 'fa-times' };
+    const labels = { EN_ATTENTE: 'EN ATTENTE', TRAITEE: 'TRAITEE', REFUSEE: 'REFUSEE' };
+    badge.className = `badge badge-${statut}`;
+    badge.innerHTML = `<i class="fas ${icons[statut]}"></i> ${labels[statut]}`;
+}
+
+function deleteRec(id) {
+    if (!confirm('Supprimer définitivement cette réclamation ?')) return;
+fetch(`/admin/reclamations/reclamation/${id}/delete`, {
+    method: 'POST'
+})        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                const row = document.getElementById('row-' + id);
+                if (row) {
+                    row.style.transition = 'all 0.3s ease';
+                    row.style.opacity = '0';
+                    row.style.transform = 'translateX(20px)';
+                    setTimeout(() => row.remove(), 300);
+                }
+                showToast('Réclamation supprimée', 'success');
+            } else {
+                showToast('Erreur lors de la suppression', 'error');
+            }
+        });
+}
+
+let toastTimer = null;
+function showToast(message, type = 'success') {
+    const toast = document.getElementById('adminToast');
+    toast.className = `admin-toast ${type}`;
+    document.getElementById('toastMsg').textContent = message;
+    document.getElementById('toastIcon').className  = type === 'success'
+        ? 'fas fa-check-circle' : 'fas fa-times-circle';
+    toast.classList.add('show');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 3500);
+}
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeReplyModal();
+});
+</script>
+{% endblock %}

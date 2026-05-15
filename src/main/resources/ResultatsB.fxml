@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="tn.esprit.controllers.ResultatsCB"
+            stylesheets="@styleB.css"
+            styleClass="results-root">
+
+    <!-- ================= TOP BAR ================= -->
+    <top>
+        <VBox spacing="15" styleClass="results-topbar">
+            <padding>
+                <Insets top="20" right="30" bottom="20" left="30"/>
+            </padding>
+
+            <!-- ===== Ligne 1 : Retour + Titre ===== -->
+            <HBox spacing="15" alignment="CENTER_LEFT">
+
+                <Button fx:id="btnBack"
+                        styleClass="btn-back"
+                        onAction="#onRetour"/>
+
+                <Label fx:id="lblTitre"
+                       text="Attractions"
+                       styleClass="results-title"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+            </HBox>
+
+            <!-- ===== Ligne 2 : Search Bar ===== -->
+            <HBox spacing="20"
+                  alignment="CENTER_LEFT"
+                  styleClass="results-searchbar">
+
+                <!-- Destination -->
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+
+                    <Label text="Destination"
+                           styleClass="search-label"/>
+
+                    <TextField fx:id="txtDestination"
+                               promptText="Où allez-vous ?"
+                               styleClass="search-field"/>
+                </VBox>
+
+                <!-- Date -->
+
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label styleClass="search-label" text="Dates"/>
+                    <DatePicker fx:id="datePicker"
+                                styleClass="search-field"/>
+                </VBox>
+                <!-- Button -->
+                <Button fx:id="btnRechercher"
+                        text="Rechercher"
+                        onAction="#onRechercher"
+                        styleClass="search-button"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <center>
+        <HBox spacing="25" styleClass="results-main">
+
+            <padding>
+                <Insets top="25" right="30" bottom="25" left="30"/>
+            </padding>
+
+            <!-- ================= FILTER SIDEBAR ================= -->
+            <VBox fx:id="filterSidebar"
+                  spacing="18"
+                  prefWidth="250"
+                  styleClass="filter-sidebar">
+
+                <Label text="Filtrer par :"
+                       styleClass="filter-title"/>
+
+                <Separator/>
+
+                <!-- LIEU -->
+                <Label text="Lieu"
+                       styleClass="filter-subtitle"/>
+
+                <CheckBox fx:id="cbParis" text="Paris"/>
+                <CheckBox fx:id="cbRome" text="Rome"/>
+                <CheckBox fx:id="cbVatican" text="Vatican"/>
+
+                <Separator/>
+
+                <!-- PRIX -->
+                <Label text="Prix"
+                       styleClass="filter-subtitle"/>
+
+                <CheckBox fx:id="cbMoins100" text="Moins de 100 DT"/>
+                <CheckBox fx:id="cbPlus100" text="Plus de 100 DT"/>
+
+                <Separator/>
+
+            </VBox>
+
+            <!-- ================= RESULTS ================= -->
+            <ScrollPane fitToWidth="true"
+                        HBox.hgrow="ALWAYS"
+                        styleClass="results-scroll">
+
+                <content>
+                    <VBox fx:id="resultsContainer"
+                          spacing="20"
+                          styleClass="results-container"/>
+                </content>
+
+            </ScrollPane>
+
+        </HBox>
+    </center>
+
+</BorderPane>

@@ -1,0 +1,325 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Carte des Hébergements - ASAFAR{% endblock %}
+
+{% block content %}
+<div class="map-container">
+    <div id="map"></div>
+    <div class="map-sidebar">
+        <div class="sidebar-header">
+            <h2>🗺️ Nos Hébergements</h2>
+            <p>{{ hebergements|length }} logements disponibles à proximité</p>
+        </div>
+        <div id="hebergements-list" class="hebergements-list">
+            <!-- Sera rempli par JavaScript -->
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .map-container {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        background: #f5f5f5;
+    }
+
+    #map {
+        flex: 1;
+        z-index: 10;
+    }
+
+    .map-sidebar {
+        width: 350px;
+        background: rgba(11, 45, 74, 0.98);
+        border-left: 1px solid rgba(47, 168, 255, 0.2);
+        padding: 20px;
+        overflow-y: auto;
+        color: white;
+    }
+
+    .sidebar-header {
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid rgba(47, 168, 255, 0.2);
+    }
+
+    .sidebar-header h2 {
+        margin: 0 0 8px 0;
+        font-size: 18px;
+        color: #2FA8FF;
+    }
+
+    .sidebar-header p {
+        margin: 0;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .hebergements-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .heb-item {
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(47, 168, 255, 0.15);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .heb-item:hover {
+        background: rgba(47, 168, 255, 0.15);
+        border-color: #2FA8FF;
+        transform: translateX(4px);
+    }
+
+    .heb-item.active {
+        background: rgba(47, 168, 255, 0.3);
+        border-color: #2FA8FF;
+        box-shadow: 0 0 12px rgba(47, 168, 255, 0.3);
+    }
+
+    .heb-item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 6px;
+    }
+
+    .heb-item-name {
+        font-weight: 600;
+        color: #2FA8FF;
+        font-size: 13px;
+    }
+
+    .heb-item-badge {
+        font-size: 10px;
+        padding: 2px 6px;
+        background: rgba(52, 211, 153, 0.8);
+        border-radius: 3px;
+        color: white;
+    }
+
+    .heb-item-badge.indisponible {
+        background: rgba(239, 68, 68, 0.8);
+    }
+
+    .heb-item-type {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 4px;
+    }
+
+    .heb-item-prix {
+        font-size: 12px;
+        color: #34D399;
+        font-weight: 600;
+    }
+
+    .heb-item-score {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.7);
+        margin-top: 4px;
+    }
+
+    .score-star {
+        color: #FFD700;
+    }
+
+    /* Leaflet customization */
+    .leaflet-popup-content-wrapper {
+        background: rgba(11, 45, 74, 0.95);
+        border-radius: 8px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .leaflet-popup-content {
+        color: white;
+        font-size: 13px;
+    }
+
+    .leaflet-popup-tip-container {
+        display: none;
+    }
+
+    .popup-content {
+        min-width: 200px;
+    }
+
+    .popup-content h4 {
+        margin: 0 0 8px 0;
+        color: #2FA8FF;
+        font-size: 14px;
+    }
+
+    .popup-content p {
+        margin: 4px 0;
+        font-size: 12px;
+    }
+
+    .popup-content .popup-price {
+        color: #34D399;
+        font-weight: 600;
+        font-size: 13px;
+    }
+
+    .popup-content .popup-score {
+        color: #FFD700;
+        font-size: 12px;
+    }
+
+    .popup-image {
+        width: 100%;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 4px;
+        margin-bottom: 8px;
+    }
+
+    @media (max-width: 768px) {
+        .map-sidebar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: 40%;
+            border-left: none;
+            border-top: 1px solid rgba(47, 168, 255, 0.2);
+            border-radius: 12px 12px 0 0;
+        }
+
+        #map {
+            height: 60%;
+        }
+
+        .hebergements-list {
+            flex-direction: row;
+            overflow-x: auto;
+            gap: 8px;
+            padding-right: 10px;
+        }
+
+        .heb-item {
+            min-width: 200px;
+            flex-shrink: 0;
+        }
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', async function() {
+    // Initialiser la carte
+    const map = L.map('map').setView([41.92, 12.49], 4); // Vue par défaut (Europe)
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    const markers = {};
+    const hebergementsList = document.getElementById('hebergements-list');
+
+    // Récupérer les données GeoJSON
+    try {
+        const response = await fetch('/api/hebergements/geojson');
+        const geojson = await response.json();
+
+        if (geojson.features.length === 0) {
+            hebergementsList.innerHTML = '<p style="color: rgba(255,255,255,0.6);">Aucun hébergement avec localisation</p>';
+            return;
+        }
+
+        // Créer les markers et la liste
+        geojson.features.forEach(feature => {
+            const props = feature.properties;
+            const coords = feature.geometry.coordinates;
+            const lat = coords[1];
+            const lng = coords[0];
+
+            // Créer le marker
+            const markerElement = document.createElement('div');
+            markerElement.className = 'custom-marker';
+            markerElement.innerHTML = `<div style="background: #2FA8FF; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">H</div>`;
+
+            const marker = L.marker([lat, lng], {
+                icon: L.divIcon({
+                    html: markerElement.innerHTML,
+                    iconSize: [32, 32],
+                    className: 'heb-marker',
+                })
+            }).addTo(map);
+
+            // Popup du marker
+            const popupContent = `
+                <div class="popup-content">
+                    ${props.image ? `<img src="${props.image}" alt="${props.nom}" class="popup-image">` : ''}
+                    <h4>${props.nom}</h4>
+                    <p><strong>${props.type}</strong></p>
+                    <p>${props.localisation}</p>
+                    <p class="popup-price">${props.prix}€ / nuit</p>
+                    ${props.disponibilite === 'DISPONIBLE' ? '<span style="color: #34D399;">✓ Disponible</span>' : '<span style="color: #EF4444;">✗ Indisponible</span>'}
+                    ${props.score ? `<p class="popup-score"><span class="score-star">★</span> Score Quartier: ${props.score.toFixed(1)}/10</p>` : ''}
+                </div>
+            `;
+            marker.bindPopup(popupContent, { maxWidth: 250 });
+
+            markers[props.id] = marker;
+
+            // Ajouter à la liste
+            const item = document.createElement('div');
+            item.className = 'heb-item';
+            item.dataset.hebId = props.id;
+            item.innerHTML = `
+                <div class="heb-item-header">
+                    <div class="heb-item-name">${props.nom}</div>
+                    <span class="heb-item-badge ${props.disponibilite === 'DISPONIBLE' ? '' : 'indisponible'}">
+                        ${props.disponibilite === 'DISPONIBLE' ? '✓ Libre' : '✗ Occupé'}
+                    </span>
+                </div>
+                <div class="heb-item-type">${props.type}</div>
+                <div class="heb-item-prix">${props.prix}€/nuit</div>
+                ${props.score ? `<div class="heb-item-score"><span class="score-star">★</span> ${props.score.toFixed(1)}/10</div>` : ''}
+            `;
+
+            // Event listeners
+            item.addEventListener('click', () => {
+                // Active state
+                document.querySelectorAll('.heb-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+
+                // Centrer et ouvrir popup
+                const m = markers[props.id];
+                map.setView([lat, lng], 16);
+                m.openPopup();
+            });
+
+            hebergementsList.appendChild(item);
+        });
+
+        // Adapter la vue à tous les markers
+        if (geojson.features.length > 0) {
+            const group = new L.featureGroup(Object.values(markers));
+            map.fitBounds(group.getBounds(), { padding: [50, 50] });
+        }
+    } catch (error) {
+        console.error('Erreur:', error);
+        hebergementsList.innerHTML = '<p style="color: red;">Erreur lors du chargement des hébergements</p>';
+    }
+});
+</script>
+{% endblock %}

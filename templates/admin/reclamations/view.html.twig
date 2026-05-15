@@ -1,0 +1,406 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Réclamation #{{ rec.idReclamation }} — Admin ASAFAR{% endblock %}
+
+{% block page_icon %}fas fa-comment-dots{% endblock %}
+{% block page_title %}Détail Réclamation{% endblock %}
+{% block breadcrumb %}Réclamations{% endblock %}
+
+{% block content %}
+<style>
+.rec-view-grid {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 20px;
+}
+@media (max-width: 768px) { .rec-view-grid { grid-template-columns: 1fr; } }
+
+.rec-view-card {
+    background: linear-gradient(135deg, rgba(11,45,74,0.6) 0%, rgba(7,27,46,0.8) 100%);
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+.rec-view-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.rec-view-label i { color: var(--amber); font-size: 10px; }
+
+.rec-view-value {
+    font-size: 14px;
+    color: var(--text-primary);
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+.rec-view-value.description {
+    background: var(--glass-bg);
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid var(--border-subtle);
+    white-space: pre-line;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+.badge-EN_ATTENTE { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+.badge-TRAITEE    { background: rgba(52,211,153,0.15);  color: #34d399; border: 1px solid rgba(52,211,153,0.3); }
+.badge-REFUSEE    { background: rgba(239,68,68,0.15);   color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+
+.type-badge { padding: 5px 12px; border-radius: 8px; font-size: 11px; font-weight: 600; }
+.type-TRANSPORT   { background: rgba(59,130,246,0.15);  color: #60a5fa; }
+.type-HEBERGEMENT { background: rgba(168,85,247,0.15);  color: #c084fc; }
+.type-LOISIR      { background: rgba(20,184,166,0.15);  color: #2dd4bf; }
+
+.rec-reponse-box {
+    background: rgba(52,211,153,0.07);
+    border: 1px solid rgba(52,211,153,0.2);
+    border-left: 3px solid #34d399;
+    border-radius: 0 12px 12px 0;
+    padding: 16px;
+    font-size: 14px;
+    color: var(--text-primary);
+    line-height: 1.7;
+    white-space: pre-line;
+    margin-bottom: 20px;
+}
+
+/* Sidebar actions */
+.action-card {
+    background: linear-gradient(135deg, rgba(11,45,74,0.6) 0%, rgba(7,27,46,0.8) 100%);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    padding: 22px;
+    margin-bottom: 16px;
+}
+.action-card:last-child { margin-bottom: 0; }
+
+.action-card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.5px;
+}
+.action-card-title i { color: var(--amber); }
+
+.statut-select {
+    width: 100%;
+    padding: 12px 16px;
+    background: var(--glass-bg);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    color: var(--text-primary);
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    cursor: pointer;
+    margin-bottom: 12px;
+    transition: all 0.2s ease;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23A7E3FF' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+}
+.statut-select:focus { border-color: var(--sky-blue); box-shadow: 0 0 0 3px rgba(47,168,255,0.15); }
+.statut-select option { background: #071b2e; color: var(--text-primary); }
+
+.reply-textarea {
+    width: 100%;
+    min-height: 110px;
+    background: var(--glass-bg);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 13px;
+    font-family: inherit;
+    resize: vertical;
+    outline: none;
+    color: var(--text-primary);
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+    margin-bottom: 12px;
+}
+.reply-textarea:focus { border-color: var(--sky-blue); box-shadow: 0 0 0 3px rgba(47,168,255,0.15); }
+.reply-textarea::placeholder { color: var(--text-muted); }
+
+.admin-toast {
+    position: fixed; bottom: 24px; right: 24px;
+    padding: 14px 20px; border-radius: 12px;
+    font-size: 13px; font-weight: 500; color: white;
+    z-index: 9999; transform: translateY(80px); opacity: 0;
+    transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    display: flex; align-items: center; gap: 10px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+.admin-toast.show    { transform: translateY(0); opacity: 1; }
+.admin-toast.success { background: linear-gradient(135deg, #059669, #10b981); }
+.admin-toast.error   { background: linear-gradient(135deg, #dc2626, #ef4444); }
+</style>
+
+{# Breadcrumb retour #}
+<div style="margin-bottom:24px; display:flex; align-items:center; gap:12px;">
+    <a href="{{ path('admin_reclamations') }}" class="btn btn-secondary" style="display:inline-flex; align-items:center; gap:8px;">
+        <i class="fas fa-arrow-left"></i> Retour
+    </a>
+    <div>
+
+        <p style="font-size:12px; color:var(--text-muted); margin:2px 0 0;">
+            Déposée le {{ rec.dateReclamation|date('d/m/Y') }}
+        </p>
+    </div>
+</div>
+
+<div class="rec-view-grid">
+
+    {# ═══ DÉTAIL ═══ #}
+    <div class="rec-view-card">
+        <div class="rec-view-label"><i class="fas fa-heading"></i> Sujet</div>
+        <div class="rec-view-value" style="font-size:20px; font-weight:700;">{{ rec.sujet }}</div>
+
+        <div style="display:flex; gap:16px; margin-bottom:24px; flex-wrap:wrap;">
+            <div>
+                <div class="rec-view-label"><i class="fas fa-tag"></i> Type</div>
+                <span class="type-badge type-{{ rec.typeReclamation }}">{{ rec.typeReclamation }}</span>
+            </div>
+            <div>
+                <div class="rec-view-label"><i class="fas fa-circle"></i> Statut</div>
+                <span class="badge badge-{{ rec.statut }}" id="statusBadge">
+                    {{ rec.statut|replace({'_': ' '}) }}
+                </span>
+            </div>
+            <div>
+                <div class="rec-view-label"><i class="fas fa-user"></i> Utilisateur</div>
+                <span style="font-size:13px; color:var(--text-secondary);">#{{ rec.idUser }}</span>
+            </div>
+        </div>
+
+        <div class="rec-view-label"><i class="fas fa-align-left"></i> Description</div>
+        <div class="rec-view-value description">{{ rec.description }}</div>
+
+        {% if rec.reponseAdmin %}
+        <div class="rec-view-label" style="color:#34d399;">
+            <i class="fas fa-reply"></i> Réponse de l'administrateur
+        </div>
+        <div class="rec-reponse-box">{{ rec.reponseAdmin }}</div>
+        {% endif %}
+
+    </div>
+{# ═══ SESSION WHATSAPP IA ═══ #}
+{% if session %}
+<div class="rec-view-card" style="margin-top: 20px; grid-column: 1 / -1;">
+    <div class="rec-view-label">
+        <i class="fab fa-whatsapp" style="color:#25d366;"></i> Analyse WhatsApp IA
+    </div>
+
+    <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:20px;">
+        <div>
+            <div class="rec-view-label">Statut session</div>
+            {% if session.isActive %}
+                <span class="badge" style="background:rgba(52,211,153,0.15); color:#34d399; border:1px solid rgba(52,211,153,0.3);">
+                    <i class="fas fa-circle" style="font-size:8px;"></i> En cours
+                </span>
+            {% elseif session.step == 'annule' %}
+                <span class="badge" style="background:rgba(239,68,68,0.15); color:#f87171; border:1px solid rgba(239,68,68,0.3);">
+                    <i class="fas fa-ban"></i> Annulée
+                </span>
+            {% else %}
+                <span class="badge" style="background:rgba(47,168,255,0.15); color:#60a5fa; border:1px solid rgba(47,168,255,0.3);">
+                    <i class="fas fa-check"></i> Terminée
+                </span>
+            {% endif %}
+        </div>
+        <div>
+            <div class="rec-view-label">Cohérence</div>
+            {% if session.coherent is null %}
+                <span class="badge" style="background:rgba(100,116,139,0.15); color:#94a3b8; border:1px solid rgba(100,116,139,0.3);">
+                    <i class="fas fa-minus"></i> N/A
+                </span>
+            {% elseif session.coherent %}
+                <span class="badge" style="background:rgba(52,211,153,0.15); color:#34d399; border:1px solid rgba(52,211,153,0.3);">
+                    <i class="fas fa-check-circle"></i> Valide
+                </span>
+            {% else %}
+                <span class="badge" style="background:rgba(239,68,68,0.15); color:#f87171; border:1px solid rgba(239,68,68,0.3);">
+                    <i class="fas fa-times-circle"></i> Invalide
+                </span>
+            {% endif %}
+        </div>
+        <div>
+            <div class="rec-view-label">Tours</div>
+            <span style="font-size:14px; font-weight:700; color:#818cf8;">{{ session.turn }} / 4</span>
+        </div>
+        <div>
+            <div class="rec-view-label">Téléphone</div>
+            <span style="font-size:13px; color:#25d366; font-family:monospace;">
+                <i class="fab fa-whatsapp"></i> {{ session.phone }}
+            </span>
+        </div>
+    </div>
+
+    {% if session.reason %}
+    <div class="rec-view-label"><i class="fas fa-gavel"></i> Raison du verdict</div>
+    <div class="rec-view-value description" style="border-color:rgba(99,102,241,0.2); background:rgba(99,102,241,0.06);">
+        {{ session.reason }}
+    </div>
+    {% endif %}
+
+    {% if session.analysisSummary %}
+    <div class="rec-view-label"><i class="fas fa-robot"></i> Résumé IA</div>
+    <div class="rec-view-value description" style="border-color:rgba(245,158,11,0.2); background:rgba(245,158,11,0.06);">
+        {{ session.analysisSummary }}
+    </div>
+    {% endif %}
+
+{# Conversation #}
+{% if history is defined and history|length > 0 %}
+<div class="rec-view-label"><i class="fas fa-comments"></i> Conversation ({{ history|length }} messages)</div>
+<div style="display:flex; flex-direction:column; gap:10px;">
+    {% for msg in history %}
+        {% if msg.role == 'user' %}
+        <div style="align-self:flex-end; max-width:80%; background:rgba(37,211,102,0.12); border:1px solid rgba(37,211,102,0.2); border-radius:14px 14px 4px 14px; padding:12px 16px;">
+            <div style="font-size:10px; font-weight:600; text-transform:uppercase; color:#25d366; margin-bottom:4px;">👤 Utilisateur</div>
+            <div style="font-size:13px; color:var(--text-primary);">{{ msg.content }}</div>
+        </div>
+        {% else %}
+        <div style="align-self:flex-start; max-width:80%; background:rgba(47,168,255,0.10); border:1px solid rgba(47,168,255,0.2); border-radius:14px 14px 14px 4px; padding:12px 16px;">
+            <div style="font-size:10px; font-weight:600; text-transform:uppercase; color:#60a5fa; margin-bottom:4px;">🤖 Assistant IA</div>
+            <div style="font-size:13px; color:var(--text-primary);">{{ msg.content }}</div>
+        </div>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
+
+    <div style="margin-top:16px; text-align:right;">
+<a href="{{ path('admin_whatsapp_sessions') }}?search={{ session.id }}"
+           class="btn btn-secondary" style="font-size:12px;">
+            <i class="fab fa-whatsapp"></i> Voir toutes les sessions de ce numéro
+        </a>
+    </div>
+</div>
+{% endif %}
+    {# ═══ ACTIONS SIDEBAR ═══ #}
+    <div>
+
+
+
+<div class="admin-toast" id="adminToast">
+    <i id="toastIcon" class="fas fa-check-circle"></i>
+    <span id="toastMsg"></span>
+</div>
+
+<script>
+const recId = {{ rec.idReclamation }};
+
+function saveStatut() {
+    const statut = document.getElementById('statutSelect').value;
+    fetch(`/admin/reclamations/${recId}/statut`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ statut })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            showToast('Statut mis à jour ', 'success');
+            const badge = document.getElementById('statusBadge');
+            if (badge) { badge.className = `badge badge-${statut}`; badge.textContent = statut.replace('_', ' '); }
+        } else { showToast('Erreur', 'error'); }
+    });
+}
+
+function sendReply() {
+    const reponse = document.getElementById('replyText').value.trim();
+    const btn     = document.getElementById('replyBtn');
+    if (!reponse || reponse.length < 5) { showToast('Réponse trop courte', 'error'); return; }
+
+    btn.disabled    = true;
+    btn.innerHTML   = '<i class="fas fa-spinner fa-spin"></i> Envoi...';
+
+    fetch(`/admin/reclamations/${recId}/repondre`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reponse })
+    })
+    .then(r => r.json())
+    .then(data => {
+        btn.disabled  = false;
+        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Envoyer la réponse';
+        if (data.success) {
+            showToast('Réponse envoyée avec succès !', 'success');
+            document.getElementById('statutSelect').value = 'TRAITEE';
+            const badge = document.getElementById('statusBadge');
+            if (badge) { badge.className = 'badge badge-TRAITEE'; badge.textContent = 'TRAITEE'; }
+        } else { showToast(data.message || 'Erreur', 'error'); }
+    })
+    .catch(() => {
+        btn.disabled  = false;
+        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Envoyer la réponse';
+        showToast('Erreur de connexion', 'error');
+    });
+}
+
+let toastTimer = null;
+function showToast(message, type = 'success') {
+    const toast = document.getElementById('adminToast');
+    toast.className = `admin-toast ${type}`;
+    document.getElementById('toastMsg').textContent = message;
+    document.getElementById('toastIcon').className  = type === 'success' ? 'fas fa-check-circle' : 'fas fa-times-circle';
+    toast.classList.add('show');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 3500);
+}
+
+function sendNewReply() {
+    const text = document.getElementById('newReplyText').value.trim();
+
+    if (!text || text.length < 5) {
+        showToast('Réponse trop courte', 'error');
+        return;
+    }
+
+    fetch(`/admin/reclamations/${recId}/repondre`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reponse: text })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            showToast('Nouvelle réponse envoyée', 'success');
+            location.reload();
+        } else {
+            showToast(data.message || 'Erreur', 'error');
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        showToast('Erreur serveur', 'error');
+    });
+}
+</script>
+{% endblock %}

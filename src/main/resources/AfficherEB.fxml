@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns="http://javafx.com/javafx/25"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="tn.esprit.controllers.AfficherEB"
+      stylesheets="@styleB.css"
+      spacing="0"
+      fillWidth="true">
+
+    <!-- ================= HERO SECTION ================= -->
+    <VBox fx:id="tete"
+          spacing="20"
+          alignment="CENTER"
+          styleClass="hero">
+
+        <padding>
+            <Insets top="40" right="60" bottom="40" left="60"/>
+        </padding>
+
+        <Label styleClass="hero-title"
+               text="Attractions, activités et expériences"/>
+
+        <Label styleClass="hero-subtitle"
+               text="Découvrez de nouvelles attractions et expériences liées à vos intérêts"/>
+
+        <!-- SEARCH -->
+        <HBox maxWidth="950"
+              spacing="40"
+              alignment="CENTER"
+              styleClass="search-container">
+
+            <!-- DESTINATION -->
+            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                <Label styleClass="search-label" text="Destination"/>
+                <TextField fx:id="txtDestination"
+                           promptText="Où allez-vous ?"
+                           styleClass="search-field"/>
+            </VBox>
+
+            <!-- DATE -->
+            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                <Label styleClass="search-label" text="Dates"/>
+                <DatePicker fx:id="datePicker"
+                            styleClass="search-field"/>
+            </VBox>
+
+            <!-- BUTTON -->
+            <Button fx:id="btnRechercher"
+                    text="Rechercher"
+                    prefHeight="45"
+                    prefWidth="150"
+                    styleClass="search-button"
+                    onAction="#ouvrirPageResultats"/>
+        </HBox>
+    </VBox>
+
+    <!-- ================= RESULTS AREA ================= -->
+    <ScrollPane fitToWidth="true"
+                VBox.vgrow="ALWAYS"
+                styleClass="results-scroll">
+
+        <VBox spacing="20" alignment="TOP_CENTER">
+
+            <!-- ===== TITRE RECOMMANDATIONS ===== -->
+            <Label text="Recommandations pour vous"
+                   styleClass="recommend-title"
+                   maxWidth="Infinity"
+                   alignment="TOP_LEFT"/>
+
+            <!-- ===== CARTES ===== -->
+            <FlowPane fx:id="excursionContainer"
+                      alignment="TOP_CENTER"
+                      hgap="30"
+                      vgap="30"
+                      prefWrapLength="1050">
+
+                <padding>
+                    <Insets top="10" right="40" bottom="30" left="40"/>
+                </padding>
+
+            </FlowPane>
+
+        </VBox>
+
+    </ScrollPane>
+
+
+</VBox>

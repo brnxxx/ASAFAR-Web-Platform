@@ -1,0 +1,1975 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Fil d'actualité{% endblock %}
+
+{% block body %}
+<section class="feed-page">
+    <div class="feed-layout">
+        <div class="feed-column">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+    <h1 class="feed-title">Fil d'actualité</h1>
+
+    <button id="open-news-modal" style="
+        padding: 10px 18px;
+        border-radius: 999px;
+        border: none;
+        background: linear-gradient(135deg, #2ea8ff, #1d7fe2);
+        color: white;
+        font-weight: 700;
+        cursor: pointer;
+    ">
+        📰 News
+    </button>
+</div>
+
+            {% for message in app.flashes('success') %}
+                <div class="flash-message flash-success">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            {% for message in app.flashes('error') %}
+                <div class="flash-message flash-error">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            <div class="create-post-card">
+                <div class="create-post-top">
+                    {% if app.user %}
+    <div class="user-avatar">
+        {{ app.user.nom|default('U')|first }}{{ app.user.prenom|default('')|first }}
+    </div>
+{% endif %}
+                    <div class="create-post-input-wrap">
+                        <input
+                            type="text"
+                            id="post-placeholder"
+                            placeholder="Quoi de neuf ?"
+                            class="fake-post-input"
+                            readonly
+                        >
+                    </div>
+
+                    <button type="button" id="toggle-post-form" class="create-post-plus">+</button>
+                </div>
+
+                <div id="post-form-wrapper" style="display: none;" class="post-form-wrapper">
+                    {{ form_start(postForm, {'attr': {'enctype': 'multipart/form-data'}}) }}
+
+                    <div class="post-form-grid">
+
+                        {{ form_widget(postForm.titre, {
+                            'attr': {
+                                'placeholder': 'Titre du post...',
+                                'class': 'post-input-field',
+                                'id': 'post-title-input'
+                            }
+                        }) }}
+
+                        {{ form_widget(postForm.type, {
+                            'attr': {
+                                'class': 'post-input-field'
+                            }
+                        }) }}
+
+                    </div>
+
+                    <div class="post-form-block">
+
+                        {{ form_widget(postForm.contenu, {
+                            'attr': {
+                                'placeholder': 'Écrire quelque chose...',
+                                'rows': 4,
+                                'class': 'post-textarea-field',
+                                'id': 'post-content-textarea'
+                            }
+                        }) }}
+
+                    </div>
+
+                    <div class="post-form-block">
+                        <div class="native-upload-box">
+                            <div class="native-upload-title">📷 Ajouter une image</div>
+                            <div class="native-upload-subtitle">Choisis directement une image depuis ton appareil</div>
+
+                            {{ form_widget(postForm.imagePath, {
+                                'attr': {
+                                    'id': 'post_image_input',
+                                    'class': 'native-file-input',
+                                    'accept': 'image/*'
+                                }
+                            }) }}
+
+                            <div id="selected-file-name" class="selected-file-name">Aucun fichier sélectionné</div>
+                        </div>
+
+                        <div id="image-preview-wrapper" style="display: none; margin-top: 14px;">
+                            <img id="image-preview" src="" alt="Aperçu de l'image" class="preview-image">
+                        </div>
+                    </div>
+
+                    <div class="post-form-block">
+                        <div class="schedule-box">
+                            <div class="schedule-title">⏰ Planifier la publication</div>
+                            <div class="schedule-subtitle">Choisis une date et une heure pour publier plus tard</div>
+
+                            <input
+                                type="datetime-local"
+                                name="scheduled_at"
+                                id="scheduled_at"
+                                class="post-input-field"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="post-form-actions">
+                        <button type="button" id="cancel-post-form" class="btn-cancel-post">
+                            Annuler
+                        </button>
+
+                        <button type="submit" name="post_action" value="schedule" class="btn-plan-post">
+                            Planifier
+                        </button>
+
+                        <button type="submit" name="post_action" value="publish" class="btn-submit-post">
+                            Publier
+                        </button>
+                    </div>
+
+                    {{ form_end(postForm) }}
+                </div>
+            </div>
+
+            {% if posts is empty %}
+                <div class="empty-post-card">
+                    <div style="font-size: 48px; margin-bottom: 12px;">📭</div>
+                    Aucun post pour le moment.
+                </div>
+            {% endif %}
+
+           {% for post in posts %}
+    {% set postAuthorName = post.user ? (post.user.nom ~ ' ' ~ post.user.prenom) : 'Auteur inconnu' %}
+    {% set postAuthorInitials = post.user ? ((post.user.nom|first) ~ (post.user.prenom|first)) : 'AI' %}
+
+    <article class="post-card" data-post-id="{{ post.id }}">
+        <div class="post-header">
+            <div class="post-author-wrap">
+                <div class="user-avatar">
+                    {{ postAuthorInitials }}
+                </div>
+
+                <div>
+                    <h3 class="post-author-name">{{ postAuthorName }}</h3>
+                    <p class="post-date">
+                        {{ post.publishedAt ? post.publishedAt|date('d/m/Y H:i') : (post.createdAt ? post.createdAt|date('d/m/Y H:i') : '') }}
+                    </p>
+                </div>
+            </div>
+
+            <div class="post-type-badge">
+                {{ post.type }}
+            </div>
+        </div>
+
+                    <h2 class="post-title">{{ post.titre }}</h2>
+
+                    <p class="post-content">{{ post.contenu }}</p>
+
+                    {% if post.imagePath %}
+                        <div class="post-image-wrap">
+                            <img src="{{ asset(post.imagePath) }}" alt="image post" class="post-image">
+                        </div>
+                    {% endif %}
+
+                    <div class="post-actions-row">
+                        <button type="button" class="like-btn post-action-btn like-action" data-post-id="{{ post.id }}">
+                            <span class="like-icon">👍</span>
+                            <span>J'aime</span>
+                            <span class="like-count action-count">{{ post.postLikes|length }}</span>
+                        </button>
+
+                        <button type="button" class="comment-btn post-action-btn comment-action" data-post-id="{{ post.id }}">
+                            <span>💬</span>
+                            <span>Commenter</span>
+                            <span class="comment-count action-count">{{ post.commentaires|length }}</span>
+                        </button>
+                        <select class="translate-lang post-action-btn" data-post-id="{{ post.id }}">
+                             <option value="fr">🇫🇷 FR</option>
+                             <option value="en">🇬🇧 EN</option>
+                             <option value="ar">🇸🇦 AR</option>
+                        </select>
+
+<button type="button"
+        class="translate-btn post-action-btn"
+        data-post-id="{{ post.id }}">
+    🌍 Traduire
+</button>
+<button type="button"
+        class="report-btn post-action-btn report-action"
+        data-post-id="{{ post.id }}">
+    🚨 Signaler
+</button>
+
+                        {% if app.user and post.user and app.user.id == post.user.id %}
+                            <button
+                                type="button"
+                                class="post-action-btn edit-action open-edit-post-modal"
+                                data-post-id="{{ post.id }}"
+                                data-post-title="{{ post.titre|e('html_attr') }}"
+                                data-post-type="{{ post.type|e('html_attr') }}"
+                                data-post-content="{{ post.contenu|e('html_attr') }}"
+                                data-post-image="{{ post.imagePath ? asset(post.imagePath) : '' }}"
+                                data-edit-url="{{ path('app_post_edit', {'id': post.id}) }}"
+                            >
+                                <span>✏️</span>
+                                <span>Modifier</span>
+                            </button>
+
+                            <form method="post" action="{{ path('app_post_delete', {'id': post.id}) }}" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce post ?')">
+                                <button type="submit" class="post-action-btn delete-action">
+                                    <span>🗑️</span>
+                                    <span>Supprimer</span>
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+
+                    {% if post.commentaires|length > 0 %}
+                        <div class="comments-section">
+                            <div class="comments-title">COMMENTAIRES ({{ post.commentaires|length }})</div>
+
+                            {% for comment in post.commentaires %}
+                                <div class="comment-card">
+                                    <div class="comment-avatar">
+                                        {% if comment.user %}{{ comment.user.nom|first }}{{ comment.user.prenom|first }}{% else %}U{% endif %}
+                                    </div>
+
+                                    <div style="flex: 1;">
+                                        <p class="comment-author">
+                                            {% if comment.user %}{{ comment.user.nom }} {{ comment.user.prenom }}{% else %}Utilisateur supprimé{% endif %}
+                                        </p>
+
+                                        {% if comment.contenu %}
+                                            <p class="comment-content-text">{{ comment.contenu }}</p>
+                                        {% endif %}
+
+                                        {% if comment.gifUrl %}
+                                            <div style="margin-top: 8px;">
+                                                <img
+                                                    src="{{ comment.gifUrl }}"
+                                                    alt="GIF commentaire"
+                                                    style="max-width: 220px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);"
+                                                >
+                                            </div>
+                                        {% endif %}
+
+                                        <p class="comment-date">{{ comment.createdAt ? comment.createdAt|date('d/m/Y H:i') : '' }}</p>
+
+                                        {% if app.user and comment.user and app.user.id == comment.user.id %}
+                                            <div class="comment-actions">
+                                                <button type="button" class="edit-comment-btn mini-btn mini-edit" data-comment-id="{{ comment.id }}" data-content="{{ comment.contenu }}">
+                                                    ✏️ Modifier
+                                                </button>
+
+                                                <form method="post" action="{{ path('api_comment_delete', {'id': comment.id}) }}" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?')">
+                                                    <button type="submit" class="mini-btn mini-delete">
+                                                        🗑️ Supprimer
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<div id="edit-comment-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; backdrop-filter: blur(4px); align-items: center; justify-content: center;">
+    <div style="background: #0B2D4A; border: 1px solid rgba(255, 193, 7, 0.2); border-radius: 20px; padding: 32px; max-width: 500px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.5);">
+        <h2 style="font-size: 24px; font-weight: 800; margin: 0 0 24px; color: #FFC107;">Modifier le commentaire</h2>
+
+        <form id="edit-comment-form" style="display: flex; flex-direction: column; gap: 16px;">
+            <input type="hidden" id="edit-modal-comment-id" name="comment_id">
+
+            <textarea id="edit-comment-text" name="contenu" placeholder="Votre commentaire..." style="width: 100%; min-height: 120px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 16px; color: #f4f8fc; font-family: 'Poppins', sans-serif; resize: vertical; outline: none; font-size: 14px;"></textarea>
+
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button type="button" id="close-edit-modal" class="btn-cancel-post">Annuler</button>
+                <button type="submit" class="btn-submit-post">Modifier</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="comment-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 20px;">
+    <div class="comment-modal-box">
+        <h2 class="comment-modal-title">Ajouter un commentaire</h2>
+
+        <form id="comment-form" class="comment-modal-form">
+            <input type="hidden" id="modal-post-id" name="post_id">
+            <input type="hidden" id="comment-gif-url" name="gifUrl">
+
+            <textarea id="comment-text" name="contenu" placeholder="Votre commentaire..." class="comment-modal-textarea"></textarea>
+            
+            <div id="comment-error-message" class="comment-error-message" style="display:none;"></div>
+
+
+            <div id="selected-gif-preview" class="selected-gif-preview" style="display:none;">
+                <div class="selected-gif-label">GIF sélectionné</div>
+                <img id="selected-gif-image" src="" alt="GIF sélectionné" class="selected-gif-image">
+                <div style="margin-top:10px;">
+                    <button type="button" id="remove-selected-gif" class="btn-cancel-post">Supprimer le GIF</button>
+                </div>
+            </div>
+
+            <div id="gif-search-box" class="gif-search-box" style="display:none;">
+                <div class="gif-search-row">
+                    <input
+                        type="text"
+                        id="gif-search-input"
+                        placeholder="Rechercher un GIF..."
+                        class="post-input-field gif-search-input"
+                    >
+                    <button type="button" id="gif-search-btn" class="btn-plan-post">Chercher</button>
+                </div>
+
+                <div id="gif-results" class="gif-results-grid"></div>
+            </div>
+
+            <div class="comment-modal-actions">
+                <button type="button" id="open-gif-search" class="btn-plan-post">GIF</button>
+                <button type="button" id="close-modal" class="btn-cancel-post">Annuler</button>
+                <button type="submit" class="btn-submit-post">Publier</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="edit-post-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: #0B2D4A; border: 1px solid rgba(255, 193, 7, 0.2); border-radius: 20px; padding: 32px; max-width: 700px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.5); max-height: 90vh; overflow-y: auto;">
+        <h2 style="font-size: 24px; font-weight: 800; margin: 0 0 24px; color: #FFC107;">Modifier le post</h2>
+
+        <form id="edit-post-form" method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 16px;">
+            <input
+                type="text"
+                id="edit-post-title"
+                name="titre"
+                placeholder="Titre du post..."
+                class="post-input-field"
+                required
+            >
+
+            <select id="edit-post-type" name="type" class="post-input-field" required>
+                <option value="Promotion">Promotion</option>
+                <option value="Actualité">Actualité</option>
+                <option value="Conseil">Conseil</option>
+                <option value="Bon plan">Bon plan</option>
+            </select>
+
+            <textarea
+                id="edit-post-content"
+                name="contenu"
+                placeholder="Écrire quelque chose..."
+                rows="5"
+                class="post-textarea-field"
+            ></textarea>
+
+            <div id="edit-current-image-wrap" style="display: none;">
+                <div style="font-size: 14px; font-weight: 700; color: #f4f8fc; margin-bottom: 10px;">Image actuelle</div>
+                <img id="edit-current-image" src="" alt="Image actuelle" class="preview-image">
+            </div>
+
+            <div class="native-upload-box">
+                <div class="native-upload-title">📷 Changer l’image</div>
+                <div class="native-upload-subtitle">Choisis une nouvelle image si tu veux remplacer l’ancienne</div>
+
+                <input type="file" id="edit-post-image" name="imagePath" class="native-file-input" accept="image/*">
+                <div id="edit-selected-file-name" class="selected-file-name">Aucun nouveau fichier sélectionné</div>
+            </div>
+
+            <div id="edit-image-preview-wrapper" style="display: none;">
+                <div style="font-size: 14px; font-weight: 700; color: #f4f8fc; margin-bottom: 10px;">Nouvelle image sélectionnée</div>
+                <img id="edit-image-preview" src="" alt="Nouvelle image" class="preview-image">
+            </div>
+
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button type="button" id="close-edit-post-modal" class="btn-cancel-post">Annuler</button>
+                <button type="submit" id="save-edit-post-btn" class="btn-submit-post">Enregistrer</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="report-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 20px;">
+    <div class="report-modal-box">
+        <h2 class="report-modal-title">Signaler ce post</h2>
+
+        <form id="report-form" class="report-modal-form">
+            <input type="hidden" id="report-post-id" name="post_id">
+
+            <select id="report-reason" name="raison" class="post-input-field" required>
+                <option value="">Choisir une raison</option>
+                <option value="Spam">Spam</option>
+                <option value="Contenu offensant">Contenu offensant</option>
+                <option value="Fausse information">Fausse information</option>
+                <option value="Harcèlement">Harcèlement</option>
+                <option value="Autre">Autre</option>
+            </select>
+
+            <textarea
+                id="report-details"
+                name="details"
+                placeholder="Explique la raison du signalement..."
+                class="comment-modal-textarea"
+                rows="5"
+            ></textarea>
+
+            <div id="report-error-message" class="comment-error-message" style="display:none;"></div>
+            <div id="report-success-message" class="flash-message flash-success" style="display:none;"></div>
+
+            <div class="comment-modal-actions">
+                <button type="button" id="close-report-modal" class="btn-cancel-post">Annuler</button>
+                <button type="submit" class="btn-submit-post">Envoyer le signalement</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="news-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:2000; backdrop-filter:blur(6px);">
+    
+    <div style="
+        width:90%;
+        max-width:1000px;
+        margin:60px auto;
+        background:#0B2D4A;
+        border-radius:20px;
+        padding:30px;
+        max-height:85vh;
+        overflow-y:auto;
+    ">
+        
+       <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+    <h2 style="color:#FFC107; margin:0;">📰 News</h2>
+
+    <div style="display:flex; align-items:center; gap:10px;">
+        <button id="refresh-news-btn" type="button" class="btn-plan-post">🔄 Actualiser</button>
+        <button id="close-news-modal" type="button" class="btn-cancel-post">X</button>
+    </div>
+</div>
+        <div id="news-container" style="margin-top:20px;">
+            Chargement des news...
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .feed-page {
+        min-height: 100vh;
+        padding: 120px 24px 60px;
+        background: #0B2D4A;
+    }
+
+    .feed-layout {
+        width: 100%;
+        max-width: 1400px;
+        margin: 0 auto;
+        display: block;
+    }
+
+    .feed-column {
+        width: 100%;
+        max-width: 820px;
+        margin: 0 auto;
+    }
+
+    .feed-title {
+        font-size: 32px;
+        font-weight: 800;
+        margin-bottom: 30px;
+        color: #FFC107;
+    }
+
+    .flash-message {
+        padding: 14px 18px;
+        border-radius: 12px;
+        margin-bottom: 16px;
+    }
+
+    .flash-success {
+        background: rgba(25, 135, 84, 0.2);
+        border: 1px solid rgba(25, 135, 84, 0.5);
+        color: #d1ffe3;
+    }
+
+    .flash-error {
+        background: rgba(220, 53, 69, 0.2);
+        border: 1px solid rgba(220, 53, 69, 0.5);
+        color: #ffd6db;
+    }
+
+    .create-post-card,
+    .post-card,
+    .empty-post-card {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255, 193, 7, 0.12);
+        border-radius: 22px;
+        padding: 24px;
+        margin-bottom: 24px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 14px 34px rgba(0, 0, 0, 0.12);
+    }
+
+    .create-post-top {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .create-post-input-wrap {
+        flex: 1;
+    }
+
+    .fake-post-input,
+    .post-input-field,
+    .post-textarea-field,
+    .native-file-input {
+        width: 100%;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 14px;
+        padding: 14px 16px;
+        color: #f4f8fc;
+        outline: none;
+        font-family: 'Poppins', sans-serif;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+
+    .post-input-field::placeholder,
+    .post-textarea-field::placeholder,
+    .fake-post-input::placeholder {
+        color: rgba(244,248,252,0.55);
+    }
+    .report-action {
+    background: rgba(255, 87, 87, 0.18);
+    color: #ff7b7b;
+}
+
+.report-action:hover {
+    background: rgba(255, 87, 87, 0.28);
+}
+
+.report-modal-box {
+    background: #0B2D4A;
+    border: 1px solid rgba(255, 193, 7, 0.2);
+    border-radius: 20px;
+    padding: 28px;
+    width: 100%;
+    max-width: 560px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+.report-modal-title {
+    font-size: 24px;
+    font-weight: 800;
+    margin: 0 0 20px;
+    color: #FFC107;
+}
+
+.report-modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+    .create-post-plus {
+        width: 54px;
+        height: 54px;
+        border: none;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #FFC107 0%, #FF8F00 100%);
+        color: #08263E;
+        font-size: 28px;
+        cursor: pointer;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+
+    .post-form-wrapper {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 193, 7, 0.1);
+    }
+
+    .post-form-wrapper form {
+        display: block;
+        width: 100%;
+    }
+
+    .post-form-grid {
+        display: grid;
+        grid-template-columns: 1fr 220px;
+        gap: 14px;
+        margin-bottom: 14px;
+    }
+
+    .post-form-block {
+        margin-bottom: 14px;
+    }
+
+    .post-textarea-field {
+        resize: vertical;
+        min-height: 120px;
+    }
+
+    .native-upload-box {
+        border: 2px dashed rgba(255, 193, 7, 0.35);
+        border-radius: 16px;
+        background: rgba(255,255,255,0.02);
+        padding: 24px;
+        text-align: center;
+    }
+
+    .native-upload-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #FFC107;
+        margin-bottom: 8px;
+    }
+
+    .native-upload-subtitle {
+        font-size: 13px;
+        color: rgba(244,248,252,0.65);
+        margin-bottom: 16px;
+    }
+
+    .schedule-box {
+        border: 2px dashed rgba(46, 168, 255, 0.35);
+        border-radius: 16px;
+        background: rgba(255,255,255,0.02);
+        padding: 20px;
+        text-align: left;
+    }
+
+    .schedule-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #2ea8ff;
+        margin-bottom: 8px;
+    }
+
+    .schedule-subtitle {
+        font-size: 13px;
+        color: rgba(244,248,252,0.65);
+        margin-bottom: 14px;
+    }
+
+    .btn-plan-post {
+        padding: 12px 30px;
+        border: none;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #2ea8ff 0%, #1d7fe2 100%);
+        color: #ffffff;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .selected-file-name {
+        font-size: 13px;
+        color: #ffffff;
+        background: rgba(255,255,255,0.06);
+        padding: 8px 14px;
+        border-radius: 999px;
+        margin-top: 14px;
+        display: inline-block;
+    }
+
+    .preview-image {
+        width: 100%;
+        max-height: 320px;
+        object-fit: cover;
+        border-radius: 14px;
+        border: 1px solid rgba(255,255,255,0.12);
+        display: block;
+    }
+
+    .post-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px;
+        margin-bottom: 16px;
+    }
+
+    .post-author-wrap {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        flex: 1;
+    }
+.comment-modal-box {
+    background: #0B2D4A;
+    border: 1px solid rgba(255, 193, 7, 0.2);
+    border-radius: 20px;
+    padding: 28px;
+    width: 100%;
+    max-width: 560px;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+.comment-modal-title {
+    font-size: 24px;
+    font-weight: 800;
+    margin: 0 0 20px;
+    color: #FFC107;
+}
+
+.comment-modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.comment-modal-textarea {
+    width: 100%;
+    min-height: 110px;
+    max-height: 180px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 14px 16px;
+    color: #f4f8fc;
+    font-family: 'Poppins', sans-serif;
+    resize: vertical;
+    outline: none;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.selected-gif-preview {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 12px;
+}
+
+.selected-gif-label {
+    font-size: 13px;
+    color: #f4f8fc;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.selected-gif-image {
+    width: 100%;
+    max-width: 180px;
+    max-height: 180px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.08);
+    display: block;
+}
+
+.gif-search-box {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 12px;
+}
+
+.gif-search-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.gif-search-input {
+    flex: 1;
+}
+
+.gif-results-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    max-height: 260px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.gif-result-item {
+    width: 100%;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.gif-result-item:hover {
+    transform: scale(1.03);
+    border-color: rgba(255, 193, 7, 0.8);
+}
+
+.comment-modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    margin-top: 4px;
+}
+
+@media (max-width: 768px) {
+    .comment-modal-box {
+        max-width: 95%;
+        padding: 22px;
+        max-height: 88vh;
+    }
+
+    .gif-results-grid {
+        grid-template-columns: repeat(2, 1fr);
+        max-height: 220px;
+    }
+
+    .gif-result-item {
+        height: 95px;
+    }
+
+    .selected-gif-image {
+        max-width: 140px;
+        max-height: 140px;
+    }
+}
+    .user-avatar-large,
+    .user-avatar {
+        border-radius: 50%;
+        background: linear-gradient(135deg, #FFC107, #FF8F00);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        color: #08263E;
+        flex-shrink: 0;
+    }
+
+    .user-avatar-large {
+        width: 48px;
+        height: 48px;
+        font-size: 18px;
+    }
+
+    .user-avatar {
+        width: 44px;
+        height: 44px;
+        font-size: 14px;
+    }
+
+    .emoji-field-wrap {
+        position: relative;
+        width: 100%;
+    }
+
+    .textarea-wrap {
+        position: relative;
+    }
+
+    .emoji-inside-btn {
+        position: absolute;
+        top: 50%;
+        right: 14px;
+        transform: translateY(-50%);
+        width: 42px;
+        height: 42px;
+        border: none;
+        border-radius: 12px;
+        background: rgba(255, 193, 7, 0.14);
+        color: #FFC107;
+        font-size: 20px;
+        cursor: pointer;
+        z-index: 30;
+    }
+
+    .textarea-wrap .emoji-inside-btn,
+    .textarea-emoji-btn {
+        top: 14px;
+        transform: none;
+    }
+
+    .post-input-field.emoji-target {
+        padding-right: 64px;
+    }
+
+    .textarea-with-emoji {
+        padding-right: 64px;
+    }
+
+    .emoji-picker-inside {
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 0;
+        width: 320px;
+        max-width: 100%;
+        padding: 14px;
+        border-radius: 16px;
+        background: #1f425f;
+        border: 1px solid rgba(255,255,255,0.08);
+        display: none;
+        flex-wrap: wrap;
+        gap: 10px;
+        z-index: 9999;
+        box-shadow: 0 16px 32px rgba(0,0,0,0.25);
+    }
+
+    .emoji-item {
+        width: 42px;
+        height: 42px;
+        border: none;
+        border-radius: 12px;
+        background: rgba(255,255,255,0.08);
+        cursor: pointer;
+        font-size: 22px;
+        transition: transform 0.2s ease, background 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .emoji-item:hover {
+        transform: scale(1.08);
+        background: rgba(255, 193, 7, 0.18);
+    }
+
+    .post-author-name {
+        font-size: 15px;
+        font-weight: 700;
+        color: #f4f8fc;
+        margin: 0;
+    }
+
+    .post-date {
+        font-size: 12px;
+        color: rgba(244,248,252,0.6);
+        margin: 4px 0 0;
+    }
+
+    .post-type-badge {
+        display: inline-block;
+        padding: 8px 14px;
+        background: linear-gradient(135deg, #FFC107 0%, #FF8F00 100%);
+        color: #08263E;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .post-title {
+        font-size: 28px;
+        font-weight: 800;
+        margin: 10px 0 12px;
+        color: #FFC107;
+        line-height: 1.25;
+    }
+
+    .post-content {
+        color: rgba(244,248,252,0.9);
+        margin: 0 0 16px;
+        line-height: 1.75;
+        font-size: 16px;
+        white-space: pre-wrap;
+    }
+
+    .post-image-wrap {
+        margin: 16px 0 18px;
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(255,255,255,0.02);
+    }
+    .translate-lang {
+    background: rgba(46,168,255,0.2);
+    color: #2ea8ff;
+    border-radius: 12px;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.translate-btn {
+    background: linear-gradient(135deg, #2ea8ff, #1d7fe2);
+    color: white;
+}
+    .post-image {
+        width: 100%;
+        max-height: 520px;
+        object-fit: cover;
+        display: block;
+    }
+
+    .post-actions-row {
+        display: flex;
+        gap: 12px;
+        margin: 18px 0 0;
+        padding-top: 16px;
+        border-top: 1px solid rgba(255,255,255,0.08);
+        flex-wrap: wrap;
+    }
+
+    .post-action-btn {
+        flex: 1;
+        min-width: 150px;
+        padding: 13px 18px;
+        border: none;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 700;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.25s ease;
+        font-size: 14px;
+    }
+
+    .like-action {
+        background: rgba(255, 193, 7, 0.1);
+        color: #FFC107;
+    }
+
+    .comment-action {
+        background: #0d4f8b;
+        color: white;
+    }
+
+    .edit-action {
+        background: rgba(255, 193, 7, 0.1);
+        color: #FFC107;
+    }
+
+    .delete-action {
+        background: rgba(220, 53, 69, 0.2);
+        color: #ff6b7d;
+    }
+
+    .action-count {
+        margin-left: auto;
+    }
+
+    .like-btn.liked {
+        background: linear-gradient(135deg, #FFC107 0%, #FF8F00 100%);
+        color: #08263E;
+    }
+
+    .like-btn.liked .like-icon::after {
+        content: ' ✓';
+    }
+
+    .comments-section {
+        margin-top: 18px;
+        padding-top: 16px;
+        border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .comments-title {
+        font-size: 12px;
+        font-weight: 800;
+        color: rgba(244,248,252,0.65);
+        margin-bottom: 14px;
+        letter-spacing: 0.4px;
+    }
+
+    .comment-card {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 12px;
+        padding: 12px;
+        background: rgba(255,255,255,0.03);
+        border-radius: 12px;
+    }
+
+    .comment-avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #FF9800, #FFC107);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        color: #08263E;
+        font-size: 12px;
+        flex-shrink: 0;
+    }
+
+    .comment-author {
+        font-size: 12px;
+        font-weight: 700;
+        color: #f4f8fc;
+        margin: 0;
+    }
+
+    .comment-content-text {
+        font-size: 13px;
+        color: rgba(244,248,252,0.82);
+        margin: 4px 0 0;
+    }
+
+    .comment-date {
+        font-size: 11px;
+        color: rgba(244,248,252,0.5);
+        margin: 4px 0 0;
+    }
+
+    .comment-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 8px;
+        flex-wrap: wrap;
+    }
+    .comment-error-message {
+    display: none;
+    background: rgba(220, 53, 69, 0.18);
+    border: 1px solid rgba(220, 53, 69, 0.45);
+    color: #ffd6db;
+    padding: 12px 14px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+} 
+    .mini-btn {
+        padding: 6px 12px;
+        border: none;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .mini-edit {
+        background: rgba(255, 193, 7, 0.2);
+        color: #FFC107;
+    }
+
+    .mini-delete {
+        background: rgba(220, 53, 69, 0.2);
+        color: #ff6b7d;
+    }
+
+    .post-form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .btn-cancel-post {
+        padding: 12px 24px;
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 999px;
+        background: transparent;
+        color: rgba(244,248,252,0.78);
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .btn-submit-post {
+        padding: 12px 30px;
+        border: none;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #FFC107 0%, #FF8F00 100%);
+        color: #08263E;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .empty-post-card {
+        text-align: center;
+        color: rgba(244,248,252,0.6);
+    }
+
+    .gif-result-item {
+        width: 100%;
+        border-radius: 10px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .gif-result-item:hover {
+        transform: scale(1.03);
+        border-color: rgba(255, 193, 7, 0.8);
+    }
+
+    @media (max-width: 768px) {
+        .feed-page {
+            padding: 110px 14px 40px;
+        }
+
+        .feed-column {
+            max-width: 100%;
+        }
+
+        .post-form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .post-card,
+        .create-post-card,
+        .empty-post-card {
+            padding: 16px;
+        }
+
+        .post-title {
+            font-size: 22px;
+        }
+
+        .post-content {
+            font-size: 15px;
+        }
+
+        .post-actions-row {
+            flex-direction: column;
+        }
+
+        .post-action-btn {
+            width: 100%;
+        }
+
+        #comment-modal > div,
+        #edit-comment-modal > div,
+        #edit-post-modal > div {
+            width: 95% !important;
+            padding: 24px !important;
+        }
+
+        #gif-results {
+            grid-template-columns: repeat(2, 1fr) !important;
+        }
+    }
+</style>
+
+<script>
+    const toggleBtn = document.getElementById('toggle-post-form');
+    const cancelBtn = document.getElementById('cancel-post-form');
+    const formWrapper = document.getElementById('post-form-wrapper');
+    const placeholder = document.getElementById('post-placeholder');
+
+    function openPostForm() {
+        if (formWrapper) {
+            formWrapper.style.display = 'block';
+        }
+    }
+
+    function closePostForm() {
+        if (formWrapper) {
+            formWrapper.style.display = 'none';
+        }
+    }
+
+    toggleBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        if (formWrapper.style.display === 'block') {
+            closePostForm();
+        } else {
+            openPostForm();
+            document.getElementById('post-title-input')?.focus();
+        }
+    });
+
+    placeholder?.addEventListener('click', (e) => {
+        e.preventDefault();
+        openPostForm();
+        document.getElementById('post-title-input')?.focus();
+    });
+
+    placeholder?.addEventListener('focus', (e) => {
+        e.preventDefault();
+        openPostForm();
+        document.getElementById('post-title-input')?.focus();
+    });
+
+    cancelBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
+        closePostForm();
+    });
+
+    const imageInput = document.getElementById('post_image_input');
+    const selectedFileName = document.getElementById('selected-file-name');
+    const imagePreviewWrapper = document.getElementById('image-preview-wrapper');
+    const imagePreview = document.getElementById('image-preview');
+
+    imageInput?.addEventListener('change', function () {
+        const file = this.files && this.files[0];
+
+        if (!file) {
+            selectedFileName.textContent = 'Aucun fichier sélectionné';
+            imagePreviewWrapper.style.display = 'none';
+            imagePreview.src = '';
+            return;
+        }
+
+        selectedFileName.textContent = file.name;
+
+        if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                imagePreview.src = e.target.result;
+                imagePreviewWrapper.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    document.querySelectorAll('.like-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const postId = btn.dataset.postId;
+
+            try {
+                const response = await fetch(`/posts/api/post/${postId}/like`, { method: 'POST' });
+                if (response.ok) {
+                    btn.classList.toggle('liked');
+                    const countElement = btn.querySelector('.like-count');
+                    const currentCount = parseInt(countElement.textContent, 10) || 0;
+                    countElement.textContent = btn.classList.contains('liked') ? currentCount + 1 : Math.max(0, currentCount - 1);
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
+        });
+    });
+
+    const modal = document.getElementById('comment-modal');
+    const closeCommentBtn = document.getElementById('close-modal');
+    const commentForm = document.getElementById('comment-form');
+    const modalPostId = document.getElementById('modal-post-id');
+    const commentText = document.getElementById('comment-text');
+    const commentGifUrlInput = document.getElementById('comment-gif-url');
+    const selectedGifPreview = document.getElementById('selected-gif-preview');
+    const selectedGifImage = document.getElementById('selected-gif-image');
+    const removeSelectedGifBtn = document.getElementById('remove-selected-gif');
+    const openGifSearchBtn = document.getElementById('open-gif-search');
+    const gifSearchBox = document.getElementById('gif-search-box');
+    const gifSearchInput = document.getElementById('gif-search-input');
+    const gifSearchBtn = document.getElementById('gif-search-btn');
+    const gifResults = document.getElementById('gif-results');
+
+    const GIPHY_API_KEY = 'JhHMwrAg0MZunIACnJkHKQGHnRzJwciH';
+
+    function resetCommentModal() {
+    commentForm?.reset();
+
+    hideCommentError();
+
+    if (commentGifUrlInput) {
+        commentGifUrlInput.value = '';
+    }
+
+    if (selectedGifImage) {
+        selectedGifImage.src = '';
+    }
+
+    if (selectedGifPreview) {
+        selectedGifPreview.style.display = 'none';
+    }
+
+    if (gifResults) {
+        gifResults.innerHTML = '';
+    }
+
+    if (gifSearchInput) {
+        gifSearchInput.value = '';
+    }
+
+    if (gifSearchBox) {
+        gifSearchBox.style.display = 'none';
+    }
+}
+
+    document.querySelectorAll('.comment-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            modalPostId.value = btn.dataset.postId;
+            modal.style.display = 'flex';
+            commentText?.focus();
+        });
+    });
+
+    closeCommentBtn?.addEventListener('click', () => {
+        modal.style.display = 'none';
+        resetCommentModal();
+    });
+
+    modal?.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+            resetCommentModal();
+        }
+    });
+
+    openGifSearchBtn?.addEventListener('click', () => {
+        gifSearchBox.style.display = gifSearchBox.style.display === 'none' || gifSearchBox.style.display === '' ? 'block' : 'none';
+        gifSearchInput?.focus();
+    });
+
+    removeSelectedGifBtn?.addEventListener('click', () => {
+        commentGifUrlInput.value = '';
+        selectedGifImage.src = '';
+        selectedGifPreview.style.display = 'none';
+    });
+
+    async function searchGifs() {
+        const query = gifSearchInput.value.trim();
+
+        if (!query) {
+            gifResults.innerHTML = '';
+            return;
+        }
+
+        gifResults.innerHTML = '<div style="color:#f4f8fc;">Chargement...</div>';
+
+        try {
+            const url = `https://api.giphy.com/v1/gifs/search?api_key=${GIPHY_API_KEY}&q=${encodeURIComponent(query)}&limit=9&rating=g&lang=fr`;
+            const response = await fetch(url);
+            const data = await response.json();
+
+            const gifs = data.data || [];
+
+            if (gifs.length === 0) {
+                gifResults.innerHTML = '<div style="color:#f4f8fc;">Aucun GIF trouvé.</div>';
+                return;
+            }
+
+            gifResults.innerHTML = gifs.map(gif => {
+    const preview = gif.images.fixed_width_small?.url || gif.images.fixed_width?.url;
+    const original = gif.images.original?.url || preview;
+
+    return `
+        <img
+            src="${preview}"
+            data-gif-url="${original}"
+            alt="GIF"
+            class="gif-result-item"
+            loading="lazy"
+        >
+    `;
+}).join('');
+
+           document.querySelectorAll('.gif-result-item').forEach(item => {
+    item.addEventListener('click', () => {
+        const gifUrl = item.getAttribute('data-gif-url');
+        commentGifUrlInput.value = gifUrl;
+        selectedGifImage.src = gifUrl;
+        selectedGifPreview.style.display = 'block';
+        gifSearchBox.style.display = 'none';
+    });
+});
+
+        } catch (error) {
+            console.error('Erreur GIPHY:', error);
+            gifResults.innerHTML = '<div style="color:#ffb3b3;">Erreur lors du chargement des GIFs.</div>';
+        }
+    }
+
+    gifSearchBtn?.addEventListener('click', searchGifs);
+
+    gifSearchInput?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            searchGifs();
+        }
+    });
+
+   const commentErrorMessage = document.getElementById('comment-error-message');
+
+function hideCommentError() {
+    if (commentErrorMessage) {
+        commentErrorMessage.style.display = 'none';
+        commentErrorMessage.textContent = '';
+    }
+}
+
+function showCommentError(message) {
+    if (commentErrorMessage) {
+        commentErrorMessage.textContent = message;
+        commentErrorMessage.style.display = 'block';
+    }
+}
+
+commentText?.addEventListener('input', hideCommentError);
+
+commentForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    hideCommentError();
+
+    const postId = modalPostId.value;
+    const content = commentText.value;
+    const gifUrl = commentGifUrlInput.value;
+
+    try {
+        const response = await fetch(`/posts/api/post/${postId}/comment`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contenu: content,
+                gifUrl: gifUrl
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            modal.style.display = 'none';
+            resetCommentModal();
+            location.reload();
+            return;
+        }
+
+        let errorMessage = data.error || 'Erreur lors de l’ajout du commentaire.';
+
+        if (Array.isArray(data.matchedWords) && data.matchedWords.length > 0) {
+            errorMessage += ' Mots détectés : ' + data.matchedWords.join(', ');
+        }
+
+        showCommentError(errorMessage);
+    } catch (error) {
+        console.error('Erreur:', error);
+        showCommentError('Erreur serveur lors de l’ajout du commentaire.');
+    }
+});
+
+    const editModal = document.getElementById('edit-comment-modal');
+    const closeEditBtn = document.getElementById('close-edit-modal');
+    const editCommentForm = document.getElementById('edit-comment-form');
+    const editModalCommentId = document.getElementById('edit-modal-comment-id');
+    const editCommentText = document.getElementById('edit-comment-text');
+
+    document.querySelectorAll('.edit-comment-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            editModalCommentId.value = btn.dataset.commentId;
+            editCommentText.value = btn.dataset.content;
+            editModal.style.display = 'flex';
+            editCommentText.focus();
+        });
+    });
+
+    closeEditBtn?.addEventListener('click', () => {
+        editModal.style.display = 'none';
+        editCommentForm.reset();
+    });
+
+    editModal?.addEventListener('click', (e) => {
+        if (e.target === editModal) {
+            editModal.style.display = 'none';
+            editCommentForm.reset();
+        }
+    });
+
+    editCommentForm?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const commentId = editModalCommentId.value;
+        const content = editCommentText.value;
+
+        try {
+            const response = await fetch(`/posts/api/comment/${commentId}/edit`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contenu: content })
+            });
+
+            if (response.ok) {
+                editModal.style.display = 'none';
+                editCommentForm.reset();
+                location.reload();
+            }
+        } catch (error) {
+            console.error('Erreur:', error);
+        }
+    });
+
+    const editPostModal = document.getElementById('edit-post-modal');
+    const closeEditPostModal = document.getElementById('close-edit-post-modal');
+    const editPostForm = document.getElementById('edit-post-form');
+    const editPostTitle = document.getElementById('edit-post-title');
+    const editPostType = document.getElementById('edit-post-type');
+    const editPostContent = document.getElementById('edit-post-content');
+    const editPostImage = document.getElementById('edit-post-image');
+    const editSelectedFileName = document.getElementById('edit-selected-file-name');
+    const editCurrentImageWrap = document.getElementById('edit-current-image-wrap');
+    const editCurrentImage = document.getElementById('edit-current-image');
+    const editImagePreviewWrapper = document.getElementById('edit-image-preview-wrapper');
+    const editImagePreview = document.getElementById('edit-image-preview');
+    const saveEditPostBtn = document.getElementById('save-edit-post-btn');
+
+    document.querySelectorAll('.open-edit-post-modal').forEach(btn => {
+        btn.addEventListener('click', () => {
+            editPostForm.action = btn.dataset.editUrl;
+            editPostTitle.value = btn.dataset.postTitle || '';
+            editPostType.value = btn.dataset.postType || 'Promotion';
+            editPostContent.value = btn.dataset.postContent || '';
+
+            const currentImage = btn.dataset.postImage || '';
+            if (currentImage) {
+                editCurrentImage.src = currentImage;
+                editCurrentImageWrap.style.display = 'block';
+            } else {
+                editCurrentImage.src = '';
+                editCurrentImageWrap.style.display = 'none';
+            }
+
+            editPostImage.value = '';
+            editSelectedFileName.textContent = 'Aucun nouveau fichier sélectionné';
+            editImagePreviewWrapper.style.display = 'none';
+            editImagePreview.src = '';
+
+            editPostModal.style.display = 'flex';
+        });
+    });
+
+    closeEditPostModal?.addEventListener('click', () => {
+        editPostModal.style.display = 'none';
+    });
+
+    editPostModal?.addEventListener('click', (e) => {
+        if (e.target === editPostModal) {
+            editPostModal.style.display = 'none';
+        }
+    });
+
+    editPostImage?.addEventListener('change', function () {
+        const file = this.files && this.files[0];
+
+        if (!file) {
+            editSelectedFileName.textContent = 'Aucun nouveau fichier sélectionné';
+            editImagePreviewWrapper.style.display = 'none';
+            editImagePreview.src = '';
+            return;
+        }
+
+        editSelectedFileName.textContent = file.name;
+
+        if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                editImagePreview.src = e.target.result;
+                editImagePreviewWrapper.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    editPostForm?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(editPostForm);
+
+        saveEditPostBtn.disabled = true;
+        saveEditPostBtn.textContent = 'Enregistrement...';
+
+        try {
+            const response = await fetch(editPostForm.action, {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                editPostModal.style.display = 'none';
+                location.reload();
+                return;
+            }
+
+            alert('Erreur lors de la modification du post.');
+        } catch (error) {
+            console.error('Erreur:', error);
+            alert('Erreur lors de la modification du post.');
+        } finally {
+            saveEditPostBtn.disabled = false;
+            saveEditPostBtn.textContent = 'Enregistrer';
+        }
+    });
+document.querySelectorAll('.translate-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+        const postCard = btn.closest('.post-card');
+
+        const titleEl = postCard.querySelector('.post-title');
+        const contentEl = postCard.querySelector('.post-content');
+        const select = postCard.querySelector('.translate-lang');
+
+        const titleText = titleEl ? titleEl.innerText.trim() : '';
+        const contentText = contentEl ? contentEl.innerText.trim() : '';
+        const targetLang = select.value;
+
+        const oldBtnText = btn.textContent;
+        btn.textContent = '⏳ Traduction...';
+        btn.disabled = true;
+
+        try {
+            const response = await fetch('/posts/api/translate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    title: titleText,
+                    text: contentText,
+                    target: targetLang
+                })
+            });
+
+            const rawText = await response.text();
+            let data = null;
+
+            try {
+                data = JSON.parse(rawText);
+            } catch (e) {
+                console.error('Réponse non JSON :', rawText);
+                alert('Le serveur a renvoyé du HTML au lieu de JSON.');
+                return;
+            }
+
+            if (!response.ok) {
+                console.error('Erreur backend traduction :', data);
+                alert((data.error || 'Erreur') + '\n' + (data.details || ''));
+                return;
+            }
+
+            if (titleEl && data.translatedTitle) {
+                titleEl.innerText = data.translatedTitle;
+            }
+
+            if (contentEl && data.translatedText) {
+                contentEl.innerText = data.translatedText;
+            }
+
+        } catch (error) {
+            console.error('Erreur fetch :', error);
+            alert('Erreur JS/fetch : ' + error.message);
+        } finally {
+            btn.textContent = oldBtnText;
+            btn.disabled = false;
+        }
+    });
+});
+const reportModal = document.getElementById('report-modal');
+const closeReportModalBtn = document.getElementById('close-report-modal');
+const reportForm = document.getElementById('report-form');
+const reportPostIdInput = document.getElementById('report-post-id');
+const reportReasonInput = document.getElementById('report-reason');
+const reportDetailsInput = document.getElementById('report-details');
+const reportErrorMessage = document.getElementById('report-error-message');
+const reportSuccessMessage = document.getElementById('report-success-message');
+
+function resetReportModal() {
+    if (reportForm) {
+        reportForm.reset();
+    }
+
+    if (reportErrorMessage) {
+        reportErrorMessage.style.display = 'none';
+        reportErrorMessage.textContent = '';
+    }
+
+    if (reportSuccessMessage) {
+        reportSuccessMessage.style.display = 'none';
+        reportSuccessMessage.textContent = '';
+    }
+
+    if (reportPostIdInput) {
+        reportPostIdInput.value = '';
+    }
+}
+
+document.querySelectorAll('.report-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        if (reportPostIdInput) {
+            reportPostIdInput.value = btn.dataset.postId;
+        }
+
+        if (reportModal) {
+            reportModal.style.display = 'flex';
+        }
+
+        reportReasonInput?.focus();
+    });
+});
+
+closeReportModalBtn?.addEventListener('click', () => {
+    if (reportModal) {
+        reportModal.style.display = 'none';
+    }
+    resetReportModal();
+});
+
+reportModal?.addEventListener('click', (e) => {
+    if (e.target === reportModal) {
+        reportModal.style.display = 'none';
+        resetReportModal();
+    }
+});
+
+reportForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if (reportErrorMessage) {
+        reportErrorMessage.style.display = 'none';
+        reportErrorMessage.textContent = '';
+    }
+
+    if (reportSuccessMessage) {
+        reportSuccessMessage.style.display = 'none';
+        reportSuccessMessage.textContent = '';
+    }
+
+    const postId = reportPostIdInput.value;
+    const raison = reportReasonInput.value.trim();
+    const details = reportDetailsInput.value.trim();
+
+    if (!raison) {
+        reportErrorMessage.textContent = 'Veuillez choisir une raison.';
+        reportErrorMessage.style.display = 'block';
+        return;
+    }
+
+    try {
+        const response = await fetch(`/posts/api/post/${postId}/report`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                raison: raison,
+                details: details
+            })
+        });
+
+        const data = await response.json();
+if (!response.ok) {
+    reportErrorMessage.textContent =
+        (data.error || 'Erreur lors du signalement.') +
+        (data.details ? ' | ' + data.details : '');
+    reportErrorMessage.style.display = 'block';
+    return;
+}
+
+        reportSuccessMessage.textContent = data.message || 'Signalement envoyé avec succès.';
+        reportSuccessMessage.style.display = 'block';
+
+        setTimeout(() => {
+            reportModal.style.display = 'none';
+            resetReportModal();
+        }, 1200);
+
+    } catch (error) {
+        console.error('Erreur signalement:', error);
+        reportErrorMessage.textContent = 'Erreur serveur lors du signalement.';
+        reportErrorMessage.style.display = 'block';
+    }
+});
+const newsModal = document.getElementById('news-modal');
+const openNewsBtn = document.getElementById('open-news-modal');
+const closeNewsBtn = document.getElementById('close-news-modal');
+const refreshNewsBtn = document.getElementById('refresh-news-btn');
+const newsContainer = document.getElementById('news-container');
+
+let newsLoading = false;
+let lastNewsFetchTime = 0;
+
+async function loadNews(force = false) {
+    const now = Date.now();
+
+    if (newsLoading) {
+        return;
+    }
+
+    if (!force && now - lastNewsFetchTime < 5000) {
+        return;
+    }
+
+    newsLoading = true;
+    lastNewsFetchTime = now;
+
+    if (refreshNewsBtn) {
+        refreshNewsBtn.disabled = true;
+        refreshNewsBtn.textContent = 'Chargement...';
+    }
+
+    newsContainer.innerHTML = 'Chargement des news...';
+
+    try {
+        const response = await fetch('/posts/api/news');
+        const data = await response.json();
+
+        if (!response.ok) {
+            newsContainer.innerHTML = 'Erreur chargement news';
+            return;
+        }
+
+        const articles = data.news || [];
+
+        if (articles.length === 0) {
+            newsContainer.innerHTML = 'Aucune news disponible.';
+            return;
+        }
+
+        newsContainer.innerHTML = articles.map(article => `
+            <div style="
+                background:rgba(255,255,255,0.05);
+                border-radius:16px;
+                padding:16px;
+                margin-bottom:16px;
+            ">
+                ${article.image ? `<img src="${article.image}" style="width:100%; border-radius:12px; margin-bottom:10px;">` : ''}
+
+                <h3 style="color:#FFC107;">${article.title || ''}</h3>
+
+                <p style="color:#f4f8fc;">${article.description || ''}</p>
+
+                <a href="${article.url}" target="_blank" style="color:#2ea8ff; font-weight:bold;">
+                    Lire plus →
+                </a>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error('Erreur news:', error);
+        newsContainer.innerHTML = 'Erreur serveur';
+    } finally {
+        newsLoading = false;
+
+        if (refreshNewsBtn) {
+            refreshNewsBtn.disabled = false;
+            refreshNewsBtn.textContent = '🔄 Actualiser';
+        }
+    }
+}
+
+openNewsBtn?.addEventListener('click', async () => {
+    newsModal.style.display = 'block';
+    await loadNews(true);
+});
+
+refreshNewsBtn?.addEventListener('click', async () => {
+    await loadNews(true);
+});
+
+closeNewsBtn?.addEventListener('click', () => {
+    newsModal.style.display = 'none';
+});
+
+newsModal?.addEventListener('click', (e) => {
+    if (e.target === newsModal) {
+        newsModal.style.display = 'none';
+    }
+});
+
+
+</script>
+{% endblock %}

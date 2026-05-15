@@ -1,0 +1,893 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Rapport Q/P AI - Analyse Qualité/Prix{% endblock %}
+
+{% block body %}
+<div class="ai-rapport-main">
+    <div class="ai-rapport-header">
+        <h2 class="ai-rapport-title">🤖 Rapport Qualité/Prix AI</h2>
+        <p class="ai-rapport-subtitle">Analyse intelligente basée sur le meilleur rapport prix/budget de votre localisation</p>
+    </div>
+    
+    <form id="ai-rapport-form" class="ai-rapport-form" method="POST" action="{{ path('ai_rapport_qp_analyze') }}">
+        <div class="ai-rapport-field">
+            <label for="ai-rapport-lieu">📍 Localisation</label>
+            <select id="ai-rapport-lieu" name="localisation" required class="ai-rapport-select">
+                <option value="">-- Sélectionnez une localisation --</option>
+                {% for localisation in localisations %}
+                    <option value="{{ localisation }}" {% if selected_lieu|default('') == localisation %}selected{% endif %}>{{ localisation }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="ai-rapport-field">
+            <label for="ai-rapport-budget">💰 Budget (TND/nuit)</label>
+            <input id="ai-rapport-budget" name="budget" type="number" min="10" value="{{ selected_budget|default(200) }}" step="10" required class="ai-rapport-input" placeholder="Ex: 200">
+            <small style="color:#999;font-size:0.85em;">Budget maximum par nuit</small>
+        </div>
+        <button type="submit" class="heb-search-btn ai-rapport-btn">🔍 Analyser le Marché</button>
+    </form>
+    
+    <div id="ai-rapport-result" style="margin-top:20px;">
+        {% if result|default(null) is not null %}
+            {% if result.success and result.hebergement is defined %}
+                {{ _self.render_report(result) }}
+            {% else %}
+                <div class="ai-card">
+                    <p style="color:#FF9800;text-align:center;">ℹ️ {{ result.message|default('Aucun hébergement trouvé pour cette recherche.') }}</p>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+
+{% macro render_report(r) %}
+    {% set heb = r.hebergement %}
+    {% set scoreClass = heb.score >= 80 ? 'high' : (heb.score >= 50 ? 'medium' : 'low') %}
+    
+    {# Winner Card #}
+    <div class="ai-card ai-card-winner">
+        <div style="display:flex;justify-content:space-between;align-items:start;">
+            <div>
+                <h3 style="margin:0 0 8px 0;">{{ heb.nom }}</h3>
+                <span class="badge badge-winner">🏆 Meilleur Q/P</span>
+            </div>
+            <div style="text-align:right;">
+                <div class="score-big {{ scoreClass }}">{{ heb.score }}</div>
+                <small style="color:#999;">/100</small>
+            </div>
+        </div>
+        
+        <div class="ai-meta" style="margin-top:12px;">
+            <span class="badge">💰 {{ heb.prix }} TND</span>
+            <span class="badge">{{ heb.type }}</span>
+            <span class="badge">{{ heb.disponibilite }}</span>
+            {% if heb.note %}<span class="badge">⭐ {{ heb.note }}/5</span>{% endif %}
+        </div>
+        
+        <div class="ai-score-bar" style="margin-top:12px;">
+            <div class="ai-score-fill {{ scoreClass }}" style="width:{{ min(100, heb.score) }}%;"></div>
+        </div>
+        
+        {% if heb.description %}
+            <p style="margin-top:14px;font-size:0.95em;opacity:0.85;line-height:1.5;">{{ heb.description|slice(0, 200) }}{% if heb.description|length > 200 %}...{% endif %}</p>
+        {% endif %}
+    </div>
+    
+    {# Budget Analysis #}
+    {% if r.budgetStats is defined %}
+        <div class="ai-card">
+            <h3>📊 Analyse du Marché</h3>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px;">
+                <div class="stat-box">
+                    <div class="stat-label">💵 Prix Minimum</div>
+                    <div class="stat-value">{{ r.budgetStats.minPrice }} TND</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">💳 Prix Maximum</div>
+                    <div class="stat-value">{{ r.budgetStats.maxPrice }} TND</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">📈 Prix Moyen</div>
+                    <div class="stat-value">{{ r.budgetStats.avgPrice }} TND</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">🎯 Étendue</div>
+                    <div class="stat-value">{{ r.budgetStats.range }} TND</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">🏠 Total Options</div>
+                    <div class="stat-value">{{ r.budgetStats.optionsFound }}</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">✅ En Budget</div>
+                    <div class="stat-value">{{ r.budgetStats.withinBudgetCount }}/{{ r.budgetStats.optionsFound }}</div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    
+    {# Budget Efficiency #}
+    <div class="ai-card">
+        <h3>💎 Efficacité du Budget</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px;">
+            <div>
+                <div class="info-label">Prix de l'hébergement</div>
+                <div class="info-value">{{ heb.prix }} TND</div>
+            </div>
+            <div>
+                <div class="info-label">Budget utilisé</div>
+                <div class="info-value">{{ heb.budgetUtilise }}%</div>
+            </div>
+            <div>
+                <div class="info-label">Budget restant</div>
+                <div class="info-value" style="color:#4CAF50;">+{{ heb.budgetRestant }} TND</div>
+            </div>
+            <div>
+                <div class="info-label">Catégorie Q/P</div>
+                <div class="info-value" style="text-transform:capitalize;">{{ heb.valueTier }}</div>
+            </div>
+        </div>
+    </div>
+    
+    {# Top Rankings #}
+    {% if r.analyse|length > 1 %}
+        <div class="ai-card">
+            <h3>🏆 Top 5 - Meilleur Classement Q/P</h3>
+            <table class="ai-table">
+                <thead>
+                    <tr>
+                        <th style="width:15%;">#</th>
+                        <th style="width:45%;">Hébergement</th>
+                        <th style="width:20%;">Prix</th>
+                        <th style="width:20%;">Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for a in r.analyse|slice(0, 5) %}
+                        <tr {% if a.idHebergement == heb.idHebergement %}class="highlight"{% endif %}>
+                            <td style="font-weight:bold;text-align:center;">{{ loop.index }}</td>
+                            <td>
+                                {% if a.idHebergement == heb.idHebergement %}<span style="color:#4CAF50;">✓</span>{% endif %}
+                                <strong>{{ a.nom }}</strong>
+                                <br><small style="opacity:0.7;">{{ a.type }}</small>
+                            </td>
+                            <td><strong>{{ a.prix }} TND</strong></td>
+                            <td>
+                                <div class="small-score {% if a.score >= 80 %}high{% elseif a.score >= 50 %}medium{% else %}low{% endif %}">
+                                    {{ a.score }}
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+    
+    {# Recommendations #}
+    {% if r.recommendations is defined and r.recommendations|length > 0 %}
+        <div class="ai-card ai-recommendations">
+            <h3>💡 Recommandations AI</h3>
+            <ul style="margin:10px 0;padding-left:20px;">
+                {% for rec in r.recommendations %}
+                    <li style="margin-bottom:6px;opacity:0.95;">{{ rec }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    
+    {# Explanation #}
+    {% if r.explication is defined %}
+        <div class="ai-explication">
+            <h4 style="margin-top:0;">📐 Formule de Calcul</h4>
+            {{ r.explication|raw }}
+        </div>
+    {% endif %}
+{% endmacro %}
+
+<style>
+body {
+    background: #0B2D4A !important;
+    font-family: 'Poppins', Arial, sans-serif;
+}
+
+.ai-rapport-main {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0;
+}
+
+.ai-rapport-header {
+    text-align: center;
+    margin-bottom: 25px;
+    animation: slideDown 0.6s;
+}
+
+.ai-rapport-title {
+    color: #FFC107;
+    font-weight: 800;
+    font-size: 2.2rem;
+    margin: 0 0 8px 0;
+    text-shadow: 0 2px 8px rgba(255,193,7,0.2);
+}
+
+.ai-rapport-subtitle {
+    color: #FF9800;
+    font-size: 0.98em;
+    margin: 0;
+    opacity: 0.9;
+}
+
+.ai-rapport-form {
+    background: #08263E;
+    padding: 22px;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(11,45,74,0.2);
+    margin-bottom: 22px;
+}
+
+.ai-rapport-field {
+    margin-bottom: 14px;
+}
+
+.ai-rapport-field label {
+    font-weight: 600;
+    color: #FFC107;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.ai-rapport-select, .ai-rapport-input {
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 10px;
+    border: 1.5px solid #FFC107;
+    font-size: 0.98em;
+    background: #0B2D4A;
+    color: #fff;
+    outline: none;
+    transition: all 0.3s;
+}
+
+.ai-rapport-select:focus, .ai-rapport-input:focus {
+    border: 2px solid #FF9800;
+    box-shadow: 0 0 8px rgba(255,152,0,0.3);
+}
+
+.ai-rapport-input::placeholder {
+    color: #666;
+}
+
+.ai-rapport-field small {
+    display: block;
+    margin-top: 4px;
+    color: #999;
+}
+
+.ai-rapport-btn {
+    width: 100%;
+    justify-content: center;
+    background: linear-gradient(135deg, #FFC107, #FF9800);
+    color: #0B2D4A;
+    font-weight: 700;
+    font-size: 1.05em;
+    border-radius: 12px;
+    padding: 13px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 12px rgba(255,152,0,0.3);
+}
+
+.ai-rapport-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255,152,0,0.4);
+}
+
+.ai-card {
+    background: #08263E;
+    border-radius: 14px;
+    box-shadow: 0 4px 15px rgba(11,45,74,0.2);
+    padding: 20px;
+    margin-top: 18px;
+    color: #fff;
+    animation: fadeIn 0.5s;
+    border: 1px solid rgba(255,193,7,0.1);
+}
+
+.ai-card h3, .ai-card h4 {
+    color: #FFC107;
+    font-size: 1.2rem;
+    margin: 0 0 12px 0;
+    font-weight: 700;
+}
+
+.ai-card-winner {
+    border: 2px solid #FFC107;
+    background: linear-gradient(135deg, #0B2D4A, #08263E);
+}
+
+.badge {
+    background: rgba(255,193,7,0.15);
+    color: #FFC107;
+    border: 1px solid #FFC107;
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 0.8em;
+    margin-right: 6px;
+    margin-bottom: 6px;
+    display: inline-block;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.badge:hover {
+    background: rgba(255,193,7,0.25);
+}
+
+.badge-winner {
+    background: #FFC107;
+    color: #0B2D4A;
+    border: none;
+    font-size: 0.9em;
+}
+
+.score-big {
+    font-size: 2.5rem;
+    font-weight: 900;
+    font-family: 'Courier New', monospace;
+    padding: 10px 15px;
+    border-radius: 10px;
+}
+
+.score-big.high {
+    color: #4CAF50;
+    background: rgba(76,175,80,0.15);
+}
+
+.score-big.medium {
+    color: #FFC107;
+    background: rgba(255,193,7,0.15);
+}
+
+.score-big.low {
+    color: #f44336;
+    background: rgba(244,67,54,0.15);
+}
+
+.ai-meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 6px 0;
+}
+
+.ai-score-bar {
+    height: 8px;
+    background: #1a3a5c;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+.ai-score-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+
+.ai-score-fill.high {
+    background: linear-gradient(90deg, #4CAF50, #8BC34A);
+}
+
+.ai-score-fill.medium {
+    background: linear-gradient(90deg, #FFC107, #FF9800);
+}
+
+.ai-score-fill.low {
+    background: linear-gradient(90deg, #f44336, #e91e63);
+}
+
+.stat-box {
+    background: #0B2D4A;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border-left: 3px solid #FFC107;
+    transition: all 0.3s;
+}
+
+.stat-box:hover {
+    border-left-color: #FF9800;
+    transform: translateX(2px);
+}
+
+.stat-label {
+    font-size: 0.8em;
+    color: #999;
+    margin-bottom: 4px;
+}
+
+.stat-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #FFC107;
+}
+
+.info-label {
+    font-size: 0.85em;
+    color: #999;
+    margin-bottom: 4px;
+}
+
+.info-value {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #FF9800;
+}
+
+.ai-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+    font-size: 0.95em;
+}
+
+.ai-table th, .ai-table td {
+    padding: 10px 12px;
+    text-align: left;
+}
+
+.ai-table th {
+    background: linear-gradient(135deg, #FFC107, #FF9800);
+    color: #0B2D4A;
+    font-weight: 700;
+    border-radius: 8px 8px 0 0;
+}
+
+.ai-table tr:nth-child(even) {
+    background: rgba(15,45,70,0.3);
+}
+
+.ai-table tr:nth-child(odd) {
+    background: transparent;
+}
+
+.ai-table tr:hover {
+    background: rgba(255,193,7,0.1) !important;
+}
+
+.ai-table tr.highlight {
+    background: rgba(255,193,7,0.15) !important;
+    border-left: 3px solid #4CAF50;
+}
+
+.small-score {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.9em;
+}
+
+.small-score.high {
+    background: rgba(76,175,80,0.2);
+    color: #4CAF50;
+}
+
+.small-score.medium {
+    background: rgba(255,193,7,0.2);
+    color: #FFC107;
+}
+
+.small-score.low {
+    background: rgba(244,67,54,0.2);
+    color: #f44336;
+}
+
+.ai-recommendations {
+    border-left: 4px solid #4CAF50 !important;
+}
+
+.ai-recommendations h4 {
+    color: #4CAF50;
+}
+
+.ai-explication {
+    color: #FFC107;
+    font-size: 0.95em;
+    margin-top: 18px;
+    background: rgba(255,193,7,0.08);
+    padding: 16px;
+    border-radius: 10px;
+    border-left: 4px solid #FFC107;
+    line-height: 1.6;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .ai-rapport-main {
+        padding: 0 12px;
+    }
+    
+    .ai-rapport-title {
+        font-size: 1.8rem;
+    }
+    
+    .stat-box, .ai-table {
+        font-size: 0.9em;
+    }
+    
+    .score-big {
+        font-size: 2rem;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var form = document.getElementById('ai-rapport-form');
+    var result = document.getElementById('ai-rapport-result');
+    
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        result.style.display = 'block';
+        result.innerHTML = '<div class="ai-card"><p style="text-align:center;color:#FFC107;"><span style="display:inline-block;animation:spin 1s linear infinite;">⏳</span> Analyse en cours...</p></div>';
+        
+        try {
+            var response = await fetch('/ai/rapport-qp-analyze?_=' + Date.now(), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                    'Cache-Control': 'no-cache',
+                    'Pragma': 'no-cache'
+                },
+                cache: 'no-store',
+                body: JSON.stringify({
+                    localisation: document.getElementById('ai-rapport-lieu').value,
+                    budget: parseFloat(document.getElementById('ai-rapport-budget').value) || 100
+                })
+            });
+            
+            var data = await response.json();
+            console.log('API Response:', data);
+            
+            if (data.success && data.hebergement) {
+                var r = data;
+                var heb = r.hebergement;
+                var analyse = r.analyse || [];
+                var scoreClass = heb.score >= 80 ? 'high' : (heb.score >= 50 ? 'medium' : 'low');
+                
+                var html = '<div class="ai-card ai-card-winner">';
+                html += '<div style="display:flex;justify-content:space-between;align-items:start;">';
+                html += '<div><h3 style="margin:0 0 8px 0;">' + escHtml(heb.nom) + '</h3>';
+                html += '<span class="badge badge-winner">🏆 Meilleur Q/P</span></div>';
+                html += '<div style="text-align:right;"><div class="score-big ' + scoreClass + '">' + heb.score + '</div><small style="color:#999;">/100</small></div>';
+                html += '</div>';
+                html += '<div class="ai-meta" style="margin-top:12px;">';
+                html += '<span class="badge">💰 ' + heb.prix + ' TND</span>';
+                html += '<span class="badge">' + escHtml(heb.type) + '</span>';
+                html += '<span class="badge">' + escHtml(heb.disponibilite) + '</span>';
+                if (heb.note) html += '<span class="badge">⭐ ' + heb.note + '/5</span>';
+                html += '</div>';
+                html += '<div class="ai-score-bar" style="margin-top:12px;"><div class="ai-score-fill ' + scoreClass + '" style="width:' + Math.min(100, heb.score) + '%;"></div></div>';
+                if (heb.description) html += '<p style="margin-top:14px;font-size:0.95em;opacity:0.85;line-height:1.5;">' + escHtml(heb.description.substring(0, 200)) + (heb.description.length > 200 ? '...' : '') + '</p>';
+                html += '</div>';
+                
+                if (r.budgetStats) {
+                    html += '<div class="ai-card"><h3>📊 Analyse du Marché</h3>';
+                    html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px;">';
+                    html += '<div class="stat-box"><div class="stat-label">💵 Prix Minimum</div><div class="stat-value">' + r.budgetStats.minPrice + ' TND</div></div>';
+                    html += '<div class="stat-box"><div class="stat-label">💳 Prix Maximum</div><div class="stat-value">' + r.budgetStats.maxPrice + ' TND</div></div>';
+                    html += '<div class="stat-box"><div class="stat-label">📈 Prix Moyen</div><div class="stat-value">' + r.budgetStats.avgPrice + ' TND</div></div>';
+                    html += '<div class="stat-box"><div class="stat-label">🎯 Étendue</div><div class="stat-value">' + r.budgetStats.range + ' TND</div></div>';
+                    html += '<div class="stat-box"><div class="stat-label">🏠 Total Options</div><div class="stat-value">' + r.budgetStats.optionsFound + '</div></div>';
+                    html += '<div class="stat-box"><div class="stat-label">✅ En Budget</div><div class="stat-value">' + r.budgetStats.withinBudgetCount + '/' + r.budgetStats.optionsFound + '</div></div>';
+                    html += '</div></div>';
+                }
+                
+                html += '<div class="ai-card"><h3>💎 Efficacité du Budget</h3>';
+                html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px;">';
+                html += '<div><div class="info-label">Prix de l\'hébergement</div><div class="info-value">' + heb.prix + ' TND</div></div>';
+                html += '<div><div class="info-label">Budget utilisé</div><div class="info-value">' + heb.budgetUtilise + '%</div></div>';
+                html += '<div><div class="info-label">Budget restant</div><div class="info-value" style="color:#4CAF50;">+' + heb.budgetRestant + ' TND</div></div>';
+                html += '<div><div class="info-label">Catégorie Q/P</div><div class="info-value" style="text-transform:capitalize;">' + escHtml(heb.valueTier) + '</div></div>';
+                html += '</div></div>';
+                
+                if (analyse.length > 1) {
+                    html += '<div class="ai-card"><h3>🏆 Top 5 - Meilleur Classement Q/P</h3>';
+                    html += '<table class="ai-table"><thead><tr><th style="width:15%;">#</th><th style="width:45%;">Hébergement</th><th style="width:20%;">Prix</th><th style="width:20%;">Score</th></tr></thead><tbody>';
+                    analyse.slice(0, 5).forEach(function(a, i) {
+                        var isBest = a.idHebergement === heb.idHebergement;
+                        html += '<tr' + (isBest ? ' class="highlight"' : '') + '>';
+                        html += '<td style="font-weight:bold;text-align:center;">' + (i+1) + '</td>';
+                        html += '<td>' + (isBest ? '<span style="color:#4CAF50;">✓</span> ' : '') + '<strong>' + escHtml(a.nom) + '</strong><br><small style="opacity:0.7;">' + escHtml(a.type) + '</small></td>';
+                        html += '<td><strong>' + a.prix + ' TND</strong></td>';
+                        var scoreClass2 = a.score >= 80 ? 'high' : (a.score >= 50 ? 'medium' : 'low');
+                        html += '<td><div class="small-score ' + scoreClass2 + '">' + a.score + '</div></td>';
+                        html += '</tr>';
+                    });
+                    html += '</tbody></table></div>';
+                }
+                
+                if (r.recommendations && r.recommendations.length > 0) {
+                    html += '<div class="ai-card ai-recommendations"><h3>💡 Recommandations AI</h3>';
+                    html += '<ul style="margin:10px 0;padding-left:20px;">';
+                    r.recommendations.forEach(function(rec) {
+                        html += '<li style="margin-bottom:6px;opacity:0.95;">' + escHtml(rec) + '</li>';
+                    });
+                    html += '</ul></div>';
+                }
+                
+                if (r.explication) {
+                    html += '<div class="ai-explication"><h4 style="margin-top:0;">📐 Formule de Calcul</h4>' + r.explication + '</div>';
+                }
+                
+                result.innerHTML = html;
+            } else {
+                console.log('Unexpected response:', data);
+                var msg = data.message || (data.result && data.result.message) || 'Aucun hébergement trouvé. Essayez une autre localisation ou budget plus élevé.';
+                result.innerHTML = '<div class="ai-card"><p style="color:#FF9800;text-align:center;">ℹ️ ' + escHtml(msg) + '</p></div>';
+            }
+        } catch (err) {
+            console.error('Fetch error:', err);
+            result.innerHTML = '<div class="ai-card"><p style="color:#f44336;text-align:center;">❌ Erreur: ' + escHtml(err.message) + '</p></div>';
+        }
+    });
+    
+    function escHtml(str) {
+        if (!str) return '';
+        var div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+});
+
+// Add spin animation for loading indicator
+var style = document.createElement('style');
+style.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
+document.head.appendChild(style);
+</script>
+{% endblock %}
+
+
+<style>
+body {
+    background: #0B2D4A !important;
+    font-family: 'Poppins', Arial, sans-serif;
+}
+.ai-rapport-main {
+    max-width: 680px;
+    margin: 30px auto;
+    padding: 28px 22px 24px 22px;
+    background: #08263E;
+    border-radius: 22px;
+    box-shadow: 0 8px 32px rgba(11,45,74,0.18);
+}
+.ai-rapport-title {
+    color: #FFC107;
+    font-weight: 800;
+    font-size: 2rem;
+    margin-bottom: 6px;
+    text-align: center;
+}
+.ai-rapport-subtitle {
+    color: #FF9800;
+    font-size: 0.95em;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.ai-rapport-form { margin-bottom: 10px; }
+.ai-rapport-field { margin-bottom: 16px; }
+.ai-rapport-field label {
+    font-weight: 600;
+    color: #FFC107;
+    display: block;
+    margin-bottom: 6px;
+}
+.ai-rapport-select, .ai-rapport-input {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 14px;
+    border: 1.5px solid #FFC107;
+    font-size: 1.08em;
+    background: #0B2D4A;
+    color: #fff;
+    outline: none;
+}
+.ai-rapport-select:focus, .ai-rapport-input:focus { border: 2px solid #FF9800; }
+.ai-rapport-btn {
+    width: 100%;
+    justify-content: center;
+    background: linear-gradient(135deg, #FFC107, #FF9800);
+    color: #0B2D4A;
+    font-weight: 700;
+    font-size: 1.1em;
+    border-radius: 18px;
+    margin-top: 8px;
+    padding: 12px;
+    border: none;
+    cursor: pointer;
+}
+.ai-card {
+    background: #0B2D4A;
+    border-radius: 16px;
+    box-shadow: 0 4px 18px rgba(11,45,74,0.18);
+    padding: 22px 18px 16px 18px;
+    margin-top: 16px;
+    color: #fff;
+    font-size: 1.08rem;
+    animation: fadeIn 0.7s;
+}
+.ai-card-winner { border: 2px solid #FFC107; }
+.ai-card h3 { color: #FFC107; font-size: 1.3rem; margin-bottom: 8px; font-weight: 800; }
+.badge {
+    background: linear-gradient(90deg,#FFC107,#FF9800);
+    color: #0B2D4A;
+    border-radius: 12px;
+    padding: 2px 12px;
+    font-size: 0.85em;
+    margin-left: 8px;
+    font-weight: 700;
+}
+.ai-score-bar { height: 10px; background: #1a3a5c; border-radius: 5px; overflow: hidden; margin: 8px 0; }
+.ai-score-fill { height: 100%; border-radius: 5px; }
+.ai-score-fill.high { background: linear-gradient(90deg,#4CAF50,#8BC34A); }
+.ai-score-fill.medium { background: linear-gradient(90deg,#FFC107,#FF9800); }
+.ai-score-fill.low { background: linear-gradient(90deg,#f44336,#e91e63); }
+.ai-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+.ai-table th, .ai-table td { padding: 8px 10px; text-align: left; font-size: 0.95em; }
+.ai-table th { background: #FFC107; color: #0B2D4A; font-weight: 700; }
+.ai-table tr:nth-child(even) { background: #0B2D4A; }
+.ai-table tr:nth-child(odd) { background: #08263E; }
+.ai-table tr.highlight { background: #fffbe6 !important; color: #0B2D4A; }
+.ai-explication {
+    color: #FFC107;
+    font-size: 0.98em;
+    margin-top: 14px;
+    background: rgba(255,193,7,0.08);
+    padding: 12px 14px;
+    border-radius: 10px;
+    border-left: 3px solid #FFC107;
+}
+.ai-meta { display: flex; gap: 8px; flex-wrap: wrap; margin: 6px 0; }
+.score-value { display: inline-block; padding: 2px 8px; border-radius: 4px; font-weight: 700; }
+.score-value.high { background: rgba(76,175,80,0.2); color: #4CAF50; }
+.score-value.medium { background: rgba(255,193,7,0.2); color: #FFC107; }
+.score-value.low { background: rgba(244,67,54,0.2); color: #f44336; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px);} to { opacity: 1; transform: none; } }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var form = document.getElementById('ai-rapport-form');
+    var result = document.getElementById('ai-rapport-result');
+    
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        result.style.display = 'block';
+        result.innerHTML = '<div class="ai-card"><p style="text-align:center;color:#FFC107;">⏳ Analyse en cours...</p></div>';
+        
+        try {
+        var response = await fetch('/ai/rapport-qp-analyze?_=' + Date.now(), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                    'Cache-Control': 'no-cache',
+                    'Pragma': 'no-cache'
+                },
+                cache: 'no-store',
+                body: JSON.stringify({
+                    localisation: document.getElementById('ai-rapport-lieu').value,
+                    budget: parseFloat(document.getElementById('ai-rapport-budget').value) || 100
+                })
+            });
+            
+            var data = await response.json();
+            console.log('API Response:', data);
+            
+            if (data.success && data.hebergement) {
+                var r = data;
+                var heb = r.hebergement;
+                var analyse = r.analyse || [];
+                var scoreClass = heb.score >= 80 ? 'high' : (heb.score >= 50 ? 'medium' : 'low');
+                
+                var html = '<div class="ai-card ai-card-winner">';
+                html += '<h3>' + escHtml(heb.nom) + ' <span class="badge">🏆 Meilleur Q/P</span></h3>';
+                html += '<div class="ai-meta">';
+                html += '<span class="badge">💰 ' + heb.prix + ' TND/nuit</span>';
+                html += '<span class="badge">' + escHtml(heb.type) + '</span>';
+                html += '<span class="badge">' + escHtml(heb.disponibilite) + '</span>';
+                html += '</div>';
+                html += '<div style="margin:10px 0;">Score Q/P: <span class="score-value ' + scoreClass + '">' + heb.score + '/100</span></div>';
+                html += '<div class="ai-score-bar"><div class="ai-score-fill ' + scoreClass + '" style="width:' + Math.min(100, heb.score) + '%;"></div></div>';
+                if (heb.note) html += '<div>Note: ' + heb.note + '/5 ⭐</div>';
+                if (heb.description) html += '<p style="margin-top:10px;font-size:0.95em;opacity:0.9;">' + escHtml(heb.description.substring(0, 150)) + '...</p>';
+                html += '</div>';
+                
+                if (r.budgetStats) {
+                    html += '<div class="ai-card">';
+                    html += '<h3>📊 Stats Budget</h3>';
+                    html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:0.9em;">';
+                    html += '<div>Min: <strong>' + r.budgetStats.minPrice + ' TND</strong></div>';
+                    html += '<div>Max: <strong>' + r.budgetStats.maxPrice + ' TND</strong></div>';
+                    html += '<div>Moy: <strong>' + r.budgetStats.avgPrice + ' TND</strong></div>';
+                    html += '<div>Options: <strong>' + r.budgetStats.optionsFound + '</strong></div>';
+                    html += '</div></div>';
+                }
+                
+                if (analyse.length > 1) {
+                    html += '<div class="ai-card">';
+                    html += '<h3>🏆 Top 5 Classement</h3>';
+                    html += '<table class="ai-table"><thead><tr><th>#</th><th>Hébergement</th><th>Prix</th><th>Score</th></tr></thead><tbody>';
+                    analyse.slice(0, 5).forEach(function(a, i) {
+                        var isBest = a.idHebergement === heb.idHebergement;
+                        html += '<tr' + (isBest ? " class='highlight'" : '') + '>';
+                        html += '<td style="font-weight:bold;">' + (i+1) + '</td>';
+                        html += '<td>' + (isBest ? '🏆 ' : '') + escHtml(a.nom) + '</td>';
+                        html += '<td><strong>' + a.prix + ' TND</strong></td>';
+                        html += '<td style="color:#FF9800;"><strong>' + a.score + '</strong></td>';
+                        html += '</tr>';
+                    });
+                    html += '</tbody></table></div>';
+                }
+                
+                if (r.recommendations && r.recommendations.length > 0) {
+                    html += '<div class="ai-card">';
+                    html += '<h4 style="color:#4CAF50;margin-bottom:8px;">💡 Recommandations AI</h4><ul style="margin:0;padding-left:18px;">';
+                    r.recommendations.forEach(function(rec) {
+                        html += '<li>' + escHtml(rec) + '</li>';
+                    });
+                    html += '</ul></div>';
+                }
+                
+                if (r.explication) {
+                    html += '<div class="ai-explication">' + escHtml(r.explication) + '</div>';
+                }
+                
+                result.innerHTML = html;
+            } else if (data.success && data.html) {
+                result.innerHTML = '<div class="ai-card"><p style="color:#FF9800;">⚠️ Réponse basique reçue. Rechargez la page.</p><div style="opacity:0.7;">' + data.html + '</div></div>';
+            } else {
+                console.log('Unexpected response:', data);
+                result.innerHTML = '<div class="ai-card"><p style="color:#FF9800;">ℹ️ ' + (data.message || data.result?.message || 'Aucun hébergement trouvé. Essayez une autre localisation ou budget plus élevé.') + '</p></div>';
+            }
+        } catch (err) {
+            console.error('Fetch error:', err);
+            result.innerHTML = '<div class="ai-card"><p style="color:#f44336;">❌ Erreur: ' + escHtml(err.message) + '</p></div>';
+        }
+    });
+    
+    function escHtml(str) {
+        if (!str) return '';
+        var div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+});
+</script>
+{% endblock %}

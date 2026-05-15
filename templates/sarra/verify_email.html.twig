@@ -1,0 +1,48 @@
+{% block body %}
+
+<h2>Vérification Email</h2>
+
+<input type="email" id="email" placeholder="Entrer votre email">
+<button onclick="sendCode()">Envoyer code</button>
+
+<div id="codeSection" style="display:none;">
+    <input type="text" id="code" placeholder="Entrer le code">
+    <button onclick="verifyCode()">Vérifier</button>
+</div>
+
+<script>
+function sendCode() {
+    let email = document.getElementById("email").value;
+
+    fetch("/send-code", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: "email=" + email
+    })
+    .then(res => res.text())
+    .then(data => {
+document.getElementById("message").textContent = data;
+        document.getElementById("codeSection").style.display = "block";
+    });
+}
+
+function verifyCode() {
+    let email = document.getElementById("email").value;
+    let code = document.getElementById("code").value;
+
+    fetch("/verify-code", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: "email=" + email + "&code=" + code
+    })
+    .then(res => res.text())
+    .then(data => {
+document.getElementById("message").textContent = data;
+        if (data === "Email vérifié") {
+            window.location.href = "/register";
+        }
+    });
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+
+<StackPane xmlns="http://javafx.com/javafx/21"
+           xmlns:fx="http://javafx.com/fxml/1"
+           stylesheets="@profile.css"
+           fx:controller="tn.esprit.controllers.ProfileController"
+           styleClass="profile-background"
+           prefWidth="900"
+           prefHeight="700">
+
+    <!-- CONTENEUR PRINCIPAL -->
+    <VBox spacing="30"
+          alignment="TOP_CENTER"
+          maxWidth="650"
+          styleClass="profile-card"
+          StackPane.alignment="CENTER">
+
+
+        <padding>
+            <Insets top="40" right="35" bottom="35" left="35"/>
+        </padding>
+
+        <!-- HEADER CLOSE -->
+        <HBox alignment="CENTER_RIGHT"
+              maxWidth="650">
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="✕"
+                    styleClass="close-btn"
+                    onAction="#handleLogout"/>
+        </HBox>
+
+        <!-- AVATAR + NOM -->
+        <VBox alignment="CENTER" spacing="18">
+
+            <StackPane>
+                <Circle radius="70" styleClass="avatar-ring"/>
+                <Circle radius="62" styleClass="avatar-inner"/>
+
+                <ImageView fitWidth="85" preserveRatio="true">
+                    <image>
+                        <Image url="@/images/avatar.png"/>
+                    </image>
+                </ImageView>
+            </StackPane>
+
+            <Label fx:id="lblName"
+                   styleClass="profile-name"/>
+
+            <HBox spacing="12" alignment="CENTER">
+                <Label fx:id="lblRole"
+                       styleClass="badge-base"/>
+
+                <Label fx:id="lblStatus"
+                       styleClass="badge-base"/>
+
+            </HBox>
+        </VBox>
+
+        <!-- INFORMATIONS -->
+        <VBox spacing="20"
+              styleClass="section-card"
+              maxWidth="550">
+
+            <Label text="INFORMATIONS"
+                   styleClass="section-title"/>
+
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <Label text="✉" styleClass="info-icon"/>
+                <VBox>
+                    <Label text="Email" styleClass="info-label"/>
+                    <Label fx:id="lblEmail"
+                           styleClass="info-value"/>
+                </VBox>
+            </HBox>
+
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <Label text="☎" styleClass="info-icon"/>
+                <VBox>
+                    <Label text="Téléphone" styleClass="info-label"/>
+                    <Label fx:id="lblPhone"
+                           styleClass="info-value"/>
+                </VBox>
+            </HBox>
+        </VBox>
+
+        <!-- SECURITY -->
+        <VBox spacing="20"
+              styleClass="section-card"
+              maxWidth="550">
+
+            <Label text="SÉCURITÉ"
+                   styleClass="section-title"/>
+
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <Label text="🔒" styleClass="info-icon"/>
+
+                <VBox>
+                    <Label text="Mot de passe" styleClass="info-label"/>
+                    <Label text="••••••••••" styleClass="info-value"/>
+                </VBox>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Button text="Modifier"
+                        styleClass="btn-small"
+                        onAction="#handleEditProfile"/>
+            </HBox>
+        </VBox>
+
+        <!-- BOUTON PRINCIPAL -->
+        <Button text="Modifier le Profil"
+                styleClass="btn-edit-full"
+                onAction="#handleEditProfile"/>
+
+        <!-- ACTIONS -->
+        <HBox spacing="20" alignment="CENTER">
+            <Button text="Déconnexion"
+                    styleClass="btn-logout"
+                    onAction="#handleLogout"/>
+
+            <Button text="Supprimer"
+                    styleClass="btn-delete"
+                    onAction="#handleDeleteAccount"/>
+        </HBox>
+
+    </VBox>
+
+</StackPane>

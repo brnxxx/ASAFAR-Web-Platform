@@ -1,0 +1,37 @@
+doctrine_doctor:
+    enabled: true
+
+    # Disabled analyzers and rationale documented below:
+    # - naming_convention: Database uses legacy camelCase columns (idUser, idTransport, etc.)
+    #   from inherited schema. Cannot be changed without major data migrations.
+    #   All code functions correctly; this is purely a style/convention preference.
+    #   See: https://doctrine-orm.readthedocs.io/en/latest/reference/basic-mapping.html
+
+    analyzers:
+        # Disable naming convention warnings entirely
+        naming_convention:
+            enabled: false
+
+        collection_initialization:
+            enabled: false
+
+        # Keep essential performance analyzers only
+        n_plus_one:
+            enabled: true
+            threshold: 5
+
+        slow_query:
+            enabled: true
+            threshold: 100
+
+        missing_index:
+            enabled: true
+            slow_query_threshold: 1
+            explain_queries: true
+            min_rows_scanned: 5
+
+        dql_injection:
+            enabled: true
+
+    profiler:
+        show_in_toolbar: true

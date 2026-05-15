@@ -1,0 +1,90 @@
+{% for user in users %}
+{% set avatarColors = ['blue', 'amber', 'purple', 'green', 'orange'] %}
+{% set colorIndex = (user.id % 5) %}
+{% set avatarColor = avatarColors[colorIndex] %}
+<tr data-role="{{ user.role|lower }}" data-status="{{ user.statut|lower }}">
+<td>
+<div class="user-cell">
+<div class="user-avatar {{ avatarColor }}">
+{{ user.prenom|slice(0,1)|upper ~ user.nom|slice(0,1)|upper }}
+<span class="status-indicator {{ user.statut == 'actif' ? 'online' : (user.statut == 'bloqué' ? 'busy' : 'offline') }}"></span>
+</div>
+<div class="user-details">
+<h4>{{ user.prenom }} {{ user.nom }}</h4>
+<p>{{ user.telephone ?? 'Non renseigné' }}</p>
+</div>
+</div>
+</td>
+<td>{{ user.email }}</td>
+<td>
+{% if user.role == 'admin' %}
+<span class="badge badge-primary">Administrateur</span>
+{% elseif user.role == 'prestataire' %}
+<span class="badge badge-purple">Prestataire</span>
+{% elseif user.role == 'moderateur' %}
+<span class="badge badge-info">Modérateur</span>
+{% else %}
+<span class="badge badge-info">Client</span>
+{% endif %}
+</td>
+<td>
+{% if user.statut == 'actif' %}
+<span class="badge badge-success">Actif</span>
+{% elseif user.statut == 'bloqué' %}
+<span class="badge badge-danger">Bloqué</span>
+{% elseif user.statut == 'inactif' %}
+<span class="badge badge-warning">Inactif</span>
+{% else %}
+<span class="badge badge-warning">Inactif</span>
+{% endif %}
+</td>
+<td>
+{% if user.dateInscription %}
+{{ user.dateInscription|date('d/m/Y') }}
+{% else %}
+N/A
+{% endif %}
+</td>
+<td>
+<div class="action-buttons">
+
+    <!-- MODIFIER -->
+    <button type="button"
+            class="btn-action btn-edit edit-user"
+            data-user-id="{{ user.id }}"
+            title="Modifier">
+        <i class="fas fa-edit"></i>
+    </button>
+
+    <!-- STATUT -->
+    <button type="button"
+            class="btn-action btn-status toggle-status"
+            data-user-id="{{ user.id }}"
+            title="Changer le statut">
+        <i class="fas fa-sync-alt"></i>
+    </button>
+
+    <!-- SUPPRIMER -->
+    <button type="button"
+            class="btn-action btn-delete delete-user"
+            data-user-id="{{ user.id }}"
+            title="Supprimer">
+        <i class="fas fa-trash"></i>
+    </button>
+
+</div>
+</td>
+</tr>
+{% else %}
+<tr>
+<td colspan="6">
+<div class="empty-state">
+<div class="empty-state-icon">
+<i class="fas fa-users"></i>
+</div>
+<h3>Aucun utilisateur trouvé</h3>
+<p>Modifiez vos critères de recherche</p>
+</div>
+</td>
+</tr>
+{% endfor %}

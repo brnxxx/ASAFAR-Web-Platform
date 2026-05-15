@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+
+<BorderPane prefHeight="900" prefWidth="1400"
+            stylesheets="@styleA.css"
+            xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.esprit.controllers.BackOfficeControllerA">
+
+    <!-- ================= SIDEBAR ================= -->
+    <left>
+        <StackPane fx:id="leftContainer"
+                   minWidth="100"
+                   prefWidth="100"
+                   maxWidth="300"
+                   onMouseEntered="#expandSidebar"
+                   onMouseExited="#collapseSidebar">
+
+            <VBox alignment="TOP_CENTER"
+                  spacing="30"
+                  styleClass="sidebar">
+
+                <padding>
+                    <Insets top="25" left="15" right="15"/>
+                </padding>
+
+                <!-- LOGO ASAFAR -->
+                <ImageView fx:id="logo"
+                           fitHeight="55"
+                           preserveRatio="true">
+                    <image>
+                        <Image url="@/images/logo.png"/>
+                    </image>
+                </ImageView>
+
+                <!-- ===== MENU AVEC ICÔNES ===== -->
+                <!-- ACCUEIL -->
+                <Button fx:id="btnAccueil" styleClass="menu-btn" text="">
+                    <graphic>
+                        <ImageView fitHeight="22" fitWidth="22" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/home.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+                <!-- HÉBERGEMENTS (ACTIF) -->
+                <Button fx:id="btnHebergement" styleClass="menu-btn" text="">
+                    <graphic>
+                        <ImageView fitHeight="22" fitWidth="22" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/building.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+                <!-- LOISIRS -->
+                <Button fx:id="btnLoisirs" styleClass="menu-btn" text="">
+                    <graphic>
+                        <ImageView fitHeight="22" fitWidth="22" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/parc.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+                <!-- TRANSPORTS -->
+                <Button fx:id="btnTransport" styleClass="menu-btn-active" text="">
+                    <graphic>
+                        <ImageView fitHeight="22" fitWidth="22" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/transport.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+                <!-- AVIS & RÉCLAMATIONS -->
+                <Button fx:id="btnAvis" styleClass="menu-btn" text="">
+                    <graphic>
+                        <ImageView fitHeight="22" fitWidth="22" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/avis.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+            </VBox>
+        </StackPane>
+    </left>
+
+    <!-- ================= CENTER ================= -->
+    <center>
+        <VBox spacing="30" styleClass="admin-root">
+            <padding>
+                <Insets top="30" left="40" right="40" bottom="30"/>
+            </padding>
+
+            <!-- ===== TOP BAR AVEC TITRE INTÉGRÉ ===== -->
+            <HBox fx:id="topBar"
+                  alignment="CENTER_LEFT"
+                  spacing="25"
+                  styleClass="topbar-fused">
+
+                <padding>
+                    <Insets top="15" right="25" bottom="15" left="25"/>
+                </padding>
+
+                <!-- TITRE DANS LA TOP BAR -->
+                <Label text="Gestion des Transports"
+                       style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <!-- PROFIL & DÉCONNEXION -->
+                <HBox alignment="CENTER" spacing="10">
+                    <Circle radius="18" styleClass="user-avatar"/>
+                    <Button fx:id="btnLogout" styleClass="top-icon-btn" onAction="#handleLogout">
+                        <graphic>
+                            <ImageView fitHeight="20" preserveRatio="true">
+                                <image>
+                                    <Image url="@/images/logout.png"/>
+                                </image>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+                </HBox>
+            </HBox>
+
+            <!-- ===== RECHERCHE ===== -->
+            <HBox spacing="20" alignment="CENTER_LEFT">
+                <TextField fx:id="txtRecherche"
+                           promptText="Rechercher par nom, type..."
+                           styleClass="search-field"
+                           HBox.hgrow="ALWAYS"/>
+
+                <Button fx:id="btnSearchAdmin" styleClass="btn-primary" onAction="#rechercherTransport">
+                    <graphic>
+                        <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/rechercher.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                    <text>RECHERCHER</text>
+                </Button>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Button fx:id="btnAjouter"
+                        text="+ NOUVEAU TRANSPORT"
+                        styleClass="btn-primary"/>
+            </HBox>
+
+            <!-- ===== LISTVIEW DES TRANSPORTS ===== -->
+            <VBox spacing="20" styleClass="admin-table-container">
+                <Label text="Liste des transports"
+                       style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold; -fx-padding: 0 0 5 0;"/>
+                <ListView fx:id="listViewTransport"
+                          prefHeight="350"
+                          maxHeight="350"
+                          VBox.vgrow="NEVER"
+                          styleClass="admin-table"/>
+            </VBox>
+
+            <!-- ===== LISTVIEW DES RESERVATIONS ===== -->
+            <VBox spacing="20" styleClass="admin-table-container">
+                <Label text="Liste des réservations"
+                       style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold; -fx-padding: 0 0 5 0;"/>
+
+                <ListView fx:id="listViewReservation"
+                          prefHeight="400"
+                          maxHeight="400"
+                          VBox.vgrow="NEVER"
+                          styleClass="admin-table"/>
+
+                <!-- Nombre total de réservations -->
+                <Label fx:id="lblTotalReservations" text="0"
+                       style="-fx-text-fill: #A7E3FF; -fx-font-size: 14px;"/>
+
+                <!-- Barre de statut -->
+                <HBox fx:id="statusBarReservation" visible="false" managed="false">
+                    <Label fx:id="lblStatusReservation" style="-fx-text-fill: #A7E3FF;"/>
+                </HBox>
+            </VBox>
+
+
+            <!-- ===== STATUS BAR ===== -->
+            <HBox fx:id="statusBar"
+                  visible="false"
+                  managed="false"
+                  styleClass="status-active"
+                  alignment="CENTER_LEFT">
+
+                <padding>
+                    <Insets left="15" right="15" top="10" bottom="10"/>
+                </padding>
+
+                <Label fx:id="lblStatusMessage" text="Prêt" style="-fx-text-fill: white;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="btnCloseStatus"
+                        text="✕"
+                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;"/>
+            </HBox>
+
+        </VBox>
+    </center>
+</BorderPane>

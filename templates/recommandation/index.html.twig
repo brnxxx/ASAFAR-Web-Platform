@@ -1,0 +1,102 @@
+{% if recommandations is empty %}
+
+    <p style="color:rgba(255,255,255,0.7); text-align:center; grid-column:1/-1;">
+        🗺️ Aucune recommandation disponible
+    </p>
+
+{% else %}
+
+{% for item in recommandations %}
+    {% set excursion = item.excursion %}
+
+    <article class="loisir-excursion-card">
+
+        <div class="loisir-excursion-image">
+            <img src="{{ asset('uploads/' ~ excursion.imageUrl) }}" alt="{{ excursion.titre }}">
+            <div class="loisir-excursion-overlay"></div>
+            <span class="loisir-excursion-badge">{{ excursion.type ?? 'Outdoor' }}</span>
+            <span class="loisir-excursion-places">{{ excursion.nombrePlacesDisponibles }} places</span>
+        </div>
+
+        <div class="loisir-excursion-content">
+
+            <h3>{{ excursion.titre }}</h3>
+
+            <div class="loisir-excursion-meta-info">
+                <span class="loisir-meta-item">📍 {{ excursion.lieu }}</span>
+                <span class="loisir-meta-item">⏱ {{ excursion.duree }}h</span>
+                <span class="loisir-meta-item">📅 {{ excursion.date|date('d/m/Y') }}</span>
+            </div>
+
+            {# 🔥 AJOUT MÉTÉO COMME L'AUTRE #}
+            {% if excursion.weather and excursion.weather.weather is defined and excursion.weather.weather|length > 0 %}
+                <div class="loisir-weather">
+                    <img src="https://openweathermap.org/img/wn/{{ excursion.weather.weather[0].icon }}@2x.png">
+                    <span>{{ excursion.weather.main.temp|round(1) }}°C</span>
+                    <span>{{ excursion.weather.weather[0].description|capitalize }}</span>
+                </div>
+            {% else %}
+                <div class="loisir-weather-empty">🌤️ Météo indisponible</div>
+            {% endif %}
+
+            <p>
+                {{ excursion.description|slice(0, 90) }}
+                {% if excursion.description|length > 90 %}...{% endif %}
+            </p>
+
+            <div class="loisir-prix-row">
+                <div class="loisir-prix-item">
+                    <span class="loisir-prix-label">Adulte</span>
+                    <span class="loisir-prix-value">
+                        {{ excursion.prixData.prix_adulte|default(excursion.prixAdulte)|round }} TND
+                    </span>
+                </div>
+
+                <div class="loisir-prix-item">
+                    <span class="loisir-prix-label">Enfant</span>
+                    <span class="loisir-prix-value enfant">
+                        {{ excursion.prixData.prix_enfant|default(0)|round }} TND
+                    </span>
+                </div>
+
+                <div class="loisir-prix-item">
+                    <span class="loisir-prix-label">Bébé</span>
+                    <span class="loisir-prix-value bebe">
+                        {% if excursion.prixData.prix_bebe|default(0) > 0 %}
+                            {{ excursion.prixData.prix_bebe|round }} TND
+                        {% else %}
+                            Gratuit
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+
+            {# ⭐ RATING IDENTIQUE #}
+            <div class="loisir-rating">
+                {% set rating = excursion.rating ?? 4.0 %}
+                {% set stars = rating | round %}
+                {% for i in 1..5 %}
+                    {% if i <= stars %}⭐{% else %}☆{% endif %}
+                {% endfor %}
+                {{ rating }}/5
+            </div>
+
+            {# 🔥 RAISON (BONUS RECO) #}
+            <div style="margin-bottom:10px;">
+                <span style="color:#FFC107;"> {{ item.raison }}</span>
+            </div>
+
+            <div class="loisir-excursion-footer">
+                <a href="{{ path('excursion_detail', {'id': excursion.idExcursion}) }}"
+                   class="loisir-excursion-btn btn-reserver">Voir détails →</a>
+
+            
+            </div>
+
+        </div>
+
+    </article>
+
+{% endfor %}
+
+{% endif %}

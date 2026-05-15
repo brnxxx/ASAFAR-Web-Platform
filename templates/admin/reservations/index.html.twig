@@ -1,0 +1,296 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Réservations Hébergements - Admin ASAFAR{% endblock %}
+
+{% block page_title %}
+    <i class="fas fa-calendar-check"></i> Gestion des Réservations
+{% endblock %}
+
+{% block breadcrumb %}Réservations{% endblock %}
+
+{% block content %}
+{% set totalReservations = reservations|length %}
+{% set pendingCount = 0 %}
+{% set confirmedCount = 0 %}
+{% set cancelledCount = 0 %}
+{% set totalAmount = 0 %}
+
+{% for reservation in reservations %}
+    {% set totalAmount = totalAmount + (reservation.montantTotal|default(0)) %}
+    {% if reservation.statut == 'EN_ATTENTE' %}
+        {% set pendingCount = pendingCount + 1 %}
+    {% elseif reservation.statut == 'CONFIRMEE' %}
+        {% set confirmedCount = confirmedCount + 1 %}
+    {% elseif reservation.statut == 'ANNULEE' %}
+        {% set cancelledCount = cancelledCount + 1 %}
+    {% endif %}
+{% endfor %}
+
+<div class="stats-grid">
+    <div class="stat-card blue">
+        <div class="stat-icon blue">
+            <i class="fas fa-calendar-check"></i>
+        </div>
+        <div class="stat-value">{{ totalReservations }}</div>
+        <div class="stat-label">Total Réservations</div>
+        <span class="stat-change positive">
+            <i class="fas fa-layer-group"></i>
+            Collection totale
+        </span>
+    </div>
+    <div class="stat-card green">
+        <div class="stat-icon green">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="stat-value">{{ confirmedCount }}</div>
+        <div class="stat-label">Confirmées</div>
+        <span class="stat-change positive">
+            <i class="fas fa-thumbs-up"></i>
+            Validées
+        </span>
+    </div>
+    <div class="stat-card amber">
+        <div class="stat-icon amber">
+            <i class="fas fa-hourglass-half"></i>
+        </div>
+        <div class="stat-value">{{ pendingCount }}</div>
+        <div class="stat-label">En Attente</div>
+        <span class="stat-change positive">
+            <i class="fas fa-clock"></i>
+            À valider
+        </span>
+    </div>
+    <div class="stat-card purple">
+        <div class="stat-icon purple">
+            <i class="fas fa-euro-sign"></i>
+        </div>
+        <div class="stat-value">{{ totalAmount|number_format(0, '.', ' ') }}€</div>
+        <div class="stat-label">Montant Total</div>
+        <span class="stat-change positive">
+            <i class="fas fa-wallet"></i>
+            Tous les montants
+        </span>
+    </div>
+</div>
+
+<div class="toolbar">
+    <div class="toolbar-left">
+        <button class="filter-btn active" data-filter="all">
+            <i class="fas fa-list"></i>
+            Tous
+        </button>
+        <button class="filter-btn" data-filter="EN_ATTENTE">
+            <i class="fas fa-hourglass-half"></i>
+            En Attente
+        </button>
+        <button class="filter-btn" data-filter="CONFIRMEE">
+            <i class="fas fa-check-circle"></i>
+            Confirmée
+        </button>
+        <button class="filter-btn" data-filter="ANNULEE">
+            <i class="fas fa-ban"></i>
+            Annulée
+        </button>
+    </div>
+    <div class="toolbar-right">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Rechercher une réservation..." aria-label="Rechercher">
+        </div>
+    </div>
+</div>
+
+{% if reservations %}
+<div class="table-container">
+    <div class="table-header">
+        <div class="table-title">
+            <i class="fas fa-list"></i>
+            Liste des Réservations
+        </div>
+        <div class="table-info">
+            Affichage de 1-{{ reservations|length }} sur {{ reservations|length }} réservations
+        </div>
+    </div>
+    <table id="reservationsTable">
+        <thead>
+            <tr>
+                <th>Hébergement</th>
+                <th>Client</th>
+                <th>Dates</th>
+                <th>Nuits</th>
+                <th>Personnes</th>
+                <th>Montant</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reservation in reservations %}
+            <tr data-status="{{ reservation.statut }}" data-id="{{ reservation.idReservation }}">
+                <td>
+                    <strong style="color: var(--text-primary);">
+                        {% if reservation.hebergement %}
+                            {{ reservation.hebergement.nom }}
+                        {% else %}
+                            <span style="color: rgba(244, 248, 252, 0.4);">Hébergement supprimé</span>
+                        {% endif %}
+                    </strong>
+                </td>
+                <td>
+                    <span style="color: var(--text-secondary);">Utilisateur #{{ reservation.idUser }}</span>
+                </td>
+                <td>
+                    <small style="color: rgba(244, 248, 252, 0.6);">
+                        {{ reservation.dateArrivee ? reservation.dateArrivee|date('d/m/Y') : 'N/A' }}
+                        → {{ reservation.dateDepart ? reservation.dateDepart|date('d/m/Y') : 'N/A' }}
+                    </small>
+                </td>
+                <td>
+                    {% set nbNuits = reservation.dateDepart ? reservation.dateArrivee ? reservation.dateDepart|date('U') - reservation.dateArrivee|date('U') : 0 : 0 %}
+                    <span style="color: #A7E3FF;">{{ (nbNuits / 86400)|round(0, 'floor') }}</span>
+                </td>
+                <td>
+                    <span style="color: var(--text-secondary);">
+                        {{ reservation.nbAdultes }}A + {{ reservation.nbEnfants }}E + {{ reservation.nbBebes }}B
+                    </span>
+                </td>
+                <td>
+                    <span style="color: #34D399; font-weight: 600;">{{ reservation.montantTotal|default('0') }}€</span>
+                </td>
+                <td>
+                    {% if reservation.statut == 'EN_ATTENTE' %}
+                        <span class="badge badge-warning">{{ reservation.statut }}</span>
+                    {% elseif reservation.statut == 'CONFIRMEE' %}
+                        <span class="badge badge-success">{{ reservation.statut }}</span>
+                    {% elseif reservation.statut == 'ANNULEE' %}
+                        <span class="badge badge-danger">{{ reservation.statut }}</span>
+                    {% else %}
+                        <span style="color: rgba(244, 248, 252, 0.4);">N/A</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <div class="action-buttons">
+                        <a href="{{ path('admin_reservation_edit', {'id': reservation.idReservation}) }}" class="btn-action btn-edit" title="Modifier">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <form method="POST" action="{{ path('admin_reservation_delete', {'id': reservation.idReservation}) }}" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr? Cette action est irréversible.');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reservation.idReservation) }}">
+                            <button type="submit" class="btn-action btn-delete" title="Supprimer">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="empty-state">
+    <i class="fas fa-inbox" style="display: block;"></i>
+    <p>Aucune réservation trouvée</p>
+    <small style="color: rgba(244, 248, 252, 0.4); display: block; margin-bottom: 20px;">Les réservations apparaîtront ici</small>
+</div>
+{% endif %}
+
+<style>
+    .toolbar-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .search-box {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 15px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .search-box i {
+        color: #A7E3FF;
+        font-size: 14px;
+    }
+
+    .search-box input {
+        background: transparent;
+        border: none;
+        color: white;
+        outline: none;
+        font-size: 14px;
+        width: 220px;
+    }
+
+    .search-box input::placeholder {
+        color: rgba(167, 227, 255, 0.5);
+    }
+
+    .search-box:focus-within {
+        border-color: rgba(47, 168, 255, 0.4);
+        box-shadow: 0 0 0 3px rgba(47, 168, 255, 0.12);
+    }
+
+    @media (max-width: 768px) {
+        .toolbar-right {
+            width: 100%;
+        }
+
+        .search-box,
+        .search-box input {
+            width: 100%;
+            min-width: 0;
+        }
+    }
+
+    .badge-warning {
+        background: rgba(255, 193, 7, 0.2);
+        color: #FFC107;
+        border: 1px solid #FFC107;
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const filterButtons = document.querySelectorAll('.filter-btn[data-filter]');
+    const tableBody = document.querySelector('#reservationsTable tbody');
+    let activeStatusFilter = 'all';
+
+    function applyFilters() {
+        if (!tableBody) return;
+
+        const searchTerm = (searchInput.value || '').toLowerCase();
+        const rows = Array.from(tableBody.querySelectorAll('tr'));
+
+        rows.forEach(row => {
+            const status = row.dataset.status || '';
+            const rowText = row.textContent.toLowerCase();
+
+            const matchesSearch = rowText.includes(searchTerm);
+            const matchesFilter = activeStatusFilter === 'all' || status === activeStatusFilter;
+
+            row.style.display = matchesSearch && matchesFilter ? '' : 'none';
+        });
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener('input', applyFilters);
+    }
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            activeStatusFilter = this.dataset.filter;
+            applyFilters();
+        });
+    });
+
+    applyFilters();
+});
+</script>
+{% endblock %}

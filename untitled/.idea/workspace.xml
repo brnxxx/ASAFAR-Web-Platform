@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="a768642b-8576-4a15-9d75-e5b8a1b9d0bd" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="CSS File" />
+        <option value="Enum" />
+        <option value="FxmlFile" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="showPreview" value="true" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="39WXJzShoWB5uw1i7rPP7y4zpNo" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Run",
+    "Application.MainFX.executor": "Run",
+    "Maven.pidev [org.openjfx:javafx-maven-plugin:0.0.8:run].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/Youssef/IdeaProjects/pidev/untitled",
+    "list.type.of.created.stylesheet": "CSS",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "onboarding.tips.debug.path": "D:/pidev/untitled/src/main/java/org/example/Main.java",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="controllers" />
+      <recent name="entities" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\pidev\untitled\src\main\resources\images" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.30387.90" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.30387.90" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="a768642b-8576-4a15-9d75-e5b8a1b9d0bd" name="Changes" comment="" />
+      <created>1770812733046</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1770812733046</updated>
+      <workItem from="1770812734649" duration="82000" />
+      <workItem from="1770812928782" duration="445000" />
+      <workItem from="1770813395880" duration="167000" />
+      <workItem from="1770813620751" duration="37000" />
+      <workItem from="1770813691791" duration="188000" />
+      <workItem from="1770813953066" duration="100000" />
+      <workItem from="1770814643157" duration="18313000" />
+      <workItem from="1770891506766" duration="1119000" />
+      <workItem from="1770892992882" duration="290000" />
+      <workItem from="1770894760183" duration="20959000" />
+      <workItem from="1770999648981" duration="20417000" />
+      <workItem from="1771075762151" duration="12902000" />
+      <workItem from="1771148436963" duration="4218000" />
+      <workItem from="1771153944035" duration="9712000" />
+      <workItem from="1771177799381" duration="34000" />
+      <workItem from="1771177840244" duration="11000" />
+      <workItem from="1771177874837" duration="11553000" />
+      <workItem from="1771237427821" duration="11159000" />
+      <workItem from="1771259092531" duration="21103000" />
+      <workItem from="1771315644825" duration="10034000" />
+      <workItem from="1771353638204" duration="1066000" />
+      <workItem from="1771355322371" duration="7000" />
+      <workItem from="1771356117485" duration="94000" />
+      <workItem from="1771356454584" duration="19000" />
+      <workItem from="1771359723857" duration="354000" />
+      <workItem from="1771360150216" duration="171000" />
+      <workItem from="1771363896198" duration="38000" />
+      <workItem from="1771630187113" duration="1082000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

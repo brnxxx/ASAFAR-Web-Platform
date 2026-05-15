@@ -1,0 +1,306 @@
+{% extends "base.html.twig" %}
+{% block title %}{{ hebergement.nom }} - ASAFAR{% endblock %}
+{% block body %}
+<style>
+    body { background: #0B2D4A !important; }
+
+    .detail-page {
+        min-height: 100vh;
+        padding: 120px 24px 80px;
+        background: radial-gradient(ellipse at 30% 50%, rgba(11,45,74,0.95) 0%, rgba(8,38,62,0.98) 50%, #051621 100%);
+    }
+    .detail-container { max-width: 1100px; margin: 0 auto; }
+
+    .back-link {
+        display: inline-flex; align-items: center; gap: 8px;
+        color: #2FA8FF; text-decoration: none; margin-bottom: 24px;
+        font-size: 14px; font-weight: 600; transition: all 0.3s ease;
+    }
+    .back-link:hover { color: #FFC107; transform: translateX(-4px); }
+
+    .detail-header { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 32px; }
+    .detail-img {
+        height: 380px; border-radius: 18px; overflow: hidden;
+        border: 2px solid rgba(255,193,7,0.15); background: rgba(255,193,7,0.05);
+        display: flex; align-items: center; justify-content: center;
+    }
+    .detail-img img { width: 100%; height: 100%; object-fit: cover; }
+    .detail-info { display: flex; flex-direction: column; gap: 16px; }
+    .detail-name {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-size: 38px; color: #FFC107; margin: 0;
+    }
+    .detail-meta { display: flex; gap: 12px; flex-wrap: wrap; }
+    .detail-tag {
+        padding: 6px 14px; background: rgba(255,193,7,0.1);
+        border: 1px solid rgba(255,193,7,0.2); border-radius: 20px;
+        font-size: 12px; color: #FFC107; font-weight: 600;
+    }
+    .detail-price-card {
+        background: rgba(255,255,255,0.05); border: 1px solid rgba(52,211,153,0.3);
+        border-radius: 16px; padding: 24px; text-align: center;
+    }
+    .detail-price { font-size: 38px; font-weight: 800; color: #34D399; }
+    .detail-price-label { font-size: 13px; color: rgba(255,255,255,0.5); }
+    .btn-reserve {
+        display: block; text-align: center; padding: 16px;
+        background: linear-gradient(135deg, #FFC107, #FF9800); color: #0B2D4A;
+        text-decoration: none; border-radius: 14px; font-weight: 700; font-size: 16px;
+        transition: all 0.4s ease; box-shadow: 0 10px 30px rgba(255,193,7,0.2);
+    }
+    .btn-reserve:hover { transform: translateY(-3px); box-shadow: 0 20px 50px rgba(255,193,7,0.3); }
+    .section-card {
+        background: rgba(255,255,255,0.05); border: 1px solid rgba(255,193,7,0.12);
+        border-radius: 18px; padding: 28px; margin-bottom: 24px;
+    }
+    .section-title { color: #2FA8FF; margin: 0 0 16px; font-size: 18px; display: flex; align-items: center; gap: 8px; }
+    .gallery-track {
+        display: flex; gap: 14px; overflow-x: auto; overflow-y: hidden;
+        padding-bottom: 10px; scroll-snap-type: x mandatory;
+    }
+    .gallery-track::-webkit-scrollbar { height: 6px; }
+    .gallery-track::-webkit-scrollbar-thumb { background: rgba(255,193,7,0.4); border-radius: 10px; }
+    .gallery-item {
+        flex: 0 0 240px; height: 160px; border-radius: 12px; overflow: hidden;
+        border: 1px solid rgba(255,193,7,0.15); scroll-snap-align: start;
+    }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
+    .converter-row { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; }
+    .converter-input, .converter-select {
+        padding: 12px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,193,7,0.2);
+        border-radius: 10px; color: #fff; font-size: 14px; outline: none;
+    }
+    .converter-select option { background: #0B2D4A; color: #fff; }
+    .converter-result { margin-top: 16px; padding: 16px; background: rgba(52,211,153,0.1); border-radius: 10px; display: none; }
+    .map-btn {
+        padding: 8px 16px; background: rgba(47,168,255,0.15); border: 1px solid #2FA8FF;
+        border-radius: 8px; color: #2FA8FF; cursor: pointer; font-size: 13px; font-weight: 600;
+    }
+    .map-container { display: none; border-radius: 12px; overflow: hidden; border: 2px solid rgba(47,168,255,0.2); margin-bottom: 24px; }
+    .mini-map { width: 100%; height: 350px; }
+    .star-interactive { transition: all 0.2s; }
+    .star-interactive:hover { transform: scale(1.2); }
+
+    @media (max-width: 768px) {
+        .detail-header { grid-template-columns: 1fr; }
+        .detail-img { height: 250px; }
+        .detail-name { font-size: 28px; }
+    }
+</style>
+
+<div class="detail-page">
+    <div class="detail-container">
+
+        <a href="{{ path('app_hebergements') }}" class="back-link">← Retour aux hébergements</a>
+
+        <div class="detail-header">
+            <div class="detail-img">
+                {% if hebergement.imagePath %}
+                    <img src="{{ asset(hebergement.imagePath|trim('/')) }}" alt="{{ hebergement.nom }}">
+                {% else %}
+                    <span style="font-size:64px;">🏨</span>
+                {% endif %}
+            </div>
+            <div class="detail-info">
+                <h1 class="detail-name">{{ hebergement.nom }}</h1>
+                <div class="detail-meta">
+                    <span class="detail-tag">📍 {{ hebergement.localisation }}</span>
+                    <span class="detail-tag">🏷️ {{ hebergement.type }}</span>
+                    <span class="detail-tag">{{ hebergement.disponibilite }}</span>
+                </div>
+
+                <div>
+                    {{ component('StarRating', { rating: hebergement.noteMoyenne|default(0), nbNotes: hebergement.nbNotes|default(0), size: 24, interactive: false }) }}
+                </div>
+
+                <div class="detail-price-card">
+                    <div class="detail-price">{{ hebergement.prixParNuit }}€</div>
+                    <div class="detail-price-label">par nuit</div>
+                </div>
+                <a href="{{ path('app_reservation_create', {'id': hebergement.idHebergement}) }}" class="btn-reserve">
+                    🛒 Réserver maintenant
+                </a>
+            </div>
+        </div>
+
+        {% set galleryImages = hebergement.galleryImages|default([]) %}
+        {% if galleryImages|length > 0 %}
+        <div class="section-card">
+            <h2 class="section-title">🖼️ Galerie photos</h2>
+            <div class="gallery-track">
+                {% for img in galleryImages %}
+                    <div class="gallery-item">
+                        <img src="{{ asset(img|trim('/')) }}" alt="Photo {{ loop.index }}">
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if hebergement.latitude and hebergement.longitude %}
+        <div style="margin-bottom:24px;">
+            <button onclick="toggleMap()" class="map-btn">📍 Afficher sur la carte</button>
+        </div>
+        <div id="mapContainer" class="map-container">
+            <div id="miniMap" class="mini-map"></div>
+        </div>
+        {% endif %}
+
+        <div class="section-card">
+            <h2 class="section-title">📝 Description</h2>
+            <p style="color: rgba(255,255,255,0.75); line-height: 1.8; margin: 0; font-size: 15px;">
+                {{ hebergement.description }}
+            </p>
+        </div>
+
+        <div class="section-card">
+            <h2 class="section-title">💱 Convertisseur de devises</h2>
+            <div class="converter-row">
+                <input type="number" id="convertAmount" value="{{ hebergement.prixParNuit }}" class="converter-input" style="width:140px;">
+                <select id="fromCurrency" class="converter-select">
+                    <option value="EUR">EUR €</option>
+                    <option value="USD">USD $</option>
+                    <option value="TND">TND</option>
+                </select>
+                <span style="color:rgba(255,255,255,0.5);">→</span>
+                <select id="toCurrency" class="converter-select">
+                    <option value="USD">USD $</option>
+                    <option value="EUR">EUR €</option>
+                    <option value="TND">TND</option>
+                </select>
+                <button onclick="convertCurrency()" style="padding:12px 20px; background: linear-gradient(135deg,#FFC107,#FF9800); color:#0B2D4A; border:none; border-radius:10px; font-weight:700; cursor:pointer;">
+                    Convertir
+                </button>
+            </div>
+            <div id="convertResult" class="converter-result">
+                <span id="resultText"></span>
+                <span id="resultAmount" style="font-size:26px; font-weight:800; color:#34D399; display:block;"></span>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <h2 class="section-title">⭐ Évaluer cet hébergement</h2>
+
+            <div id="currentRating" style="margin-bottom:20px; padding:14px; background:rgba(52,211,153,0.1); border-radius:10px; border-left:4px solid #34D399; {% if not hebergement.noteMoyenne %}display:none;{% endif %}">
+                {{ component('StarRating', { rating: hebergement.noteMoyenne|default(0), nbNotes: hebergement.nbNotes|default(0), size: 28, interactive: false }) }}
+            </div>
+
+            <div style="display:flex; gap:8px; font-size:42px;" id="starRating">
+                {% for i in 1..5 %}
+                    <span class="star star-interactive" data-value="{{ i }}" style="opacity:0.3; color:#FFC107;">★</span>
+                {% endfor %}
+            </div>
+            <input type="hidden" id="ratingValue" value="0">
+
+            <button onclick="submitRating({{ hebergement.idHebergement }})"
+                    style="width:100%; margin-top:16px; padding:14px; background:linear-gradient(135deg,#FFC107,#FF9800); border:none; border-radius:10px; color:#0B2D4A; font-weight:700; cursor:pointer; font-size:16px;">
+                ⭐ Envoyer la note
+            </button>
+            <div id="ratingMessage" style="display:none; margin-top:12px; padding:12px; border-radius:8px; text-align:center; font-size:14px;"></div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+// Stars
+document.querySelectorAll('.star').forEach(star => {
+    star.addEventListener('mouseover', function() {
+        const v = this.dataset.value;
+        document.querySelectorAll('.star').forEach(s => {
+            s.style.opacity = s.dataset.value <= v ? '1' : '0.3';
+            s.style.transform = s.dataset.value <= v ? 'scale(1.2)' : 'scale(1)';
+        });
+    });
+    star.addEventListener('mouseout', function() {
+        const val = document.getElementById('ratingValue').value;
+        document.querySelectorAll('.star').forEach(s => {
+            s.style.opacity = s.dataset.value <= val ? '1' : '0.3';
+            s.style.transform = 'scale(1)';
+        });
+    });
+    star.addEventListener('click', function() {
+        document.getElementById('ratingValue').value = this.dataset.value;
+        document.querySelectorAll('.star').forEach(s => {
+            s.style.opacity = s.dataset.value <= this.dataset.value ? '1' : '0.3';
+        });
+    });
+});
+
+function submitRating(hebergementId) {
+    const rating = document.getElementById('ratingValue').value;
+    const msgDiv = document.getElementById('ratingMessage');
+    if (rating == 0) {
+        msgDiv.style.display = 'block';
+        msgDiv.style.background = 'rgba(239,68,68,0.15)';
+        msgDiv.style.color = '#EF4444';
+        msgDiv.textContent = '❌ Sélectionnez une note.';
+        return;
+    }
+    msgDiv.style.display = 'block';
+    msgDiv.style.background = 'rgba(255,193,7,0.1)';
+    msgDiv.style.color = '#FFC107';
+    msgDiv.textContent = '⏳ Envoi...';
+
+    fetch('/hebergement/' + hebergementId + '/rate', {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        body: new URLSearchParams({ rating: rating })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            msgDiv.style.background = 'rgba(52,211,153,0.15)';
+            msgDiv.style.color = '#34D399';
+            msgDiv.textContent = '✅ ' + data.message;
+            document.getElementById('currentRating').style.display = 'block';
+            location.reload();
+        }
+    })
+    .catch(() => {
+        msgDiv.style.background = 'rgba(239,68,68,0.15)';
+        msgDiv.style.color = '#EF4444';
+        msgDiv.textContent = '❌ Erreur réseau.';
+    });
+}
+
+// Map
+{% if hebergement.latitude and hebergement.longitude %}
+let miniMap = null;
+function toggleMap() {
+    const mc = document.getElementById('mapContainer');
+    if (mc.style.display === 'block') { mc.style.display = 'none'; return; }
+    mc.style.display = 'block';
+    if (!miniMap) {
+        miniMap = L.map('miniMap').setView([{{ hebergement.latitude }}, {{ hebergement.longitude }}], 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(miniMap);
+        L.marker([{{ hebergement.latitude }}, {{ hebergement.longitude }}]).addTo(miniMap);
+    }
+    setTimeout(() => miniMap.invalidateSize(), 200);
+}
+{% endif %}
+
+// Converter
+function convertCurrency() {
+    const amount = document.getElementById('convertAmount').value;
+    const from = document.getElementById('fromCurrency').value;
+    const to = document.getElementById('toCurrency').value;
+    
+    fetch('{{ path("api_convert_currency") }}', {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        body: new URLSearchParams({ amount: amount, from: from, to: to })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('convertResult').style.display = 'block';
+            document.getElementById('resultText').textContent = data.amount + ' ' + data.from + ' = ';
+            document.getElementById('resultAmount').textContent = data.converted + ' ' + data.to;
+        }
+    });
+}
+</script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+{% endblock %}

@@ -1,0 +1,848 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Utilisateurs - Admin ASAFAR{% endblock %}
+
+{% block page_icon %}fas fa-users{% endblock %}
+{% block page_title %}Gestion des Utilisateurs{% endblock %}
+{% block breadcrumb %}Utilisateurs{% endblock %}
+
+{% block content %}
+<style>
+/* Modal Styles */
+.modal-overlay {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background: rgba(5, 20, 33, 0.85);
+backdrop-filter: blur(8px);
+display: none;
+align-items: center;
+justify-content: center;
+z-index: 9999;
+padding: 20px;
+}
+
+.modal-overlay.active {
+display: flex;
+}
+
+.modal {
+background: linear-gradient(135deg, rgba(11, 45, 74, 0.98) 0%, rgba(7, 27, 46, 0.98) 100%);
+border: 1px solid var(--border-subtle);
+border-radius: 20px;
+width: 100%;
+max-width: 520px;
+max-height: 90vh;
+overflow: hidden;
+box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5), var(--shadow-glow-blue);
+animation: modalSlide 0.3s ease;
+}
+
+@keyframes modalSlide {
+from {
+opacity: 0;
+transform: translateY(-30px) scale(0.95);
+}
+to {
+opacity: 1;
+transform: translateY(0) scale(1);
+}
+}
+
+.modal-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 20px 24px;
+background: linear-gradient(135deg, rgba(30, 111, 168, 0.2) 0%, rgba(11, 45, 74, 0.4) 100%);
+border-bottom: 1px solid var(--border-subtle);
+}
+
+.modal-header h3 {
+font-size: 18px;
+font-weight: 600;
+color: var(--text-primary);
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.modal-header h3 i {
+color: var(--amber);
+}
+
+.modal-close {
+width: 36px;
+height: 36px;
+display: flex;
+align-items: center;
+justify-content: center;
+background: var(--glass-bg);
+border: 1px solid var(--border-subtle);
+border-radius: 10px;
+color: var(--text-secondary);
+cursor: pointer;
+transition: all var(--transition-medium);
+}
+
+.modal-close:hover {
+background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+color: white;
+border-color: transparent;
+transform: rotate(90deg);
+}
+
+.modal-body {
+padding: 24px;
+overflow-y: auto;
+max-height: calc(90vh - 140px);
+}
+
+.form-row {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 16px;
+}
+
+.form-group {
+margin-bottom: 20px;
+}
+
+.form-group label {
+display: block;
+font-size: 13px;
+font-weight: 500;
+color: var(--text-secondary);
+margin-bottom: 8px;
+letter-spacing: 0.3px;
+}
+
+.form-group input,
+.form-group select {
+width: 100%;
+padding: 14px 16px;
+background: var(--glass-bg);
+border: 1px solid var(--border-subtle);
+border-radius: 10px;
+color: var(--text-primary);
+font-size: 14px;
+font-family: inherit;
+transition: all var(--transition-medium);
+}
+
+.form-group input::placeholder {
+color: var(--text-muted);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+outline: none;
+border-color: var(--sky-blue);
+box-shadow: 0 0 0 3px rgba(47, 168, 255, 0.15), var(--shadow-glow-blue);
+}
+
+.form-group select {
+cursor: pointer;
+appearance: none;
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23A7E3FF' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+background-repeat: no-repeat;
+background-position: right 16px center;
+padding-right: 40px;
+}
+
+.form-group select option {
+background: var(--midnight-blue);
+color: var(--text-primary);
+}
+
+.form-message {
+padding: 12px 16px;
+border-radius: 10px;
+font-size: 13px;
+font-weight: 500;
+display: none;
+margin-bottom: 16px;
+}
+
+.form-message.error {
+display: block;
+background: rgba(239, 68, 68, 0.15);
+color: #EF4444;
+border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.form-message.success {
+display: block;
+background: rgba(52, 211, 153, 0.15);
+color: #34D399;
+border: 1px solid rgba(52, 211, 153, 0.3);
+}
+
+.modal-footer {
+display: flex;
+justify-content: flex-end;
+gap: 12px;
+padding: 20px 24px;
+background: linear-gradient(135deg, rgba(30, 111, 168, 0.1) 0%, rgba(11, 45, 74, 0.2) 100%);
+border-top: 1px solid var(--border-subtle);
+}
+
+.modal-footer .btn {
+min-width: 120px;
+justify-content: center;
+}
+
+.field-error {
+color: #e74c3c;
+font-size: 12px;
+margin-top: 5px;
+min-height: 18px;
+}
+
+input.error, select.error {
+border-color: #e74c3c !important;
+}
+
+input.valid, select.valid {
+border-color: #2ecc71 !important;
+}
+
+.search-box-inline {
+position: relative;
+display: flex;
+align-items: center;
+}
+
+.search-box-inline input {
+width: 240px;
+padding: 12px 16px 12px 42px;
+background: var(--glass-bg);
+border: 1px solid var(--border-subtle);
+border-radius: 10px;
+color: var(--text-primary);
+transition: all 0.3s ease;
+}
+
+.search-box-inline input:focus {
+border-color: var(--sky-blue);
+box-shadow: 0 0 0 3px rgba(47, 168, 255, 0.15);
+width: 300px;
+}
+
+@media (max-width: 480px) {
+.form-row {
+grid-template-columns: 1fr;
+}
+.modal {
+max-width: 100%;
+border-radius: 16px 16px 0 0;
+}
+.modal-overlay {
+align-items: flex-end;
+}
+}
+</style>
+
+<div class="stats-grid">
+<div class="stat-card blue">
+<div class="stat-icon blue">
+<i class="fas fa-users"></i>
+</div>
+<div class="stat-value">{{ stats.total|default(0)|number_format(0, '', ' ') }}</div>
+<div class="stat-label">Total Utilisateurs</div>
+<span class="stat-change {{ stats.growth >= 0 ? 'positive' : 'negative' }}">
+<i class="fas fa-arrow-{{ stats.growth >= 0 ? 'up' : 'down' }}"></i>
+{{ stats.growth >= 0 ? '+' : '' }}{{ stats.growth|default(0) }}% ce mois
+</span>
+</div>
+<div class="stat-card green">
+<div class="stat-icon green">
+<i class="fas fa-user-check"></i>
+</div>
+<div class="stat-value">{{ stats.active|default(0)|number_format(0, '', ' ') }}</div>
+<div class="stat-label">Utilisateurs Actifs</div>
+<span class="stat-change {{ stats.growth >= 0 ? 'positive' : 'negative' }}">
+<i class="fas fa-arrow-{{ stats.growth >= 0 ? 'up' : 'down' }}"></i>
+{{ stats.growth >= 0 ? '+' : '' }}{{ stats.growth|default(0) }}% ce mois
+</span>
+</div>
+<div class="stat-card amber">
+<div class="stat-icon amber">
+<i class="fas fa-user-clock"></i>
+</div>
+<div class="stat-value">{{ stats.newThisMonth|default(0)|number_format(0, '', ' ') }}</div>
+<div class="stat-label">Nouveaux ce mois</div>
+<span class="stat-change {{ stats.newGrowth >= 0 ? 'positive' : 'negative' }}">
+<i class="fas fa-arrow-{{ stats.newGrowth >= 0 ? 'up' : 'down' }}"></i>
+{{ stats.newGrowth >= 0 ? '+' : '' }}{{ stats.newGrowth|default(0) }}% ce mois
+</span>
+</div>
+<div class="stat-card purple">
+<div class="stat-icon purple">
+<i class="fas fa-user-shield"></i>
+</div>
+<div class="stat-value">{{ stats.admins|default(0)|number_format(0, '', ' ') }}</div>
+<div class="stat-label">Administrateurs</div>
+<span class="stat-change positive">
+<i class="fas fa-check"></i>
+{{ stats.admins|default(0) }} total
+</span>
+</div>
+</div>
+
+<div class="toolbar">
+<div class="toolbar-left">
+<a href="#" data-filter="all" class="filter-btn {{ filter == 'all' ? 'active' : '' }}">
+<i class="fas fa-users"></i> Tous
+</a>
+<a href="#" data-filter="active" class="filter-btn {{ filter == 'active' ? 'active' : '' }}">
+<i class="fas fa-user-check"></i> Actifs
+</a>
+<a href="#" data-filter="inactive" class="filter-btn {{ filter == 'inactive' ? 'active' : '' }}">
+<i class="fas fa-user-clock"></i> Inactifs
+</a>
+<a href="#" data-filter="blocked" class="filter-btn {{ filter == 'blocked' ? 'active' : '' }}">
+<i class="fas fa-user-slash"></i> Bloques
+</a>
+<a href="#" data-filter="admin" class="filter-btn {{ filter == 'admin' ? 'active' : '' }}">
+<i class="fas fa-user-shield"></i> Admins
+</a>
+</div>
+
+<div class="toolbar-right">
+<button class="btn btn-primary" id="addUserBtn">
+<i class="fas fa-plus"></i>
+</button>
+<button id="sortBtn" class="btn btn-primary">
+    <i class="fas fa-sort-alpha-down"></i>
+</button>
+
+<div class="search-box-inline">
+<i class="fas fa-search"></i>
+<input type="text" id="searchInput" value="{{ search }}" placeholder="Rechercher un utilisateur...">
+</div>
+
+<a href="{{ path('admin_users_export', {filter: filter, search: search}) }}" class="btn btn-primary">
+<i class="fas fa-download"></i> Exporter
+</a>
+<a href="{{ path('admin_chatbot') }}" class="btn btn-primary" title="Assistant IA">
+    <i class="fas fa-robot"></i> Assistant IA
+</a>
+</div>
+</div>
+
+<div class="modal-overlay" id="addUserModal">
+<div class="modal">
+<div class="modal-header">
+<h3><i class="fas fa-user-plus"></i> Nouvel Utilisateur</h3>
+<button class="modal-close" id="closeAddModal">
+<i class="fas fa-times"></i>
+</button>
+</div>
+<div id="addFormContainer">
+<div class="modal-body">
+<div class="text-center" style="padding: 40px;">
+<i class="fas fa-spinner fa-spin" style="font-size: 24px; color: var(--text-muted);"></i>
+<p style="margin-top: 10px; color: var(--text-muted);">Chargement...</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+{# Modal modifier utilisateur #}
+<div class="modal-overlay" id="editUserModal">
+<div class="modal">
+<div class="modal-header">
+<h3><i class="fas fa-user-edit"></i> Modifier Utilisateur</h3>
+<button class="modal-close" id="closeEditModal">
+<i class="fas fa-times"></i>
+</button>
+</div>
+<div id="editFormContainer">
+<div class="modal-body">
+<div class="text-center" style="padding: 40px;">
+<i class="fas fa-spinner fa-spin" style="font-size: 24px; color: var(--text-muted);"></i>
+<p style="margin-top: 10px; color: var(--text-muted);">Chargement...</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+{# Table Container #}
+<div class="table-container" id="usersTable">
+<div class="table-header">
+<div class="table-title">
+<i class="fas fa-list"></i>
+Liste des Utilisateurs
+</div>
+<div class="table-info">
+{% if total > 0 %}
+Affichage de {{ ((currentPage - 1) * 10) + 1 }}-{{ (currentPage * 10) > total ? total : (currentPage * 10) }} sur {{ total|number_format(0, '', ' ') }} utilisateurs
+{% else %}
+Aucun utilisateur trouvé
+{% endif %}
+</div>
+</div>
+
+<table>
+<thead>
+<tr>
+{# FIX : colonnes correctes pour les utilisateurs (sans colonne "priorité") #}
+<th id="sortNom" style="cursor:pointer;">
+    Nom
+    <i id="sortIcon" class="fas fa-sort" style="margin-left:5px;"></i>
+</th>
+<th>Email</th>
+<th>Rôle</th>
+<th>Statut</th>
+<th id="sortDate" style="cursor:pointer;">
+    Date d'inscription
+    <i id="sortDateIcon" class="fas fa-sort" style="margin-left:5px;"></i>
+</th>
+<th style="text-align: right;">Actions</th>
+</tr>
+</thead>
+<tbody id="usersTableBody">
+{% if users is defined and users|length > 0 %}
+{% for user in users %}
+{% set avatarColors = ['blue', 'amber', 'purple', 'green', 'orange'] %}
+{% set colorIndex = (user.id % 5) %}
+{% set avatarColor = avatarColors[colorIndex] %}
+<tr data-role="{{ user.role|lower }}" data-status="{{ user.statut|lower }}">
+
+    {# FIX : colonne Nom — affiche le prénom + nom de l'utilisateur (pas rec.priorite) #}
+    <td>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <div class="avatar avatar-{{ avatarColor }}" style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;">
+                {{ user.prenom|default('?')|slice(0,1)|upper }}{{ user.nom|default('')|slice(0,1)|upper }}
+            </div>
+            <div>
+                <div style="font-weight: 500;">{{ user.prenom|default('') }} {{ user.nom|default('') }}</div>
+            </div>
+        </div>
+    </td>
+
+    <td>{{ user.email }}</td>
+
+    <td>
+        {% if user.role == 'admin' %}
+        <span class="badge badge-primary">Administrateur</span>
+        {% elseif user.role == 'prestataire' %}
+        <span class="badge badge-purple">Prestataire</span>
+        {% elseif user.role == 'moderateur' %}
+        <span class="badge badge-info">Modérateur</span>
+        {% else %}
+        <span class="badge badge-info">Client</span>
+        {% endif %}
+    </td>
+
+    <td>
+        {% if user.statut == 'actif' %}
+        <span class="badge badge-success">Actif</span>
+        {% elseif user.statut == 'bloque' %}
+        <span class="badge badge-danger">Bloqué</span>
+        {% elseif user.statut == 'inactif' %}
+        <span class="badge badge-warning">Inactif</span>
+        {% else %}
+        <span class="badge badge-warning">Inactif</span>
+        {% endif %}
+    </td>
+
+    <td>
+        {% if user.dateInscription %}
+        {{ user.dateInscription|date('d/m/Y') }}
+        {% else %}
+        N/A
+        {% endif %}
+    </td>
+
+    <td>
+        <div class="action-buttons">
+            <button class="btn-action btn-edit edit-user" data-user-id="{{ user.id }}" title="Modifier">
+                <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn-action btn-edit toggle-status" data-user-id="{{ user.id }}" title="Changer le statut">
+                <i class="fas fa-sync-alt"></i>
+            </button>
+            <button class="btn-action btn-delete delete-user" data-user-id="{{ user.id }}" title="Supprimer">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    </td>
+</tr>
+{% endfor %}
+{% else %}
+<tr>
+<td colspan="6">
+<div class="empty-state">
+<div class="empty-state-icon">
+<i class="fas fa-users"></i>
+</div>
+<h3>Aucun utilisateur trouvé</h3>
+<p>
+{% if search %}
+Aucun résultat pour "{{ search }}"
+{% else %}
+Il n'y a pas encore d'utilisateurs.
+{% endif %}
+</p>
+</div>
+</td>
+</tr>
+{% endif %}
+</tbody>
+</table>
+
+{% if pages is defined and pages > 1 %}
+<div class="pagination-container">
+<div class="pagination-info">
+Page {{ currentPage }} sur {{ pages }}
+</div>
+<div class="pagination">
+{% if currentPage > 1 %}
+<a href="{{ path('admin_users', {page: currentPage - 1, filter: filter, search: search}) }}" class="page-btn">
+<i class="fas fa-chevron-left"></i>
+</a>
+{% else %}
+<span class="page-btn" style="opacity: 0.4; cursor: not-allowed;">
+<i class="fas fa-chevron-left"></i>
+</span>
+{% endif %}
+
+{% for i in 1..pages %}
+{% if i == 1 or i == pages or (i >= currentPage - 1 and i <= currentPage + 1) %}
+<a href="{{ path('admin_users', {page: i, filter: filter, search: search}) }}" class="page-btn {{ i == currentPage ? 'active' : '' }}">
+    {{ i }}
+</a>
+{% elseif i == currentPage - 2 or i == currentPage + 2 %}
+<span class="page-btn">...</span>
+{% endif %}
+{% endfor %}
+
+{% if currentPage < pages %}
+<a href="{{ path('admin_users', {page: currentPage + 1, filter: filter, search: search}) }}" class="page-btn">
+<i class="fas fa-chevron-right"></i>
+</a>
+{% else %}
+<span class="page-btn" style="opacity: 0.4; cursor: not-allowed;">
+<i class="fas fa-chevron-right"></i>
+</span>
+{% endif %}
+</div>
+</div>
+{% endif %}
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    let currentSort = 'ASC';
+    let dateSortDir = null;
+
+    const searchInput = document.getElementById('searchInput');
+    const tableBody = document.getElementById('usersTableBody');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const addUserModal = document.getElementById('addUserModal');
+    const editUserModal = document.getElementById('editUserModal');
+    const addFormContainer = document.getElementById('addFormContainer');
+    const editFormContainer = document.getElementById('editFormContainer');
+    const sortNom = document.getElementById('sortNom');
+    const sortIcon = document.getElementById('sortIcon');
+    const sortDate = document.getElementById('sortDate');
+    const sortDateIcon = document.getElementById('sortDateIcon');
+
+    let timeout = null;
+    let currentFilter = "{{ filter|default('all') }}";
+
+    function loadUsers() {
+        const searchValue = searchInput ? searchInput.value : '';
+        fetch(`/admin/users/search?search=${encodeURIComponent(searchValue)}&filter=${currentFilter}&sort=${currentSort}`)
+            .then(r => r.text())
+            .then(html => {
+                if (tableBody) tableBody.innerHTML = html;
+            })
+            .catch(() => {});
+    }
+
+    document.getElementById('addUserBtn')?.addEventListener('click', () => {
+        addFormContainer.innerHTML = `
+        <div class="modal-body">
+        <div class="text-center" style="padding: 40px;">
+        <i class="fas fa-spinner fa-spin" style="font-size: 24px; color: var(--text-muted);"></i>
+        <p style="margin-top: 10px; color: var(--text-muted);">Chargement...</p>
+        </div>
+        </div>`;
+
+        fetch('/admin/user/form/add')
+            .then(r => r.text())
+            .then(html => {
+                addFormContainer.innerHTML = html;
+                addUserModal.classList.add('active');
+                initForm('add');
+            })
+            .catch(err => {
+                addFormContainer.innerHTML = '<div class="modal-body"><div class="form-message error">Erreur de chargement</div></div>';
+            });
+    });
+
+    window.openEditModal = function (id) {
+        editFormContainer.innerHTML = `
+        <div class="modal-body">
+        <div class="text-center" style="padding: 40px;">
+        <i class="fas fa-spinner fa-spin" style="font-size: 24px; color: var(--text-muted);"></i>
+        <p style="margin-top: 10px; color: var(--text-muted);">Chargement...</p>
+        </div>
+        </div>`;
+
+        fetch(`/admin/user/form/${id}/edit`)
+            .then(r => r.text())
+            .then(html => {
+                editFormContainer.innerHTML = html;
+                editUserModal.classList.add('active');
+                initForm('edit');
+            })
+            .catch(err => {
+                editFormContainer.innerHTML = '<div class="modal-body"><div class="form-message error">Erreur de chargement</div></div>';
+            });
+    };
+
+    document.getElementById('closeAddModal')?.addEventListener('click', () => {
+        addUserModal.classList.remove('active');
+    });
+
+    document.getElementById('closeEditModal')?.addEventListener('click', () => {
+        editUserModal.classList.remove('active');
+    });
+
+    [addUserModal, editUserModal].forEach(modal => {
+        modal?.addEventListener('click', e => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+    });
+
+    document.addEventListener('click', function (e) {
+
+        const toggleBtn = e.target.closest('.toggle-status');
+        if (toggleBtn) {
+            const id = toggleBtn.dataset.userId;
+            fetch(`/admin/user/${id}/toggle-status`, { method: 'POST' })
+                .then(r => r.json())
+                .then(res => {
+                    if (res.success) loadUsers();
+                });
+        }
+
+        const deleteBtn = e.target.closest('.delete-user');
+        if (deleteBtn) {
+            const id = deleteBtn.dataset.userId;
+            showConfirmModal('Êtes-vous sûr de vouloir supprimer cet utilisateur ?', () => {
+                fetch(`/admin/user/${id}/delete`, { method: 'POST' })
+                    .then(r => r.json())
+                    .then(res => {
+                        if (res.success) loadUsers();
+                    });
+            });
+        }
+
+        const editBtn = e.target.closest('.edit-user');
+        if (editBtn) {
+            openEditModal(editBtn.dataset.userId);
+        }
+    });
+
+    searchInput?.addEventListener('keyup', () => {
+        clearTimeout(timeout);
+        timeout = setTimeout(loadUsers, 300);
+    });
+
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', e => {
+            e.preventDefault();
+            filterButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentFilter = btn.dataset.filter;
+            loadUsers();
+        });
+    });
+
+    // Tri par nom
+    sortNom?.addEventListener('click', () => {
+        dateSortDir = null;
+        if (sortDateIcon) sortDateIcon.className = 'fas fa-sort';
+
+        currentSort = currentSort === 'ASC' ? 'DESC' : 'ASC';
+        if (sortIcon) sortIcon.className = currentSort === 'ASC' ? 'fas fa-arrow-up' : 'fas fa-arrow-down';
+
+        loadUsers();
+    });
+
+    // Tri par date
+    sortDate?.addEventListener('click', () => {
+        if (sortIcon) sortIcon.className = 'fas fa-sort';
+
+        dateSortDir = dateSortDir === 'date_asc' ? 'date_desc' : 'date_asc';
+        if (sortDateIcon) sortDateIcon.className = dateSortDir === 'date_asc'
+            ? 'fas fa-arrow-up'
+            : 'fas fa-arrow-down';
+
+        currentSort = dateSortDir;
+        loadUsers();
+    });
+
+    // Bouton tri
+    document.getElementById('sortBtn')?.addEventListener('click', () => {
+        dateSortDir = null;
+        if (sortDateIcon) sortDateIcon.className = 'fas fa-sort';
+
+        currentSort = currentSort === 'DESC' ? 'ASC' : 'DESC';
+        if (sortIcon) sortIcon.className = currentSort === 'ASC' ? 'fas fa-arrow-up' : 'fas fa-arrow-down';
+
+        loadUsers();
+    });
+
+});
+
+function initForm(mode) {
+    const form = document.getElementById('backofficeUserForm');
+    if (!form) return;
+
+    const messageContainer = document.getElementById('formMessage');
+    const addUserModal = document.getElementById('addUserModal');
+    const editUserModal = document.getElementById('editUserModal');
+
+    form.noValidate = true;
+    form.setAttribute('novalidate', 'novalidate');
+
+    form.onsubmit = function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const formData = new FormData(form);
+
+        fetch(form.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(r => r.json())
+        .then(res => {
+
+            if (res.success) {
+                showMessage(messageContainer, true, res.message);
+
+                setTimeout(() => {
+                    if (mode === 'add') {
+                        addUserModal.classList.remove('active');
+                    } else {
+                        editUserModal.classList.remove('active');
+                    }
+
+                    const searchInput = document.getElementById('searchInput');
+                    const tableBody = document.getElementById('usersTableBody');
+                    const currentFilter = document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
+                    const searchValue = searchInput ? searchInput.value : '';
+
+                    fetch(`/admin/users/search?search=${encodeURIComponent(searchValue)}&filter=${currentFilter}&sort=ASC`)
+                        .then(r => r.text())
+                        .then(html => {
+                            if (tableBody) tableBody.innerHTML = html;
+                        });
+
+                }, 1500);
+
+            } else {
+                showMessage(messageContainer, false, res.message);
+
+                if (res.errors) {
+                    displayFieldErrors(res.errors);
+                }
+            }
+
+        })
+        .catch(err => {
+            console.error(err);
+            showMessage(messageContainer, false, 'Erreur serveur');
+        });
+
+        return false;
+    };
+}
+
+function showMessage(container, success, message) {
+    if (!container) return;
+
+    container.className = 'form-message ' + (success ? 'success' : 'error');
+    container.textContent = message;
+    container.style.display = 'block';
+}
+
+function showConfirmModal(message, onConfirm) {
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay active';
+
+    modal.innerHTML = `
+        <div class="modal">
+            <div class="modal-body">
+                <p style="margin-bottom:20px;">${message}</p>
+                <div style="display:flex; justify-content:flex-end; gap:10px;">
+                    <button class="btn btn-secondary" id="cancelBtn">Annuler</button>
+                    <button class="btn btn-primary" id="okBtn">Confirmer</button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    modal.querySelector('#cancelBtn').onclick = () => {
+        modal.remove();
+    };
+
+    modal.querySelector('#okBtn').onclick = () => {
+        modal.remove();
+        onConfirm();
+    };
+}
+
+function displayFieldErrors(errors) {
+    document.querySelectorAll('.field-error').forEach(el => el.textContent = '');
+
+    for (const field in errors) {
+        let errorElement = null;
+
+        switch (field) {
+            case 'prenom':
+                errorElement = document.getElementById('prenomError');
+                break;
+            case 'nom':
+                errorElement = document.getElementById('nomError');
+                break;
+            case 'email':
+                errorElement = document.getElementById('emailError');
+                break;
+            case 'telephone':
+                errorElement = document.getElementById('telephoneError');
+                break;
+            case 'plainPassword':
+            case 'first':
+                errorElement = document.getElementById('plainPasswordFirstError');
+                break;
+            case 'second':
+                errorElement = document.getElementById('plainPasswordSecondError');
+                break;
+        }
+
+        if (errorElement) {
+            errorElement.textContent = errors[field];
+        }
+    }
+}
+</script>
+{% endblock %}

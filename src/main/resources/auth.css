@@ -1,0 +1,161 @@
+/* =====================================================
+   GLOBAL BACKGROUND
+===================================================== */
+
+.auth-background {
+    -fx-background-color:
+            linear-gradient(to bottom right,
+            #081F34,
+            #0B2D4A);
+}
+
+
+/* =====================================================
+   MAIN CARD (NEON FRAME)
+===================================================== */
+
+.auth-card {
+
+    -fx-background-color: #0F2E4A;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+
+    -fx-border-color: #2FA8FF;
+    -fx-border-width: 1.5;
+
+    /* neon glow around card */
+    -fx-effect:
+            dropshadow(gaussian, rgba(47,168,255,0.75), 45, 0.4, 0, 0);
+}
+
+
+/* =====================================================
+   LEFT PANEL (GRADIENT + DIAGONAL LOOK)
+===================================================== */
+
+.welcome-panel {
+
+    -fx-background-color:
+            linear-gradient(to bottom right,
+            #1E6FA8,
+            #2FA8FF);
+
+    -fx-background-radius: 20 0 0 20;
+
+    /* strong glow like reference */
+    -fx-effect:
+            dropshadow(gaussian, rgba(47,168,255,0.6), 60, 0.3, 0, 0);
+}
+
+
+/* =====================================================
+   TITLES
+===================================================== */
+
+.auth-title {
+    -fx-text-fill: #A7E3FF;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+}
+
+.welcome-text {
+    -fx-text-fill: white;
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+}
+
+.auth-text {
+    -fx-text-fill: #A7E3FF;
+    -fx-font-size: 13px;
+}
+
+
+/* =====================================================
+   INPUT FIELDS (VIDEO STYLE UNDERLINE)
+===================================================== */
+
+.input-field {
+
+    -fx-background-color: transparent;
+
+    -fx-border-color: transparent transparent #2FA8FF transparent;
+    -fx-border-width: 0 0 2 0;
+
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #A7E3FF;
+
+    -fx-font-size: 14px;
+    -fx-padding: 8 0 8 0;
+}
+
+/* glowing focus line */
+.input-field:focused {
+
+    -fx-border-color: transparent transparent #FFC107 transparent;
+
+    -fx-effect:
+            dropshadow(gaussian, rgba(255,193,7,0.7), 18, 0.4, 0, 0);
+}
+
+
+/* =====================================================
+   LOGIN BUTTON (NEON STYLE)
+===================================================== */
+
+.btn-auth {
+
+    -fx-background-color:
+            linear-gradient(to bottom,
+            #2FA8FF,
+            #1E6FA8);
+
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+
+    -fx-background-radius: 30;
+    -fx-padding: 12 40 12 40;
+
+    -fx-cursor: hand;
+
+    -fx-effect:
+            dropshadow(gaussian, rgba(47,168,255,0.9), 25, 0.5, 0, 0);
+}
+
+/* hover effect like reference */
+.btn-auth:hover {
+
+    -fx-background-color:
+            linear-gradient(to bottom,
+            #FFC107,
+            #FF8F00);
+
+    -fx-effect:
+            dropshadow(gaussian, rgba(255,143,0,0.95), 30, 0.6, 0, 0);
+}
+
+
+/* =====================================================
+   LINKS
+===================================================== */
+
+.auth-link {
+    -fx-text-fill: #2FA8FF;
+    -fx-font-weight: bold;
+}
+
+.auth-link:hover {
+    -fx-text-fill: #FFC107;
+}
+
+
+/* =====================================================
+   ERROR TEXT
+===================================================== */
+
+.error-label {
+    -fx-text-fill: #ff6b6b;
+}
+.diagonal-cut {
+    -fx-fill: #123A5C; /* same color as right panel */
+}

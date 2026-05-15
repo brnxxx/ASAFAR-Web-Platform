@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<VBox alignment="CENTER"
+      spacing="25"
+      xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="tn.esprit.controllers.FaceCameraController"
+      style="-fx-background-color: linear-gradient(to bottom,#0F2A44,#081C2E);">
+
+    <!-- TITRE -->
+    <Label text="Authentification Faciale"
+           style="-fx-text-fill:white;
+                  -fx-font-size:26;
+                  -fx-font-weight:bold;" />
+
+    <!-- CARD -->
+    <VBox alignment="CENTER"
+          spacing="15"
+          style="-fx-background-color: rgba(255,255,255,0.08);
+                 -fx-background-radius:20;
+                 -fx-padding:30;
+                 -fx-effect:dropshadow(gaussian,rgba(0,0,0,0.4),20,0,0,6);">
+
+        <!-- CAMERA -->
+        <StackPane>
+
+            <ImageView fx:id="cameraView"
+                       fitWidth="420"
+                       fitHeight="300"
+                       preserveRatio="true"
+                       style="-fx-background-radius:15;
+                              -fx-border-radius:15;
+                              -fx-border-color:#2FA8FF;
+                              -fx-border-width:3;" />
+
+        </StackPane>
+
+        <!-- STATUS IA -->
+        <Label fx:id="lblStatus"
+               text="En attente du scan..."
+               style="-fx-text-fill:#8fbcd4;
+                      -fx-font-size:14;" />
+
+        <!-- COMPTEUR BLOQUAGE -->
+        <Label fx:id="lblLockTimer"
+               text=""
+               style="-fx-text-fill:#ff6b6b;
+                      -fx-font-size:16;
+                      -fx-font-weight:bold;" />
+
+        <!-- BOUTON -->
+        <Button text="Scanner visage"
+                onAction="#captureFace"
+                style="-fx-background-color:#2FA8FF;
+                       -fx-text-fill:white;
+                       -fx-font-size:14;
+                       -fx-background-radius:12;
+                       -fx-padding:10 25;" />
+
+    </VBox>
+
+</VBox>
+

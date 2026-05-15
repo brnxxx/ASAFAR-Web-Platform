@@ -1,0 +1,12 @@
+<h2>🔔 Mes notifications</h2>
+
+{% if notifications is empty %}
+    <p>Aucune notification</p>
+{% endif %}
+
+{% for n in notifications %}
+    <div style="padding:10px; border-bottom:1px solid #ccc;">
+        <strong>{{ n.message }}</strong><br>
+        <small>{{ n.createdAt|date('d/m/Y H:i') }}</small>
+    </div>
+{% endfor %}

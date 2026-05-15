@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="tn.esprit.controllers.ClientControllerY"
+      stylesheets="@styleY.css"
+      spacing="0"
+      fillWidth="true">
+
+    <!-- Définition du ToggleGroup -->
+    <fx:define>
+        <ToggleGroup fx:id="triGroup" />
+    </fx:define>
+
+    <!-- ================= HERO SECTION ================= -->
+    <VBox fx:id="tete"
+          spacing="20"
+          alignment="CENTER"
+          styleClass="hero">
+        <padding>
+            <Insets top="40" right="60" bottom="40" left="60"/>
+        </padding>
+
+        <Label fx:id="lblPageTitle"
+               styleClass="hero-title"
+               text="Hébergements de rêve"/>
+
+        <Label styleClass="hero-subtitle"
+               text="Découvrez les meilleurs hébergements pour votre séjour"/>
+
+        <!-- SEARCH BAR AVEC DATES -->
+        <HBox maxWidth="950"
+              spacing="20"
+              alignment="CENTER"
+              styleClass="search-container">
+
+            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                <Label styleClass="search-label" text="Destination"/>
+                <TextField fx:id="txtRecherche"
+                           promptText="Où allez-vous ?"
+                           styleClass="search-field"/>
+            </VBox>
+
+            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                <Label styleClass="search-label" text="Arrivée"/>
+                <DatePicker fx:id="dateArrivee"
+                            promptText="Date d'arrivée"
+                            styleClass="search-field"/>
+            </VBox>
+
+            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                <Label styleClass="search-label" text="Départ"/>
+                <DatePicker fx:id="dateDepart"
+                            promptText="Date de départ"
+                            styleClass="search-field"/>
+            </VBox>
+
+            <Button fx:id="btnRechercher"
+                    text="Rechercher"
+                    prefHeight="45"
+                    prefWidth="120"
+                    styleClass="search-button"/>
+        </HBox>
+    </VBox>
+
+    <!-- ================= SCROLLPANE PRINCIPAL ================= -->
+    <ScrollPane fx:id="mainScrollPane"
+                VBox.vgrow="ALWAYS"
+                fitToWidth="true"
+                styleClass="main-scroll">
+
+        <content>
+            <!-- ================= CONTENU PRINCIPAL ================= -->
+            <HBox fx:id="mainContent"
+                  styleClass="main-content"
+                  visible="false"
+                  managed="false">
+
+                <!-- ===== FILTER SIDEBAR (À GAUCHE) ===== -->
+                <VBox spacing="18"
+                      styleClass="filter-sidebar"
+                      prefWidth="300"
+                      maxWidth="300"
+                      minWidth="300">
+                    <padding>
+                        <Insets top="25" right="20" bottom="25" left="20"/>
+                    </padding>
+
+                    <Label text="Filtrer par :" styleClass="filter-title"/>
+
+                    <!-- Pays -->
+                    <Label text="Pays" styleClass="filter-subtitle"/>
+                    <ComboBox fx:id="comboPays"
+                              prefWidth="240"
+                              promptText="Sélectionner un pays"
+                              styleClass="filter-combo"/>
+
+                    <!-- Prix minimum -->
+                    <Label text="Prix minimum" styleClass="filter-subtitle"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Slider fx:id="sliderPrixMin" prefWidth="120" styleClass="filter-slider"/>
+                        <Label fx:id="lblPrixMin" text="0 €" styleClass="filter-value"/>
+                    </HBox>
+
+                    <!-- Prix maximum -->
+                    <Label text="Prix maximum" styleClass="filter-subtitle"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Slider fx:id="sliderPrixMax" prefWidth="120" styleClass="filter-slider"/>
+                        <Label fx:id="lblPrixMax" text="1000 €" styleClass="filter-value"/>
+                    </HBox>
+
+                    <!-- Trier par -->
+                    <Label text="Trier par" styleClass="filter-subtitle"/>
+                    <VBox spacing="8">
+                        <RadioButton fx:id="triPrixCroissant" text="Prix ↑" styleClass="filter-radio" toggleGroup="$triGroup"/>
+                        <RadioButton fx:id="triPrixDecroissant" text="Prix ↓" styleClass="filter-radio" toggleGroup="$triGroup"/>
+                        <RadioButton fx:id="triNoteCroissant" text="Note ↑" styleClass="filter-radio" toggleGroup="$triGroup"/>
+                        <RadioButton fx:id="triNoteDecroissant" text="Note ↓" styleClass="filter-radio" toggleGroup="$triGroup"/>
+                    </VBox>
+
+                    <!-- Boutons d'action -->
+                    <VBox spacing="10" styleClass="filter-buttons">
+                        <Button fx:id="btnAppliquerFiltres" text="APPLIQUER" maxWidth="Infinity" styleClass="btn-primary-small"/>
+                        <Button fx:id="btnReinitialiserFiltres" text="RÉINITIALISER" maxWidth="Infinity" styleClass="btn-secondary-small"/>
+                    </VBox>
+                </VBox>
+
+                <!-- ===== ZONE DES RÉSULTATS (À DROITE) ===== -->
+                <VBox spacing="20" styleClass="results-container" HBox.hgrow="ALWAYS">
+                    <padding>
+                        <Insets top="25" right="25" bottom="25" left="25"/>
+                    </padding>
+
+                    <!-- En-tête des résultats avec sélecteur de devise -->
+                    <VBox spacing="10">
+                        <HBox alignment="CENTER_LEFT" spacing="20">
+                            <Label text="Hébergements disponibles" styleClass="results-title"/>
+                            <Label fx:id="lblNbResultats" text="(0 résultat)" styleClass="results-count"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Label text="Devise :" styleClass="filter-subtitle" />
+                            <ComboBox fx:id="comboDevise" prefWidth="190" styleClass="filter-combo"/>
+                        </HBox>
+                        <!-- Affichage des dates choisies -->
+                        <HBox spacing="15" styleClass="selected-dates">
+                            <Label fx:id="lblDestinationChoisie" styleClass="date-info"/>
+                            <Label fx:id="lblDatesChoisies" styleClass="date-info"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Grille des hébergements -->
+                    <GridPane fx:id="gridHebergements"
+                              hgap="0"
+                              vgap="15"
+                              styleClass="hebergement-grid">
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="ALWAYS" percentWidth="100"/>
+                        </columnConstraints>
+                    </GridPane>
+                </VBox>
+            </HBox>
+        </content>
+    </ScrollPane>
+
+    <!-- ================= STATUS BAR ================= -->
+    <HBox fx:id="statusBar"
+          visible="false"
+          managed="false"
+          styleClass="status-active"
+          alignment="CENTER_LEFT">
+        <padding>
+            <Insets left="15" right="15" top="10" bottom="10"/>
+        </padding>
+        <Label fx:id="lblStatusMessage" text="Prêt" style="-fx-text-fill: white;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button fx:id="btnCloseStatus" text="✕" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand;"/>
+    </HBox>
+
+</VBox>

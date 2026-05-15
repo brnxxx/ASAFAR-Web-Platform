@@ -1,0 +1,70 @@
+{% if excursions is empty %}
+    <p style="color:rgba(255,255,255,0.7); text-align:center; grid-column:1/-1;">
+        ❌ Aucun résultat trouvé
+    </p>
+{% endif %}
+
+{% for excursion in excursions %}
+<article class="loisir-excursion-card">
+
+    <div class="loisir-excursion-image">
+        <img src="{{ asset('images/loisirs/' ~ excursion.imageUrl) }}" alt="{{ excursion.titre }}">
+        <div class="loisir-excursion-overlay"></div>
+
+        <span class="loisir-excursion-badge">
+            {{ excursion.type ?? 'Outdoor' }}
+        </span>
+
+        <span class="loisir-excursion-places">
+            {{ excursion.nombrePlacesDisponibles }} places
+        </span>
+    </div>
+
+    <div class="loisir-excursion-content">
+
+        <h3>{{ excursion.titre }}</h3>
+
+        <div class="loisir-excursion-meta-info">
+            <span class="loisir-meta-item">{{ excursion.lieu }}</span>
+            <span class="loisir-meta-item">{{ excursion.duree }}h</span>
+            <span class="loisir-meta-item">{{ excursion.date|date('d/m/Y') }}</span>
+        </div>
+
+        <p>
+            {{ excursion.description|slice(0, 90) }}
+            {% if excursion.description|length > 90 %}...{% endif %}
+        </p>
+
+        <div class="loisir-prix-row">
+            <div class="loisir-prix-item">
+                <span class="loisir-prix-label">Adulte</span>
+                <span class="loisir-prix-value">{{ excursion.prixAdulte }} TND</span>
+            </div>
+            <div class="loisir-prix-item">
+                <span class="loisir-prix-label">Enfant</span>
+                <span class="loisir-prix-value enfant">{{ excursion.prixEnfant }} TND</span>
+            </div>
+            <div class="loisir-prix-item">
+                <span class="loisir-prix-label">Bébé</span>
+                <span class="loisir-prix-value bebe">{{ excursion.prixBebe }} TND</span>
+            </div>
+        </div>
+
+        <div class="loisir-excursion-footer">
+            <a href="{{ path('excursion_detail', {'id': excursion.idExcursion}) }}"
+               class="loisir-excursion-btn btn-detail">
+                Voir détails
+            </a>
+
+            <a href="{{ path('excursion_reserver', {'id': excursion.idExcursion}) }}"
+               class="loisir-excursion-btn btn-reserver">
+                Réserver
+            </a>
+        </div>
+
+    </div>
+
+    <div class="loisir-excursion-card-bottom"></div>
+
+</article>
+{% endfor %}

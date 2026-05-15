@@ -1,0 +1,266 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réservation Confirmée - ASAFAR{% endblock %}
+
+{% block body %}
+<style>
+    body { background: #0B2D4A !important; }
+
+    .confirm-page {
+        min-height: 100vh;
+        padding: 120px 24px 80px;
+        background: radial-gradient(ellipse at 30% 50%, rgba(11,45,74,0.95) 0%, rgba(8,38,62,0.98) 50%, #051621 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .confirm-container {
+        max-width: 650px;
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Success animation */
+    .success-icon {
+        width: 90px;
+        height: 90px;
+        margin: 0 auto 24px;
+        background: linear-gradient(135deg, #34D399, #10B981);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 42px;
+        animation: bounceIn 0.7s ease;
+        box-shadow: 0 16px 40px rgba(52,211,153,0.3);
+    }
+
+    @keyframes bounceIn {
+        0% { transform: scale(0); opacity: 0; }
+        60% { transform: scale(1.15); }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    .confirm-title {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-size: 38px;
+        font-weight: 800;
+        color: #34D399;
+        margin: 0 0 10px;
+    }
+
+    .confirm-subtitle {
+        font-size: 16px;
+        color: rgba(255,255,255,0.65);
+        margin: 0 0 32px;
+    }
+
+    .confirm-subtitle strong {
+        color: #FFC107;
+    }
+
+    /* Recap card */
+    .recap-card {
+        background: rgba(255,255,255,0.05);
+        border: 1.5px solid rgba(52,211,153,0.25);
+        border-radius: 20px;
+        padding: 32px 28px;
+        text-align: left;
+        margin-bottom: 28px;
+    }
+
+    .recap-title {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-size: 22px;
+        color: #FFC107;
+        margin: 0 0 20px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid rgba(255,193,7,0.15);
+    }
+
+    .recap-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    .recap-item {
+        padding: 12px 14px;
+        background: rgba(255,255,255,0.03);
+        border-radius: 10px;
+    }
+
+    .recap-label {
+        font-size: 11px;
+        color: rgba(255,255,255,0.4);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 4px;
+    }
+
+    .recap-value {
+        font-size: 15px;
+        font-weight: 700;
+        color: #fff;
+    }
+
+    .recap-value.price {
+        color: #34D399;
+        font-size: 22px;
+    }
+
+    /* Status badge */
+    .status-row {
+        margin-top: 16px;
+        padding-top: 14px;
+        border-top: 1px solid rgba(255,255,255,0.08);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .badge-status {
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        background: rgba(255,193,7,0.2);
+        color: #FFC107;
+    }
+
+    /* Buttons */
+    .btn-group {
+        display: flex;
+        gap: 14px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-primary {
+        padding: 14px 28px;
+        background: linear-gradient(135deg, #FFC107, #FF9800);
+        color: #0B2D4A;
+        text-decoration: none;
+        border-radius: 30px;
+        font-weight: 700;
+        font-size: 14px;
+        transition: all 0.4s ease;
+        box-shadow: 0 10px 30px rgba(255,193,7,0.2);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 20px 50px rgba(255,193,7,0.3);
+    }
+
+    .btn-secondary {
+        padding: 14px 28px;
+        background: rgba(47,168,255,0.12);
+        color: #2FA8FF;
+        text-decoration: none;
+        border-radius: 30px;
+        font-weight: 700;
+        font-size: 14px;
+        border: 1.5px solid rgba(47,168,255,0.3);
+        transition: all 0.4s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-secondary:hover {
+        background: rgba(47,168,255,0.22);
+        transform: translateY(-3px);
+    }
+
+    @media (max-width: 600px) {
+        .confirm-title { font-size: 28px; }
+        .recap-grid { grid-template-columns: 1fr; }
+        .btn-group { flex-direction: column; }
+    }
+</style>
+
+<div class="confirm-page">
+    <div class="confirm-container">
+
+        <div class="success-icon">✓</div>
+
+        <h1 class="confirm-title">Réservation confirmée !</h1>
+        <p class="confirm-subtitle">
+            Votre réservation pour <strong>{{ hebergement ? hebergement.nom : 'cet hébergement' }}</strong> a été créée avec succès.
+        </p>
+
+        <div class="recap-card">
+            <h3 class="recap-title">📋 Récapitulatif de votre réservation</h3>
+
+            <div class="recap-grid">
+                {% if hebergement %}
+                <div class="recap-item">
+                    <div class="recap-label">Hébergement</div>
+                    <div class="recap-value">{{ hebergement.nom }}</div>
+                </div>
+                {% endif %}
+
+                <div class="recap-item">
+                    <div class="recap-label">Numéro de réservation</div>
+                    <div class="recap-value">#{{ reservation.idReservation }}</div>
+                </div>
+
+                {% if reservation.dateArrivee %}
+                <div class="recap-item">
+                    <div class="recap-label">Date d'arrivée</div>
+                    <div class="recap-value">{{ reservation.dateArrivee|date('d/m/Y') }}</div>
+                </div>
+                {% endif %}
+
+                {% if reservation.dateDepart %}
+                <div class="recap-item">
+                    <div class="recap-label">Date de départ</div>
+                    <div class="recap-value">{{ reservation.dateDepart|date('d/m/Y') }}</div>
+                </div>
+                {% endif %}
+
+                <div class="recap-item">
+                    <div class="recap-label">Adultes</div>
+                    <div class="recap-value">{{ reservation.nbAdultes }}</div>
+                </div>
+
+                <div class="recap-item">
+                    <div class="recap-label">Enfants</div>
+                    <div class="recap-value">{{ reservation.nbEnfants }}</div>
+                </div>
+
+                <div class="recap-item">
+                    <div class="recap-label">Bébés</div>
+                    <div class="recap-value">{{ reservation.nbBebes }}</div>
+                </div>
+
+                <div class="recap-item">
+                    <div class="recap-label">Total à payer</div>
+                    <div class="recap-value price">{{ reservation.montantTotal }} TND</div>
+                </div>
+            </div>
+
+            <div class="status-row">
+                <span class="recap-label" style="margin:0;">Statut</span>
+                <span class="badge-status">⏳ {{ reservation.statut }}</span>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <a href="{{ path('app_mes_reservations') }}" class="btn-primary">
+                📋 Voir mes réservations
+            </a>
+            <a href="{{ path('app_hebergements') }}" class="btn-secondary">
+                🏨 Continuer la navigation
+            </a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

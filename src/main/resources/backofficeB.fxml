@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+
+<BorderPane prefHeight="900"
+            prefWidth="1400"
+            stylesheets="@styleB.css"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.esprit.controllers.BackOfficeControllerB">
+
+    <!-- ================= SIDEBAR ================= -->
+    <left>
+        <StackPane fx:id="leftContainer"
+                   maxWidth="300"
+                   minWidth="100"
+                   prefWidth="100"
+                   onMouseEntered="#expandSidebar"
+                   onMouseExited="#collapseSidebar">
+
+            <VBox alignment="TOP_CENTER"
+                  spacing="30"
+                  styleClass="sidebar">
+
+                <padding>
+                    <Insets left="15" right="15" top="0"/>
+                </padding>
+
+                <ImageView fx:id="logo" fitHeight="55" preserveRatio="true">
+                    <image>
+                        <Image url="@/images/logo.png"/>
+                    </image>
+                </ImageView>
+
+                <!-- MENU -->
+                <Button fx:id="btnAccueil" styleClass="menu-btn">
+                    <graphic>
+                        <ImageView fitHeight="22" fitWidth="22">
+                            <Image url="@/images/home.png"/>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+                <Button fx:id="btnHebergement" styleClass="menu-btn">
+                    <graphic>
+                        <ImageView fitHeight="22" fitWidth="22">
+                            <Image url="@/images/building.png"/>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+                <Button fx:id="btnLoisirs" styleClass="menu-btn-active">
+                    <graphic>
+                        <ImageView fitHeight="22" fitWidth="22">
+                            <Image url="@/images/parc.png"/>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+                <Button fx:id="btnTransport" styleClass="menu-btn">
+                    <graphic>
+                        <ImageView fitHeight="22" fitWidth="22">
+                            <Image url="@/images/transport.png"/>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+                <Button fx:id="btnAvis" styleClass="menu-btn">
+                    <graphic>
+                        <ImageView fitHeight="22" fitWidth="22">
+                            <Image url="@/images/avis.png"/>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+            </VBox>
+        </StackPane>
+    </left>
+
+    <!-- ================= CENTER ================= -->
+    <center>
+
+        <BorderPane>
+
+            <!-- ================= TOPBAR FIXE ================= -->
+            <top>
+                <HBox fx:id="topBar"
+                      alignment="CENTER_LEFT"
+                      spacing="25"
+                      styleClass="topbar-fused">
+
+                    <padding>
+                        <Insets top="15" right="25" bottom="15" left="25"/>
+                    </padding>
+
+                    <Label text="Gestion des Excursions"
+                           style="-fx-text-fill:white;
+                                  -fx-font-size:24px;
+                                  -fx-font-weight:bold;"/>
+
+                    <Region HBox.hgrow="ALWAYS"/>
+
+                    <HBox alignment="CENTER" spacing="10">
+                        <Circle radius="18" styleClass="user-avatar"/>
+
+                        <Button fx:id="btnLogout"
+                                onAction="#handleLogout"
+                                styleClass="top-icon-btn">
+                            <graphic>
+                                <ImageView fitHeight="22"
+                                           fitWidth="22"
+                                           preserveRatio="true"
+                                           smooth="true">
+                                    <image>
+                                        <Image url="@/images/logout.png"/>
+                                    </image>
+                                </ImageView>
+
+                            </graphic>
+                        </Button>
+                    </HBox>
+                </HBox>
+            </top>
+
+            <!-- ================= CONTENU SCROLLABLE ================= -->
+            <center>
+
+                <ScrollPane fitToWidth="true"
+                            pannable="true"
+                            style="-fx-background-color:transparent;
+                                   -fx-background:transparent;">
+
+                    <content>
+
+                        <VBox spacing="30"
+                              styleClass="admin-root"
+                              fillWidth="true"
+                              maxWidth="Infinity">
+
+                            <padding>
+                                <Insets top="25" right="40" bottom="30" left="40"/>
+                            </padding>
+
+                            <!-- ===== RECHERCHE ===== -->
+                            <HBox alignment="CENTER_LEFT" spacing="20">
+
+                                <TextField fx:id="txtRecherche"
+                                           promptText="Rechercher par nom, type..."
+                                           styleClass="search-field"
+                                           HBox.hgrow="ALWAYS"/>
+
+                                <Button fx:id="btnSearchAdmin"
+                                        styleClass="btn-search-icon">
+                                    <graphic>
+                                        <ImageView fitHeight="35"
+                                                   fitWidth="35"
+                                                   preserveRatio="true">
+                                            <Image url="@/images/rechercher.png"/>
+                                        </ImageView>
+                                    </graphic>
+                                </Button>
+
+                                <Region HBox.hgrow="ALWAYS"/>
+
+                                <Button fx:id="btnAjouterExcursion"
+                                        text="Ajouter Excursion"
+                                        onAction="#ajouterExcursion"
+                                        styleClass="btn-reserver"/>
+                            </HBox>
+
+                            <!-- ===== LISTE EXCURSIONS ===== -->
+                            <VBox spacing="20" styleClass="admin-table-container">
+
+                                <Label text="Liste des Excursions"
+                                       style="-fx-text-fill:white;
+                                              -fx-font-size:20px;
+                                              -fx-font-weight:bold;"/>
+
+                                <ListView fx:id="listViewExcursion"
+                                          styleClass="admin-table"
+                                          VBox.vgrow="ALWAYS"
+                                          maxWidth="Infinity"
+                                          prefHeight="450"/>
+                            </VBox>
+
+                            <!-- ===== LISTE RESERVATIONS ===== -->
+                            <VBox spacing="20" styleClass="admin-table-container">
+
+                                <Label text="Liste des Réservations"
+                                       style="-fx-text-fill:white;
+                                              -fx-font-size:20px;
+                                              -fx-font-weight:bold;"/>
+
+                                <ListView fx:id="listViewReservation"
+                                          styleClass="admin-table"
+                                          VBox.vgrow="ALWAYS"
+                                          maxWidth="Infinity"
+                                          prefHeight="450"/>
+                            </VBox>
+
+                        </VBox>
+
+                    </content>
+                </ScrollPane>
+
+            </center>
+
+        </BorderPane>
+
+    </center>
+
+</BorderPane>

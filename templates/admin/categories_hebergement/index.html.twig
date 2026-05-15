@@ -1,0 +1,380 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Categories Hebergement - Admin ASAFAR{% endblock %}
+
+{% block page_title %}
+    <i class="fas fa-tags"></i> Gestion des Categories d'Hebergement
+{% endblock %}
+
+{% block breadcrumb %}Categories Hebergement{% endblock %}
+
+{% block content %}
+<div class="toolbar">
+    <div class="toolbar-right" style="margin-left: auto;">
+        <div class="search-box-inline category-search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchCategorieHebergement" placeholder="Rechercher une categorie..." aria-label="Rechercher une categorie">
+        </div>
+        <a href="{{ path('admin_categorie_hebergement_create') }}" class="btn btn-primary js-open-category-modal" data-modal-title="Ajouter une Categorie d'Hebergement">
+            <i class="fas fa-plus"></i>
+            <span>Ajouter</span>
+        </a>
+    </div>
+</div>
+
+{% if categories %}
+<div class="table-container">
+    <div class="table-header">
+        <div class="table-title">
+            <i class="fas fa-list"></i>
+            Liste des Categories d'Hebergement
+        </div>
+        <div class="table-info">
+            {{ categories|length }} categorie{% if categories|length > 1 %}s{% endif %}
+        </div>
+    </div>
+
+    <table id="categoriesHebergementTable">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Nom</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for categorie in categories %}
+            <tr data-name="{{ categorie.nom|lower }}">
+                <td>
+                    {% if categorie.imagePath %}
+                        <img src="{{ categorie.imagePath }}" alt="{{ categorie.nom }}" class="categorie-thumb">
+                    {% else %}
+                        <div class="categorie-thumb placeholder">
+                            <i class="fas fa-image"></i>
+                        </div>
+                    {% endif %}
+                </td>
+                <td>
+                    <strong style="color: var(--text-primary);">{{ categorie.nom }}</strong>
+                </td>
+                <td>
+                    <small style="color: rgba(244, 248, 252, 0.7);">
+                        {% if categorie.description %}
+                            {{ categorie.description|slice(0, 70) }}{% if categorie.description|length > 70 %}...{% endif %}
+                        {% else %}
+                            <span style="color: rgba(244, 248, 252, 0.4);">-</span>
+                        {% endif %}
+                    </small>
+                </td>
+                <td>
+                    <div class="action-buttons">
+                        <a href="{{ path('admin_categorie_hebergement_edit', {'id': categorie.idCategorie}) }}" class="btn-action btn-edit js-open-category-modal" data-modal-title="Modifier Categorie d'Hebergement" title="Modifier">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <form method="POST" action="{{ path('admin_categorie_hebergement_delete', {'id': categorie.idCategorie}) }}" style="display: inline;" onsubmit="return confirm('Etes-vous sur? Cette action est irreversible.');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ categorie.idCategorie) }}">
+                            <button type="submit" class="btn-action btn-delete" title="Supprimer">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="empty-state">
+    <i class="fas fa-inbox" style="display: block;"></i>
+    <p>Aucune categorie d'hebergement trouvee</p>
+    <small style="color: rgba(244, 248, 252, 0.4); display: block; margin-bottom: 20px;">Commencez par creer votre premiere categorie</small>
+    <a href="{{ path('admin_categorie_hebergement_create') }}" class="btn btn-primary js-open-category-modal" data-modal-title="Ajouter une Categorie d'Hebergement">
+        <i class="fas fa-plus"></i>
+        <span>Creer la premiere categorie</span>
+    </a>
+</div>
+{% endif %}
+
+<div id="categoryHebergementModal" class="category-modal-overlay" aria-hidden="true">
+    <div class="category-modal-card" role="dialog" aria-modal="true" aria-labelledby="categoryModalTitle">
+        <div class="category-modal-header">
+            <h3 id="categoryModalTitle">Categorie d'Hebergement</h3>
+            <button type="button" id="categoryModalClose" class="category-modal-close" aria-label="Fermer">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="category-modal-body">
+            <iframe id="categoryModalFrame" title="Formulaire Categorie Hebergement"></iframe>
+        </div>
+    </div>
+</div>
+
+<style>
+    .categorie-thumb {
+        width: 64px;
+        height: 48px;
+        border-radius: 8px;
+        object-fit: cover;
+        border: 1px solid rgba(47, 168, 255, 0.25);
+    }
+
+    .categorie-thumb.placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(47, 168, 255, 0.08);
+        color: rgba(47, 168, 255, 0.5);
+    }
+
+    .category-search-box {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(10px);
+        width: 320px;
+    }
+
+    .category-search-box i {
+        color: #A7E3FF;
+    }
+
+    .category-search-box input {
+        flex: 1;
+        border: none;
+        outline: none;
+        background: transparent;
+        color: white;
+        font-size: 14px;
+    }
+
+    .category-search-box input::placeholder {
+        color: rgba(167, 227, 255, 0.5);
+    }
+
+    .category-modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(5, 20, 33, 0.72);
+        backdrop-filter: blur(6px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        z-index: 1900;
+    }
+
+    .category-modal-overlay.active {
+        display: flex;
+    }
+
+    .category-modal-card {
+        width: min(960px, 100%);
+        max-height: calc(100vh - 48px);
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(47, 168, 255, 0.28);
+        box-shadow: 0 30px 90px rgba(0, 0, 0, 0.45);
+        background: rgba(11, 45, 74, 0.98);
+        animation: categoryModalIn 0.22s ease;
+    }
+
+    @keyframes categoryModalIn {
+        from {
+            transform: translateY(16px) scale(0.98);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+    }
+
+    .category-modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 18px;
+        border-bottom: 1px solid rgba(47, 168, 255, 0.2);
+        background: rgba(7, 27, 46, 0.95);
+    }
+
+    .category-modal-header h3 {
+        margin: 0;
+        color: var(--text-primary);
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+    .category-modal-close {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        border: 1px solid rgba(47, 168, 255, 0.3);
+        background: rgba(255, 255, 255, 0.03);
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .category-modal-close:hover {
+        color: var(--text-primary);
+        border-color: rgba(47, 168, 255, 0.6);
+        background: rgba(47, 168, 255, 0.12);
+    }
+
+    .category-modal-body {
+        height: calc(100vh - 126px);
+        min-height: 460px;
+        background: rgba(5, 20, 33, 0.9);
+    }
+
+    #categoryModalFrame {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        background: transparent;
+    }
+
+    @media (max-width: 768px) {
+        .category-search-box {
+            width: 100%;
+        }
+
+        .toolbar-right {
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        .category-modal-overlay {
+            padding: 10px;
+        }
+
+        .category-modal-body {
+            min-height: 380px;
+            height: calc(100vh - 110px);
+        }
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchCategorieHebergement');
+    const rows = document.querySelectorAll('#categoriesHebergementTable tbody tr');
+    const modalTriggers = document.querySelectorAll('.js-open-category-modal');
+    const modal = document.getElementById('categoryHebergementModal');
+    const modalTitle = document.getElementById('categoryModalTitle');
+    const modalClose = document.getElementById('categoryModalClose');
+    const modalFrame = document.getElementById('categoryModalFrame');
+    let modalOpened = false;
+
+    function applySearch() {
+        const term = (searchInput?.value || '').toLowerCase().trim();
+
+        rows.forEach(row => {
+            const name = row.dataset.name || '';
+            row.style.display = name.includes(term) ? '' : 'none';
+        });
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener('input', applySearch);
+    }
+
+    function openModal(url, title) {
+        if (!modal || !modalFrame) {
+            window.location.href = url;
+            return;
+        }
+
+        modalTitle.textContent = title || 'Categorie d\'Hebergement';
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        modalOpened = true;
+        modalFrame.src = url;
+    }
+
+    function closeModal() {
+        if (!modal || !modalFrame) {
+            return;
+        }
+
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+        modalFrame.src = 'about:blank';
+        document.body.style.overflow = '';
+        modalOpened = false;
+    }
+
+    modalTriggers.forEach(function(trigger) {
+        trigger.addEventListener('click', function(event) {
+            event.preventDefault();
+            openModal(this.href, this.dataset.modalTitle || 'Categorie d\'Hebergement');
+        });
+    });
+
+    if (modalClose) {
+        modalClose.addEventListener('click', closeModal);
+    }
+
+    if (modal) {
+        modal.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+    }
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && modalOpened) {
+            closeModal();
+        }
+    });
+
+    if (modalFrame) {
+        modalFrame.addEventListener('load', function() {
+            try {
+                const frameDocument = modalFrame.contentDocument;
+                if (frameDocument && !frameDocument.getElementById('categorie-hebergement-frame-style')) {
+                    const cleanupStyle = frameDocument.createElement('style');
+                    cleanupStyle.id = 'categorie-hebergement-frame-style';
+                    cleanupStyle.textContent = [
+                        '.sidebar, .top-bar { display: none !important; }',
+                        '.main-content { margin-left: 0 !important; width: 100% !important; }',
+                        '.page-content { padding: 18px !important; }',
+                        '.content-header, .breadcrumb { display: none !important; }',
+                        '.search-box, .notification-btn, .settings-btn { display: none !important; }'
+                    ].join(' ');
+
+                    frameDocument.head.appendChild(cleanupStyle);
+
+                    const cancelButton = frameDocument.querySelector('.btn-cancel');
+                    if (cancelButton) {
+                        cancelButton.addEventListener('click', function(event) {
+                            event.preventDefault();
+                            closeModal();
+                        });
+                    }
+                }
+
+                const frameUrl = new URL(modalFrame.contentWindow.location.href);
+                const isBackToIndex = frameUrl.pathname.endsWith('/admin/categories-hebergement') || frameUrl.pathname.endsWith('/admin/hebergements/categories');
+
+                if (modalOpened && isBackToIndex) {
+                    closeModal();
+                    window.location.reload();
+                }
+            } catch (e) {
+                // Keep modal open if iframe URL cannot be inspected.
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

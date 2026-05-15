@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<BorderPane prefHeight="900.0" prefWidth="1400.0"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            stylesheets="@style.css,@admin.css"
+            fx:controller="tn.esprit.controllers.ReclamationBackController">
+
+    <!-- ================= SIDEBAR ================= -->
+    <left>
+        <StackPane fx:id="leftContainer"
+                   prefWidth="100"
+                   minWidth="100"
+                   maxWidth="300"
+                   onMouseEntered="#expandSidebar"
+                   onMouseExited="#collapseSidebar">
+
+            <VBox alignment="TOP_CENTER"
+                  spacing="30"
+                  styleClass="sidebar">
+
+                <padding>
+                    <Insets top="25" right="15" left="15"/>
+                </padding>
+
+                <!-- LOGO -->
+                <ImageView fitHeight="55" preserveRatio="true">
+                    <image>
+                        <Image url="@/images/logo.png"/>
+                    </image>
+                </ImageView>
+
+                <!-- ACCUEIL -->
+                <Button fx:id="btnAccueil"
+                        text="ACCUEIL"
+                        styleClass="menu-btn">
+                    <graphic>
+                        <ImageView fitHeight="18" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/home.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+                <!-- USERS -->
+                <Button fx:id="btnutilisateur"
+                        text="UTILISATEURS"
+                        styleClass="menu-btn"
+                        onAction="#openUsers">
+                    <graphic>
+                        <ImageView fitHeight="18" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/util.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+                <!-- HEBERGEMENT -->
+                <Button fx:id="btnHebergement"
+                        text="HÉBERGEMENTS"
+                        styleClass="menu-btn">
+                    <graphic>
+                        <ImageView fitHeight="18" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/building.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+                <!-- LOISIRS -->
+                <Button fx:id="btnLoisirs"
+                        text="LOISIRS"
+                        styleClass="menu-btn">
+                    <graphic>
+                        <ImageView fitHeight="18" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/parc.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+                <!-- TRANSPORT -->
+                <Button fx:id="btnTransport"
+                        text="TRANSPORTS"
+                        styleClass="menu-btn">
+                    <graphic>
+                        <ImageView fitHeight="18" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/transport.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+                <!-- PAGE ACTIVE -->
+                <Button fx:id="btnAvis"
+                        text="RÉCLAMATIONS"
+                        styleClass="menu-btn-active">
+                    <graphic>
+                        <ImageView fitHeight="18" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/avis.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+            </VBox>
+
+        </StackPane>
+    </left>
+
+
+    <!-- ================= CENTER ================= -->
+    <center>
+
+        <VBox spacing="30" styleClass="admin-root">
+
+            <padding>
+                <Insets top="30" left="40" right="40" bottom="30"/>
+            </padding>
+
+            <!-- ===== TITLE ===== -->
+            <HBox alignment="CENTER_LEFT">
+
+                <Label text="Gestion des Réclamations"
+                       styleClass="section-title"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Button text="Actualiser"
+                        onAction="#refresh"
+                        styleClass="btn-primary"/>
+            </HBox>
+
+            <!-- ===== TABLE ===== -->
+            <VBox spacing="20"
+                  styleClass="admin-table-container"
+                  VBox.vgrow="ALWAYS">
+
+                <TableView fx:id="tableReclamations"
+                           styleClass="admin-table"
+                           VBox.vgrow="ALWAYS">
+
+                    <columns>
+
+                        <TableColumn fx:id="colSujet"
+                                     text="Sujet"
+                                     prefWidth="200"/>
+
+                        <TableColumn fx:id="colDescription"
+                                     text="Description"
+                                     prefWidth="420"/>
+
+                        <TableColumn fx:id="colDate"
+                                     text="Date"
+                                     prefWidth="150"/>
+
+                        <TableColumn fx:id="colStatut"
+                                     text="Statut"
+                                     prefWidth="140"/>
+
+                        <TableColumn fx:id="colReponse"
+                                     text="Réponse Admin"
+                                     prefWidth="260"/>
+
+                        <TableColumn fx:id="colActions"
+                                     text="Actions"
+                                     prefWidth="140"/>
+
+                    </columns>
+
+                </TableView>
+
+            </VBox>
+
+        </VBox>
+
+    </center>
+
+</BorderPane>

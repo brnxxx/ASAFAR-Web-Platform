@@ -1,0 +1,267 @@
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 99a3600 (Initial commit - Projet ASAFAR)
+/* ================= GLOBAL BACKGROUND ================= */
+
+.root {
+    -fx-background-color: #F4F8FC;
+}
+
+/* ================= SIDEBAR ================= */
+
+.sidebar {
+    -fx-background-color: linear-gradient(to bottom, #0B2D4A, #08263E);
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(47,168,255,0.35), 25, 0.3, 3, 0);
+}
+
+/* Logo glow */
+.sidebar .image-view {
+    -fx-effect: dropshadow(gaussian, rgba(47,168,255,0.6), 25, 0.4, 0, 4);
+}
+
+/* ================= MENU BUTTONS ================= */
+
+.menu-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #A7E3FF;
+    -fx-font-size: 15px;
+    -fx-font-weight: 500;
+    -fx-padding: 12 15 12 15;
+    -fx-background-radius: 12;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(255,193,7,0.1), 10, 0.3, 0, 0);
+}
+
+
+.menu-btn:hover {
+    -fx-background-color: rgba(255,193,7,0.15);
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, #FFC107, 25, 0.6, 0, 0);
+}
+
+
+.menu-btn-active {
+    -fx-background-color: linear-gradient(to right, #FFC107, #FF8F00);
+    -fx-text-fill: #0B2D4A;
+    -fx-font-weight: bold;
+    -fx-background-radius: 25;
+    -fx-padding: 12 20 12 20;
+    -fx-effect: dropshadow(gaussian, #FFC107, 35, 0.7, 0, 0);
+}
+
+
+/* ================= TOP BAR FUSIONNÉE ================= */
+
+.topbar-fused {
+    -fx-background-color: linear-gradient(to right, #0B2D4A, #123A5C);
+    -fx-padding: 10 25 10 25;
+    -fx-effect: dropshadow(gaussian, rgba(47,168,255,0.35), 20, 0.3, 0, 2);
+}
+
+/* ================= USER SECTION ================= */
+
+.user-avatar {
+    -fx-fill: linear-gradient(to bottom right, #FF8F00, #FF8F00);
+    -fx-effect: dropshadow(gaussian, #FF8F00, 20, 0.6, 0, 0);
+}
+
+.user-name {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+}
+
+/* ================= ICON BUTTONS ================= */
+
+.top-icon-btn {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+}
+
+.top-icon-btn:hover {
+    -fx-effect: dropshadow(gaussian, #FFC107, 20, 0.6, 0, 0);
+}
+
+/* ================= CONTENT ================= */
+
+.content {
+    -fx-background-color: #F4F8FC;
+    -fx-padding: 40;
+}
+
+.title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0B2D4A;
+}
+
+.subtitle {
+    -fx-font-size: 15px;
+    -fx-text-fill: #1E6FA8;
+}
+
+/* ===== SIDEBAR + TOPBAR FUSION ===== */
+
+.sidebar {
+    -fx-background-color: #0B2D4A;
+}
+
+.topbar-fused {
+    -fx-background-color: #0B2D4A;
+}
+
+/* Supprimer toute séparation */
+.border-pane {
+    -fx-background-color: #F4F8FC;
+}
+
+/*fin sidebar*/
+
+/*reclamationnnnnnnnnn*/
+.btn-edit {
+    -fx-background-color: #1E88E5;
+    -fx-text-fill: white;
+    -fx-background-radius: 15;
+}
+
+.btn-delete {
+    -fx-background-color: #E53935;
+    -fx-text-fill: white;
+    -fx-background-radius: 15;
+}
+<<<<<<< HEAD
+=======
+/* ================= GLOBAL BACKGROUND ================= */
+
+.root {
+    -fx-background-color: #F4F8FC;
+}
+
+/* ================= SIDEBAR ================= */
+
+.sidebar {
+    -fx-background-color: linear-gradient(to bottom, #0B2D4A, #08263E);
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(47,168,255,0.35), 25, 0.3, 3, 0);
+}
+
+/* Logo glow */
+.sidebar .image-view {
+    -fx-effect: dropshadow(gaussian, rgba(47,168,255,0.6), 25, 0.4, 0, 4);
+}
+
+/* ================= MENU BUTTONS ================= */
+
+.menu-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #A7E3FF;
+    -fx-font-size: 15px;
+    -fx-font-weight: 500;
+    -fx-padding: 12 15 12 15;
+    -fx-background-radius: 12;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(255,193,7,0.1), 10, 0.3, 0, 0);
+}
+
+
+.menu-btn:hover {
+    -fx-background-color: rgba(255,193,7,0.15);
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, #FFC107, 25, 0.6, 0, 0);
+}
+
+
+.menu-btn-active {
+    -fx-background-color: linear-gradient(to right, #FFC107, #FF8F00);
+    -fx-text-fill: #0B2D4A;
+    -fx-font-weight: bold;
+    -fx-background-radius: 25;
+    -fx-padding: 12 20 12 20;
+    -fx-effect: dropshadow(gaussian, #FFC107, 35, 0.7, 0, 0);
+}
+
+
+/* ================= TOP BAR FUSIONNÉE ================= */
+
+.topbar-fused {
+    -fx-background-color: linear-gradient(to right, #0B2D4A, #123A5C);
+    -fx-padding: 10 25 10 25;
+    -fx-effect: dropshadow(gaussian, rgba(47,168,255,0.35), 20, 0.3, 0, 2);
+}
+
+/* ================= USER SECTION ================= */
+
+.user-avatar {
+    -fx-fill: linear-gradient(to bottom right, #FF8F00, #FF8F00);
+    -fx-effect: dropshadow(gaussian, #FF8F00, 20, 0.6, 0, 0);
+}
+
+.user-name {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+}
+
+/* ================= ICON BUTTONS ================= */
+
+.top-icon-btn {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+}
+
+.top-icon-btn:hover {
+    -fx-effect: dropshadow(gaussian, #FFC107, 20, 0.6, 0, 0);
+}
+
+/* ================= CONTENT ================= */
+
+.content {
+    -fx-background-color: #F4F8FC;
+    -fx-padding: 40;
+}
+
+.title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0B2D4A;
+}
+
+.subtitle {
+    -fx-font-size: 15px;
+    -fx-text-fill: #1E6FA8;
+}
+
+/* ===== SIDEBAR + TOPBAR FUSION ===== */
+
+.sidebar {
+    -fx-background-color: #0B2D4A;
+}
+
+.topbar-fused {
+    -fx-background-color: #0B2D4A;
+}
+
+/* Supprimer toute séparation */
+.border-pane {
+    -fx-background-color: #F4F8FC;
+}
+
+/*fin sidebar*/
+
+/*reclamationnnnnnnnnn*/
+.btn-edit {
+    -fx-background-color: #1E88E5;
+    -fx-text-fill: white;
+    -fx-background-radius: 15;
+}
+
+.btn-delete {
+    -fx-background-color: #E53935;
+    -fx-text-fill: white;
+    -fx-background-radius: 15;
+}
+>>>>>>> 38680b7 (integ v1.0)
+=======
+>>>>>>> 99a3600 (Initial commit - Projet ASAFAR)

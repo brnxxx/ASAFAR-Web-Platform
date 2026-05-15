@@ -1,0 +1,178 @@
+/* =====================================================
+   GLOBAL BACKGROUND
+===================================================== */
+
+.auth-background {
+    -fx-background-color:
+            linear-gradient(to right,
+            #0B2D4A 0%,
+            #123A5A 40%,
+            #173F60 100%);
+    -fx-alignment: center;
+}
+
+
+/* =====================================================
+   CARD CONTAINER
+===================================================== */
+
+.auth-card {
+    -fx-background-color: #163B57;
+    -fx-background-radius: 20;
+
+    -fx-effect: dropshadow(gaussian,
+    rgba(47,168,255,0.35),
+    40,0.3,0,0);
+
+    -fx-padding: 35;
+}
+
+
+/* =====================================================
+   TITLE
+===================================================== */
+
+.auth-title {
+    -fx-text-fill: #A7E3FF;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+}
+
+
+/* =====================================================
+   INPUT FIELDS
+===================================================== */
+
+.input-field {
+
+    -fx-background-color: transparent;
+
+    -fx-border-color: transparent transparent #2FA8FF transparent;
+    -fx-border-width: 0 0 2 0;
+
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #A7E3FF;
+
+    -fx-font-size: 14px;
+    -fx-padding: 10 5 10 5;
+
+    -fx-pref-width: 300;
+}
+
+
+/* INPUT FOCUS EFFECT (ligne jaune glow) */
+
+.input-field:focused {
+
+    -fx-border-color: transparent transparent #FFC107 transparent;
+
+    -fx-effect: dropshadow(gaussian,
+    rgba(255,193,7,0.7),
+    12,0.3,0,2);
+}
+
+
+/* =====================================================
+   BUTTON
+===================================================== */
+
+.btn-auth {
+
+    -fx-background-color:
+            linear-gradient(to bottom, #2FA8FF, #1E6FA8);
+
+    -fx-background-radius: 25;
+
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+
+    -fx-padding: 12 35 12 35;
+
+    -fx-cursor: hand;
+
+    -fx-effect: dropshadow(gaussian,
+    rgba(47,168,255,0.7),
+    25,0.4,0,0);
+}
+
+
+/* BUTTON HOVER */
+
+.btn-auth:hover {
+
+    -fx-background-color:
+            linear-gradient(to bottom, #4FC3FF, #2FA8FF);
+
+    -fx-effect: dropshadow(gaussian,
+    rgba(47,168,255,1),
+    35,0.6,0,0);
+}
+
+
+/* =====================================================
+   TEXTS
+===================================================== */
+
+.auth-text {
+    -fx-text-fill: #A7E3FF;
+    -fx-font-size: 13px;
+}
+
+.auth-link {
+    -fx-text-fill: #2FA8FF;
+    -fx-font-weight: bold;
+}
+
+.auth-link:hover {
+    -fx-text-fill: #FFC107;
+}
+
+
+/* =====================================================
+   AVATAR
+===================================================== */
+
+.avatar-circle {
+    -fx-fill: #1E6FA8;
+
+    -fx-effect: dropshadow(gaussian,
+    rgba(47,168,255,0.6),
+    25,0.4,0,0);
+}
+
+
+/* =====================================================
+   ERROR LABELS
+===================================================== */
+
+.error-label {
+    -fx-text-fill: #FF8F00;
+    -fx-font-size: 12px;
+}
+.welcome-panel {
+    -fx-background-color:
+            linear-gradient(to bottom right,
+            #2FA8FF,
+            #1E6FA8);
+
+    -fx-effect:
+            dropshadow(gaussian, rgba(47,168,255,0.6), 60, 0.3, 0, 0);
+}
+.error-text {
+    -fx-text-fill: #FF6B6B;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 2 0 0 5;
+    -fx-effect: dropshadow(gaussian, rgba(255,107,107,0.6), 6, 0.2, 0, 0);
+}
+
+.field-error {
+    -fx-border-color: #FF6B6B;
+    -fx-border-width: 0 0 2 0;
+}
+
+.field-valid {
+    -fx-border-color: #4CD964;
+    -fx-border-width: 0 0 2 0;
+}

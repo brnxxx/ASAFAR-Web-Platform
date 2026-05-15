@@ -1,0 +1,30 @@
+controllers:
+    resource:
+        path: ../src/
+        namespace: App
+    type: attribute
+
+profile_index:
+    path: /profile
+    controller: App\Controller\ProfileController::index
+    methods: [GET]
+
+profile_update:
+    path: /profile/modifier
+    controller: App\Controller\ProfileController::update
+    methods: [POST]
+
+profile_change_password:
+    path: /profile/changer-mot-de-passe
+    controller: App\Controller\ProfileController::changePassword
+    methods: [POST]
+
+profile_delete:
+    path: /profile/supprimer
+    controller: App\Controller\ProfileController::delete
+    methods: [POST]
+
+profile_upload_photo:
+    path: /profile/upload-photo
+    controller: App\Controller\ProfileController::uploadPhoto
+    methods: [POST]

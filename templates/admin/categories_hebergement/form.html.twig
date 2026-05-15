@@ -1,0 +1,337 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ title }} - Admin ASAFAR{% endblock %}
+
+{% block page_title %}
+    <i class="fas fa-tags"></i> {{ title }}
+{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto;">
+    <div style="background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(12px); border: 2px solid rgba(47, 168, 255, 0.15); border-radius: 16px; padding: 40px; overflow: hidden;">
+
+        {{ form_start(form, {'attr': {'class': 'categorie-form', 'novalidate': 'novalidate', 'enctype': 'multipart/form-data'}}) }}
+
+        <!-- Form Errors -->
+        {% if form.vars.errors|length > 0 %}
+            <div style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px; padding: 15px; margin-bottom: 20px; color: #EF4444;">
+                <h4 style="margin: 0 0 10px 0; color: #EF4444;">Erreurs du formulaire:</h4>
+                {{ form_errors(form) }}
+            </div>
+        {% endif %}
+
+        <!-- Image Upload -->
+        <div class="form-group" style="margin-bottom: 30px;">
+            <label style="display: block; margin-bottom: 10px; font-weight: 600; color: var(--text-primary); letter-spacing: 0.5px;">
+                Image de la Catégorie
+            </label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start;">
+                <div style="background: rgba(47, 168, 255, 0.1); border: 2px dashed rgba(47, 168, 255, 0.3); border-radius: 12px; padding: 20px; display: flex; align-items: center; justify-content: center; min-height: 220px; overflow: hidden;">
+                    <div id="imagePreview" style="text-align: center; width: 100%;">
+                        {% if categorie.imagePath %}
+                            <img src="{{ categorie.imagePath }}" alt="Preview" style="max-width: 100%; max-height: 180px; border-radius: 8px; object-fit: cover;">
+                        {% else %}
+                            <div style="color: rgba(47, 168, 255, 0.5);">
+                                <i class="fas fa-image" style="font-size: 44px; display: block; margin-bottom: 10px;"></i>
+                                <p style="font-size: 14px; margin: 0;">Aucune image sélectionnée</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div>
+                    <div style="position: relative;">
+                        {{ form_widget(form.imageFile, {
+                            'attr': {
+                                'id': form.imageFile.vars.id,
+                                'class': 'file-input',
+                                'accept': 'image/*'
+                            }
+                        }) }}
+                        <label for="{{ form.imageFile.vars.id }}" class="btn-upload">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>Choisir une image</span>
+                        </label>
+                    </div>
+                    <p style="font-size: 12px; color: var(--text-secondary); margin-top: 10px; margin-bottom: 0;">
+                        Format: JPG, PNG, GIF, WebP<br>
+                        Taille max: 5MB
+                    </p>
+                    {% if form.imageFile.vars.errors|length > 0 %}
+                        <div style="color: #EF4444; font-size: 12px; margin-top: 6px;">
+                            {{ form_errors(form.imageFile) }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Nom Field -->
+        <div class="form-group" style="margin-bottom: 24px;">
+            <label for="{{ form.nom.vars.id }}" style="display: block; margin-bottom: 10px; font-weight: 600; color: var(--text-primary); letter-spacing: 0.5px;">
+                Nom de la Catégorie
+                <span style="color: #FF6B6B; font-weight: 700;">*</span>
+            </label>
+            {{ form_widget(form.nom, {'attr': {'id': form.nom.vars.id, 'placeholder': 'Ex: Luxe, Budget, Eco...', 'class': 'form-control'}}) }}
+            {% if form.nom.vars.errors|length > 0 %}
+                <div style="color: #EF4444; font-size: 12px; margin-top: 5px;">
+                    {{ form_errors(form.nom) }}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Description Field -->
+        <div class="form-group" style="margin-bottom: 30px;">
+            <label for="{{ form.description.vars.id }}" style="display: block; margin-bottom: 10px; font-weight: 600; color: var(--text-primary); letter-spacing: 0.5px;">
+                Description
+            </label>
+            {{ form_widget(form.description, {'attr': {'id': form.description.vars.id, 'rows': 4, 'placeholder': 'Décrivez cette catégorie d\'hébergement...', 'class': 'form-control'}}) }}
+            {% if form.description.vars.errors|length > 0 %}
+                <div style="color: #EF4444; font-size: 12px; margin-top: 5px;">
+                    {{ form_errors(form.description) }}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Form Actions -->
+        <div style="display: flex; gap: 15px; margin-top: 40px; padding-top: 20px; border-top: 2px solid rgba(47, 168, 255, 0.15);">
+            <button type="submit" class="btn-submit">
+                <i class="fas fa-save"></i>
+                <span>{% if categorie.idCategorie %}Mettre a Jour{% else %}Creer{% endif %}</span>
+            </button>
+
+            <a href="{{ path('admin_categories_hebergement') }}" class="btn-cancel">
+                <i class="fas fa-times"></i>
+                <span>Annuler</span>
+            </a>
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+</div>
+
+<style>
+    .form-group {
+        margin-bottom: 24px;
+    }
+
+    .form-control,
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 12px 16px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 2px solid rgba(47, 168, 255, 0.15);
+        border-radius: 8px;
+        color: var(--text-primary);
+        font-family: 'Inter', sans-serif;
+        transition: all 0.3s ease;
+        font-size: 14px;
+    }
+
+    input:focus, select:focus, textarea:focus {
+        outline: none !important;
+        background: rgba(255, 255, 255, 0.08);
+        border-color: #2FA8FF;
+        box-shadow: 0 0 15px rgba(47, 168, 255, 0.2);
+    }
+
+    .file-input {
+        display: none;
+    }
+
+    .btn-upload {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        width: 100%;
+        padding: 16px 24px;
+        background: linear-gradient(135deg, #FFC107 0%, #FFD54F 100%);
+        color: #0B2D4A;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 15px;
+        text-decoration: none;
+    }
+
+    .btn-upload:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(255, 193, 7, 0.35);
+    }
+
+    .btn-submit {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 32px;
+        background: linear-gradient(135deg, #2FA8FF 0%, #A7E3FF 100%);
+        color: #0B2D4A;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 14px;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(47, 168, 255, 0.35);
+    }
+
+    .btn-cancel {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 32px;
+        background: rgba(47, 168, 255, 0.1);
+        color: #2FA8FF;
+        border: 2px solid #2FA8FF;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-size: 14px;
+    }
+
+    .btn-cancel:hover {
+        background: #2FA8FF;
+        color: #0B2D4A;
+        transform: translateY(-3px);
+    }
+
+    @media (max-width: 768px) {
+        .form-group {
+            margin-bottom: 18px;
+        }
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const formElement = document.querySelector('.categorie-form');
+    const fileInput = document.getElementById('{{ form.imageFile.vars.id }}');
+    const imagePreview = document.getElementById('imagePreview');
+    const nomInput = document.getElementById('{{ form.nom.vars.id }}');
+    const descriptionInput = document.getElementById('{{ form.description.vars.id }}');
+
+    function showError(input, message) {
+        let errorDiv = input.nextElementSibling;
+        if (!errorDiv || !errorDiv.classList.contains('error-message')) {
+            errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.style.cssText = 'color: #EF4444; font-size: 12px; margin-top: 6px;';
+            input.parentNode.insertBefore(errorDiv, input.nextSibling);
+        }
+        errorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+        errorDiv.style.display = 'block';
+    }
+
+    function clearError(input) {
+        const errorDiv = input.nextElementSibling;
+        if (errorDiv && errorDiv.classList.contains('error-message')) {
+            errorDiv.style.display = 'none';
+        }
+    }
+
+    if (fileInput && imagePreview) {
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) {
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                imagePreview.innerHTML = `<img src="${event.target.result}" alt="Preview" style="max-width: 100%; max-height: 180px; border-radius: 8px; object-fit: cover;">`;
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    if (nomInput) {
+        nomInput.addEventListener('input', function() {
+            const value = this.value.trim();
+
+            if (value === '') return;
+            if (value.length < 3) {
+                showError(this, 'Le nom de la categorie doit contenir au moins 3 caracteres');
+            } else if (!/^[a-zA-ZÀ-ÿ\s\-']+$/.test(value)) {
+                showError(this, 'Le nom de la categorie ne doit contenir que des lettres, espaces et tirets');
+            } else {
+                clearError(this);
+            }
+        });
+
+        nomInput.addEventListener('blur', function() {
+            if (this.value.trim() === '') {
+                showError(this, 'Le nom de la categorie ne doit pas etre vide');
+            }
+        });
+    }
+
+    if (descriptionInput) {
+        descriptionInput.addEventListener('input', function() {
+            const value = this.value.trim();
+
+            if (value.length > 1000) {
+                showError(this, 'La description ne doit pas depasser 1000 caracteres');
+            } else {
+                clearError(this);
+            }
+        });
+    }
+
+    if (formElement) {
+        formElement.addEventListener('submit', function(event) {
+            let hasError = false;
+
+            if (nomInput) {
+                const nomValue = nomInput.value.trim();
+                if (nomValue === '') {
+                    showError(nomInput, 'Le nom de la categorie ne doit pas etre vide');
+                    hasError = true;
+                } else if (nomValue.length < 3) {
+                    showError(nomInput, 'Le nom de la categorie doit contenir au moins 3 caracteres');
+                    hasError = true;
+                } else if (!/^[a-zA-ZÀ-ÿ\s\-']+$/.test(nomValue)) {
+                    showError(nomInput, 'Le nom de la categorie ne doit contenir que des lettres, espaces et tirets');
+                    hasError = true;
+                }
+            }
+
+            if (descriptionInput) {
+                const descriptionValue = descriptionInput.value.trim();
+                if (descriptionValue.length > 1000) {
+                    showError(descriptionInput, 'La description ne doit pas depasser 1000 caracteres');
+                    hasError = true;
+                }
+            }
+
+            if (fileInput && fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                if (!allowedTypes.includes(file.type)) {
+                    alert('Veuillez televerser une image valide (JPG, PNG, GIF, WebP).');
+                    hasError = true;
+                }
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('La taille de l\'image ne doit pas depasser 5MB.');
+                    hasError = true;
+                }
+            }
+
+            if (hasError) {
+                event.preventDefault();
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

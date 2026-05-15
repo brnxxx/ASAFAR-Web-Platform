@@ -1,0 +1,109 @@
+{# templates/transport/mobile_detail.html.twig #}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mon Voyage - ASAFAR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --m-navy: #051621;
+            --m-sky: #2FA8FF;
+            --m-amber: #FFC107;
+        }
+        body {
+            margin: 0; padding: 0;
+            background: var(--m-navy);
+            color: #F4F8FC;
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+        }
+        .header {
+            padding: 40px 25px;
+            background: linear-gradient(180deg, rgba(47, 168, 255, 0.15) 0%, transparent 100%);
+            text-align: center;
+        }
+        .logo { font-family: 'Playfair Display'; color: var(--m-amber); font-size: 28px; }
+        
+        .card {
+            margin: -20px 20px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 30px;
+            animation: slideUp 0.6s ease-out;
+        }
+        
+        .ticket-type {
+            text-transform: uppercase; font-size: 12px; font-weight: 800;
+            letter-spacing: 2px; color: var(--m-sky); margin-bottom: 10px;
+        }
+        
+        .route-info {
+            display: flex; align-items: center; justify-content: space-between;
+            margin: 20px 0;
+        }
+        .city { font-size: 24px; font-weight: 800; }
+        .plane-icon { color: var(--m-amber); font-size: 20px; }
+        
+        .details-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+            margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+        }
+        .detail-item label { font-size: 10px; text-transform: uppercase; color: #BED1E0; }
+        .detail-item div { font-size: 14px; font-weight: 600; }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">ASAFAR</div>
+        <p style="font-size: 12px; opacity: 0.7;">Votre itinéraire numérique</p>
+    </div>
+
+    <div class="card">
+        <div class="ticket-type">{{ transport.type }}</div>
+        <h2 style="margin:0; font-family:'Playfair Display'">{{ transport.nom }}</h2>
+        
+        <div class="route-info">
+            <div class="city">{{ transport.departure.codeIata|default('DEP') }}</div>
+            <div class="plane-icon">✈</div>
+            <div class="city">{{ transport.destination.codeIata|default('ARR') }}</div>
+        </div>
+
+        <div style="background: rgba(47, 168, 255, 0.1); padding: 15px; border-radius: 15px; font-size: 13px;">
+            {{ transport.description|slice(0, 100) }}...
+        </div>
+
+        <div class="details-grid">
+            <div class="detail-item">
+                <label>Prix Payé</label>
+                <div style="color: var(--m-amber)">{{ transport.prix }} TND</div>
+            </div>
+            <div class="detail-item">
+                <label>Date Voyage</label>
+                <div>{{ "now"|date("d M Y") }}</div>
+            </div>
+            <div class="detail-item">
+                <label>Status</label>
+                <div style="color: #48C774">● Confirmé</div>
+            </div>
+            <div class="detail-item">
+                <label>Référence</label>
+                <div>#ASF-{{ transport.id }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; padding: 20px; font-size: 11px; opacity: 0.5;">
+        ASAFAR Mobility - Bon voyage !
+    </div>
+</body>
+</html>

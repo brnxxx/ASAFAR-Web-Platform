@@ -1,0 +1,80 @@
+{{ form_start(form, {
+    action: is_edit
+        ? path('admin_user_form_edit_submit', {'id': user_id})
+        : path('admin_user_form_add_submit'),
+    attr: {
+        id: 'backofficeUserForm',
+        novalidate: 'novalidate'
+    }
+}) }}
+
+<div class="modal-body">
+    <div class="form-message" id="formMessage"></div>
+
+
+<div class="form-row">
+    <div class="form-group">
+        {{ form_label(form.prenom) }}
+        {{ form_widget(form.prenom) }}
+        <div class="field-error" id="prenomError"></div>
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.nom) }}
+        {{ form_widget(form.nom) }}
+        <div class="field-error" id="nomError"></div>
+    </div>
+</div>
+
+<div class="form-group">
+    {{ form_label(form.email) }}
+    {{ form_widget(form.email) }}
+    <div class="field-error" id="emailError"></div>
+</div>
+
+<div class="form-group">
+    {{ form_label(form.telephone) }}
+    {{ form_widget(form.telephone) }}
+    <div class="field-error" id="telephoneError"></div>
+</div>
+
+{% if not is_edit %}
+<div class="form-row">
+    <div class="form-group">
+        {{ form_label(form.plainPassword.first) }}
+        {{ form_widget(form.plainPassword.first) }}
+        <div class="field-error" id="plainPasswordFirstError"></div>
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.plainPassword.second) }}
+        {{ form_widget(form.plainPassword.second) }}
+        <div class="field-error" id="plainPasswordSecondError"></div>
+    </div>
+</div>
+{% endif %}
+
+<div class="form-row">
+    <div class="form-group">
+        {{ form_label(form.role) }}
+        {{ form_widget(form.role) }}
+        <div class="field-error" id="roleError"></div>
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.statut) }}
+        {{ form_widget(form.statut) }}
+        <div class="field-error" id="statutError"></div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" id="cancelFormBtn">
+        Annuler
+    </button>
+
+    <button type="submit" class="btn btn-primary">
+        {{ is_edit ? 'Mettre à jour' : 'Enregistrer' }}
+    </button>
+</div>
+
+{{ form_end(form) }}

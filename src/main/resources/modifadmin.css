@@ -1,0 +1,92 @@
+/* ================= DIALOG BACKGROUND ================= */
+
+.dialog-pane {
+    -fx-background-color: #1E2A38;
+    -fx-background-radius: 15;
+    -fx-padding: 25;
+}
+
+/* ================= TITRE ================= */
+
+.dialog-pane .header-panel {
+    -fx-background-color: transparent;
+}
+
+.dialog-pane .label {
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+}
+
+/* ================= TEXTFIELDS ================= */
+
+.text-field {
+    -fx-background-color: #263445;
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #00AEEF;
+    -fx-border-width: 1;
+    -fx-padding: 8 12 8 12;
+}
+
+.text-field:focused {
+    -fx-border-color: #00D4FF;
+    -fx-effect: dropshadow(gaussian, rgba(0,212,255,0.5), 8, 0.2, 0, 0);
+}
+
+/* ================= COMBOBOX ================= */
+
+.combo-box {
+    -fx-background-color: #263445;
+    -fx-background-radius: 8;
+    -fx-border-color: #00AEEF;
+    -fx-border-radius: 8;
+    -fx-text-fill: white;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: white;
+    -fx-background-color: #263445;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: #263445;
+}
+
+/* ================= BUTTONS ================= */
+
+.button {
+    -fx-background-radius: 8;
+    -fx-padding: 8 18 8 18;
+    -fx-font-weight: bold;
+}
+
+/* Bouton Annuler */
+.button:cancel {
+    -fx-background-color: #444;
+    -fx-text-fill: white;
+}
+
+/* Bouton Enregistrer */
+.button:default {
+    -fx-background-color: #00AEEF;
+    -fx-text-fill: white;
+}
+
+.button:default:hover {
+    -fx-background-color: #00D4FF;
+}
+.field-error {
+    -fx-border-color: #ff4d4d;
+    -fx-border-width: 2;
+}
+
+.field-valid {
+    -fx-border-color: #00ff99;
+    -fx-border-width: 2;
+}
+
+.error-label {
+    -fx-text-fill: #ff4d4d;
+    -fx-font-size: 11px;
+}

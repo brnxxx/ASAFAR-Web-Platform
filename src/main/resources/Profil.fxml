@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/21"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="tn.esprit.controllers.ProfileController"
+           stylesheets="@profile.css"
+           styleClass="profile-background">
+
+
+    <HBox AnchorPane.topAnchor="15"
+          AnchorPane.leftAnchor="15"
+          alignment="CENTER_LEFT">
+
+        <Button fx:id="btnRetour"
+                text="← Retour"
+                onAction="#goBack"
+                styleClass="btn-auth"/>
+    </HBox>
+
+    <!-- CARD -->
+    <VBox alignment="TOP_CENTER"
+          spacing="25"
+          maxWidth="820"
+          styleClass="profile-card">
+
+        <padding>
+            <Insets top="35" right="40" bottom="35" left="40"/>
+        </padding>
+
+        <!-- HEADER -->
+        <VBox alignment="CENTER" spacing="10">
+
+            <Label fx:id="lblName" styleClass="profile-name"/>
+
+            <HBox spacing="10" alignment="CENTER">
+                <Label fx:id="lblRole" styleClass="badge-base"/>
+                <Label fx:id="lblStatus" styleClass="badge-base"/>
+            </HBox>
+
+        </VBox>
+
+        <!-- MAIN PROFILE -->
+        <HBox alignment="CENTER" spacing="40"
+              styleClass="section-card">
+
+            <!-- LEFT INFO -->
+            <VBox spacing="18" alignment="CENTER_LEFT">
+
+                <Label text="Profil" styleClass="section-title"/>
+
+                <HBox spacing="10">
+                    <Label text="✉" styleClass="info-icon"/>
+                    <VBox>
+                        <Label text="Email" styleClass="info-label"/>
+                        <Label fx:id="lblEmail" styleClass="info-value"/>
+                    </VBox>
+                </HBox>
+
+                <HBox spacing="10">
+                    <Label text="☎" styleClass="info-icon"/>
+                    <VBox>
+                        <Label text="Téléphone" styleClass="info-label"/>
+                        <Label fx:id="lblPhone" styleClass="info-value"/>
+                    </VBox>
+                </HBox>
+                <HBox spacing="10">
+                    <Label text="🔒" styleClass="info-icon"/>
+                    <VBox>
+                        <Label text="Mot de passe" styleClass="info-label"/>
+                        <Label text="••••••••••" styleClass="info-value"/>
+                    </VBox>
+                    <Button onAction="#handleChangePassword"
+                            styleClass="icon-button">
+
+                        <graphic>
+                            <ImageView fitWidth="16"
+                                       fitHeight="16"
+                                       preserveRatio="true">
+                                <image>
+                                    <Image url="@/images/edit.png"/>
+                                </image>
+                            </ImageView>
+                        </graphic>
+
+                    </Button>
+
+
+
+                </HBox>
+
+
+            </VBox>
+
+            <!-- CENTER IMAGE -->
+            <StackPane alignment="CENTER">
+
+                <ImageView fx:id="profileImage"
+                           fitWidth="200"
+                           fitHeight="200"
+                           preserveRatio="true"
+                           styleClass="profile-image"/>
+
+            </StackPane>
+
+            <!-- RIGHT STATUS -->
+            <VBox spacing="18" alignment="CENTER_LEFT">
+
+                <Label text="Statut" styleClass="section-title"/>
+
+                <Label text="Client depuis :" styleClass="info-label"/>
+                <Label fx:id="lblMemberSince" styleClass="info-value"/>
+
+                <Button text="Modifier le profil"
+                        styleClass="btn-edit-full"
+                        onAction="#handleEditProfile"/>
+
+            </VBox>
+
+        </HBox>
+
+        <!-- ACTIONS -->
+        <HBox spacing="20" alignment="CENTER">
+
+            <Button fx:id="btnLogout"
+                    text="Déconnexion"
+                    styleClass="btn-logout"
+                    onAction="#handleLogout"/>
+
+            <Button text="Supprimer"
+                    styleClass="btn-delete"
+                    onAction="#handleDeleteAccount"/>
+
+        </HBox>
+
+    </VBox>
+
+</StackPane>

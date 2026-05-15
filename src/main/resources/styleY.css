@@ -1,0 +1,1767 @@
+/* ================= GLOBAL BACKGROUND ================= */
+
+.root {
+    -fx-background-color: #F4F8FC;
+}
+
+/* ================= SIDEBAR ================= */
+
+.sidebar {
+    -fx-background-color: linear-gradient(to bottom, #0B2D4A, #08263E);
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(47,168,255,0.35), 25, 0.3, 3, 0);
+}
+
+/* Logo glow */
+.sidebar .image-view {
+    -fx-effect: dropshadow(gaussian, rgba(47,168,255,0.6), 25, 0.4, 0, 4);
+}
+
+/* ================= MENU BUTTONS ================= */
+
+.menu-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #A7E3FF;
+    -fx-font-size: 15px;
+    -fx-font-weight: 500;
+    -fx-padding: 12 15 12 15;
+    -fx-background-radius: 12;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(255,193,7,0.1), 10, 0.3, 0, 0);
+}
+
+.menu-btn:hover {
+    -fx-background-color: rgba(255,193,7,0.15);
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, #FFC107, 25, 0.6, 0, 0);
+}
+
+.menu-btn-active {
+    -fx-background-color: linear-gradient(to right, #FFC107, #FF8F00);
+    -fx-text-fill: #0B2D4A;
+    -fx-font-weight: bold;
+    -fx-background-radius: 25;
+    -fx-padding: 12 20 12 20;
+    -fx-effect: dropshadow(gaussian, #FFC107, 35, 0.7, 0, 0);
+}
+
+/* ================= TOP BAR FUSIONNÉE ================= */
+
+.topbar-fused {
+    -fx-background-color: linear-gradient(to right, #0B2D4A, #123A5C);
+    -fx-padding: 10 25 10 25;
+    -fx-effect: dropshadow(gaussian, rgba(47,168,255,0.35), 20, 0.3, 0, 2);
+}
+
+/* ================= USER SECTION ================= */
+
+.user-avatar {
+    -fx-fill: linear-gradient(to bottom right, #FF8F00, #FF8F00);
+    -fx-effect: dropshadow(gaussian, #FF8F00, 20, 0.6, 0, 0);
+}
+
+.user-name {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+}
+
+/* ================= ICON BUTTONS ================= */
+
+.top-icon-btn {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+}
+
+.top-icon-btn:hover {
+    -fx-effect: dropshadow(gaussian, #FFC107, 20, 0.6, 0, 0);
+}
+
+/* ================= CONTENT ================= */
+
+.content {
+    -fx-background-color: #F4F8FC;
+    -fx-padding: 40;
+}
+
+.title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0B2D4A;
+}
+
+.subtitle {
+    -fx-font-size: 15px;
+    -fx-text-fill: #1E6FA8;
+}
+
+/* ===== SIDEBAR + TOPBAR FUSION ===== */
+
+.sidebar {
+    -fx-background-color: #0B2D4A;
+}
+
+.topbar-fused {
+    -fx-background-color: #0B2D4A;
+}
+
+/* Supprimer toute séparation */
+.border-pane {
+    -fx-background-color: #F4F8FC;
+}
+
+/*fin sidebar*/
+
+/*partie admin*/
+
+/* =========================================================
+   BACKGROUND ADMIN (Galaxy style)
+========================================================= */
+
+.admin-root {
+    -fx-background-color: radial-gradient(
+            radius 120%,
+            #1E6FA8 0%,
+            #0B2D4A 45%,
+            #061A2B 100%
+    );
+}
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+.section-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #A7E3FF;
+}
+
+/* =========================================================
+   STAT CARDS (Bleu)
+========================================================= */
+
+.stat-card {
+    -fx-background-color: linear-gradient(to bottom right, #1E6FA8, #0B2D4A);
+    -fx-background-radius: 20;
+    -fx-padding: 25;
+    -fx-effect: dropshadow(gaussian, #2FA8FF, 30, 0.5, 0, 0);
+}
+
+.stat-number {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.stat-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #A7E3FF;
+}
+
+/* =========================================================
+   GOLD STAT CARD (Transactions)
+========================================================= */
+
+.stat-card-gold {
+    -fx-background-color: linear-gradient(to bottom right, #FFC107, #FF8F00);
+    -fx-background-radius: 20;
+    -fx-padding: 25;
+    -fx-effect: dropshadow(gaussian, #FF8F00, 35, 0.6, 0, 0);
+}
+
+.stat-number-gold {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0B2D4A;
+}
+
+/* =========================================================
+   TABLE CONTAINER
+========================================================= */
+
+.admin-table-container {
+    -fx-background-color: linear-gradient(to bottom right, #0B2D4A, #1E6FA8);
+    -fx-background-radius: 25;
+    -fx-padding: 25;
+    -fx-effect: dropshadow(gaussian, #2FA8FF, 40, 0.4, 0, 0);
+}
+
+/* =========================================================
+   TABLE VIEW
+========================================================= */
+
+.admin-table {
+    -fx-background-color: transparent;
+    -fx-control-inner-background: #0B2D4A;
+    -fx-table-cell-border-color: transparent;
+    -fx-text-fill: white;
+}
+
+/* Header */
+.table-view .column-header-background {
+    -fx-background-color: #1E6FA8;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+/* Rows */
+.table-row-cell {
+    -fx-background-color: transparent;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: rgba(47,168,255,0.15);
+}
+
+/* Cells */
+.table-cell {
+    -fx-text-fill: #A7E3FF;
+    -fx-font-size: 13px;
+}
+
+/* =========================================================
+   STATUS BADGES
+========================================================= */
+
+.status-active {
+    -fx-background-color: #2FA8FF;
+    -fx-text-fill: white;
+    -fx-background-radius: 20;
+    -fx-padding: 4 12;
+}
+
+.status-blocked {
+    -fx-background-color: #FF8F00;
+    -fx-text-fill: white;
+    -fx-background-radius: 20;
+    -fx-padding: 4 12;
+}
+
+/* =========================================================
+   PRIMARY BUTTON (Ajouter utilisateur)
+========================================================= */
+
+.btn-primary {
+    -fx-background-color: #FF8F00;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 25;
+    -fx-padding: 8 20;
+    -fx-cursor: hand;
+}
+
+.btn-primary:hover {
+    -fx-background-color: linear-gradient(to right, #FFA500, #FF8F00);
+    -fx-effect: dropshadow(gaussian, #FF8F00, 15, 0.5, 0, 0);
+}
+
+/* =========================================================
+   SCROLLBAR STYLE
+========================================================= */
+
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #2FA8FF;
+    -fx-background-radius: 10;
+}
+
+/* ================= HEBERGEMENT CUSTOM ================= */
+
+/* Search field */
+.search-field {
+    -fx-background-color: rgba(255,255,255,0.1);
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #A7E3FF;
+    -fx-background-radius: 25;
+    -fx-padding: 10 20;
+    -fx-border-color: #2FA8FF;
+    -fx-border-radius: 25;
+    -fx-border-width: 1;
+}
+
+.search-field:focused {
+    -fx-border-color: #FFC107;
+    -fx-effect: dropshadow(gaussian, #FFC107, 15, 0.5, 0, 0);
+}
+
+/* ListView */
+.hebergement-listview {
+    -fx-background-color: transparent;
+    -fx-control-inner-background: transparent;
+}
+
+.list-view {
+    -fx-background-color: transparent;
+}
+
+.list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 10;
+}
+
+.list-cell:filled:hover {
+    -fx-background-color: rgba(47,168,255,0.15);
+    -fx-background-radius: 15;
+}
+
+/* Cards dans ListView */
+.list-cell .hbox {
+    -fx-background-color: linear-gradient(to bottom right, #0B2D4A, #1E6FA8);
+    -fx-background-radius: 20;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, #2FA8FF, 20, 0.3, 0, 0);
+    -fx-border-width: 0;
+}
+
+.list-cell .hbox:hover {
+    -fx-effect: dropshadow(gaussian, #FFC107, 30, 0.5, 0, 0);
+}
+
+/* Labels dans les cards - TOUS */
+.list-cell .label {
+    -fx-text-fill: white;
+}
+
+/* Classes spécifiques pour les hébergements (à utiliser dans le code) */
+.hebergement-nom {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.hebergement-infos {
+    -fx-text-fill: #A7E3FF;
+    -fx-font-size: 13px;
+}
+
+.hebergement-description {
+    -fx-text-fill: #A7E3FF;
+    -fx-font-size: 12px;
+}
+
+/* Badge disponibilité - classes */
+.status-dispo {
+    -fx-background-color: #2FA8FF;
+    -fx-text-fill: white;
+    -fx-background-radius: 20;
+    -fx-padding: 4 15;
+    -fx-font-weight: bold;
+}
+
+.status-indispo {
+    -fx-background-color: #FF8F00;
+    -fx-text-fill: white;
+    -fx-background-radius: 20;
+    -fx-padding: 4 15;
+    -fx-font-weight: bold;
+}
+
+/* Boutons dans les cards */
+.list-cell .button {
+    -fx-background-color: linear-gradient(to right, #2FA8FF, #1E6FA8);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-padding: 8 20;
+    -fx-cursor: hand;
+}
+
+.list-cell .button:hover {
+    -fx-background-color: linear-gradient(to right, #3FC0FF, #2FA8FF);
+    -fx-effect: dropshadow(gaussian, #2FA8FF, 15, 0.5, 0, 0);
+}
+
+/* Bouton supprimer spécifique */
+.btn-delete {
+    -fx-background-color: linear-gradient(to right, #FF8F00, #FF6B00);
+}
+
+.btn-delete:hover {
+    -fx-background-color: linear-gradient(to right, #FFA500, #FF8F00);
+}
+
+/* Status bar */
+.status-active {
+    -fx-background-color: #2FA8FF;
+    -fx-background-radius: 25;
+    -fx-effect: dropshadow(gaussian, #2FA8FF, 15, 0.5, 0, 0);
+}
+
+/* Close button dans status bar */
+.close-status-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.close-status-btn:hover {
+    -fx-effect: dropshadow(gaussian, white, 10, 0.5, 0, 0);
+}
+
+.btn-secondary {
+    -fx-background-color: transparent;
+    -fx-text-fill: #0B2D4A;
+    -fx-font-weight: bold;
+    -fx-border-color: #0B2D4A;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-padding: 8 20;
+    -fx-cursor: hand;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: #0B2D4A;
+    -fx-text-fill: white;
+}
+
+/* ================= STYLES INTERFACE CLIENT - TOUT EN BLEU ================= */
+
+/* Fond principal de l'interface client */
+.client-root {
+    -fx-background-color: #0B2D4A;
+}
+
+/* Top bar client */
+.topbar-client {
+    -fx-background-color: linear-gradient(to right, #0B2D4A, #123A5C);
+    -fx-padding: 10 25 10 25;
+    -fx-effect: dropshadow(gaussian, rgba(47,168,255,0.35), 20, 0.3, 0, 2);
+    -fx-background-radius: 20;
+}
+
+/* Zone de contenu scrollable */
+.client-root .viewport,
+.client-root .client-scroll,
+.client-root .client-scroll .viewport,
+.client-root .hebergement-grid {
+    -fx-background-color: #0B2D4A;
+}
+
+/* ===== FILTRES AVANCÉS ===== */
+
+/* Conteneur principal des filtres */
+.filter-titled-pane {
+    -fx-background-color: #0B2D4A;
+}
+
+/* Titre "Filtres avancés" en blanc */
+.filter-titled-pane .title {
+    -fx-background-color: #0B2D4A;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+/* Contenu du TitledPane */
+.filter-titled-pane .content {
+    -fx-background-color: #0B2D4A;
+    -fx-border-color: transparent;
+}
+
+/* Labels des filtres */
+.filter-label {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+}
+
+/* Combobox des filtres */
+.filter-combo {
+    -fx-background-color: #1E3B5A;
+    -fx-text-fill: white;
+    -fx-background-radius: 15;
+    -fx-padding: 5 10;
+}
+
+.filter-combo .list-cell {
+    -fx-background-color: #1E3B5A;
+    -fx-text-fill: white;
+}
+
+.filter-combo .list-view {
+    -fx-background-color: #1E3B5A;
+}
+
+/* Sliders */
+.filter-slider .track {
+    -fx-background-color: #1E3B5A;
+}
+
+.filter-slider .thumb {
+    -fx-background-color: #FF8F00;
+}
+
+/* Valeurs des prix */
+.filter-value {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+/* Radio buttons */
+.filter-radio {
+    -fx-text-fill: white;
+}
+
+.filter-radio .radio {
+    -fx-background-color: transparent;
+    -fx-border-color: #FF8F00;
+    -fx-border-radius: 10;
+}
+
+.filter-radio:selected .radio .dot {
+    -fx-background-color: #FF8F00;
+}
+
+/* Boutons APPLIQUER et RÉINITIALISER en orange */
+.btn-appliquer,
+.btn-reinitialiser,
+#btnAppliquerFiltres,
+#btnReinitialiserFiltres {
+    -fx-background-color: #FF8F00;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-padding: 8 20;
+    -fx-cursor: hand;
+    -fx-font-size: 13px;
+}
+
+.btn-appliquer:hover,
+.btn-reinitialiser:hover,
+#btnAppliquerFiltres:hover,
+#btnReinitialiserFiltres:hover {
+    -fx-background-color: linear-gradient(to right, #FFA500, #FF8F00);
+    -fx-effect: dropshadow(gaussian, #FF8F00, 15, 0.5, 0, 0);
+}
+
+/* Bouton RECHERCHER principal */
+.btn-primary-client,
+#btnRechercher {
+    -fx-background-color: #FF8F00;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 25;
+    -fx-padding: 10 25;
+    -fx-cursor: hand;
+}
+
+.btn-primary-client:hover,
+#btnRechercher:hover {
+    -fx-background-color: linear-gradient(to right, #FFA500, #FF8F00);
+    -fx-effect: dropshadow(gaussian, #FF8F00, 15, 0.5, 0, 0);
+}
+
+/* ===== CARTES HÉBERGEMENTS ===== */
+
+/* Cartes d'hébergement */
+.hebergement-card {
+    -fx-background-color: linear-gradient(to bottom right, #0B2D4A, #1E6FA8);
+    -fx-background-radius: 20;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, #2FA8FF, 20, 0.3, 0, 0);
+}
+
+.hebergement-card:hover {
+    -fx-effect: dropshadow(gaussian, #FFC107, 30, 0.5, 0, 0);
+}
+
+/* Texte dans les cartes */
+.hebergement-name {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.hebergement-type-ville {
+    -fx-text-fill: #A7E3FF;
+    -fx-font-size: 14px;
+}
+
+.hebergement-price {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FF8F00;
+}
+
+.hebergement-price-unit {
+    -fx-text-fill: #A7E3FF;
+    -fx-font-size: 14px;
+}
+
+.hebergement-note {
+    -fx-text-fill: #FFD700;
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+}
+
+/* Badges de disponibilité */
+.hebergement-dispo-disponible {
+    -fx-background-color: #2FA8FF;
+    -fx-text-fill: white;
+    -fx-background-radius: 20;
+    -fx-padding: 5 20;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.hebergement-dispo-indisponible {
+    -fx-background-color: #FF8F00;
+    -fx-text-fill: white;
+    -fx-background-radius: 20;
+    -fx-padding: 5 20;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+/* ===== STATUS BAR ===== */
+.status-bar {
+    -fx-background-color: #2FA8FF;
+    -fx-background-radius: 25;
+    -fx-effect: dropshadow(gaussian, #2FA8FF, 15, 0.5, 0, 0);
+    -fx-padding: 8 15;
+}
+
+.status-message {
+    -fx-text-fill: white;
+}
+
+.status-close-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.status-close-btn:hover {
+    -fx-effect: dropshadow(gaussian, white, 10, 0.5, 0, 0);
+}
+
+/* ===== STYLES POUR LES TABS (Hébergements et Réservations) ===== */
+
+/* Conteneur des tabs */
+.tab-pane {
+    -fx-background-color: transparent;
+}
+
+/* Zone des en-têtes de tabs */
+.tab-pane .tab-header-area {
+    -fx-background-color: transparent;
+    -fx-padding: 5 0 0 0;
+}
+
+/* Style des tabs individuels */
+.tab-pane .tab {
+    -fx-background-color: transparent;
+    -fx-background-radius: 20 20 0 0;
+    -fx-padding: 8 25;
+}
+
+/* Texte des tabs (non sélectionné) */
+.tab-pane .tab .tab-label {
+    -fx-text-fill: white; /* Texte en blanc */
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* Tab sélectionné - Hébergements ou Réservations */
+.tab-pane .tab:selected {
+    -fx-background-color: #FF8F00; /* Fond orange */
+}
+
+.tab-pane .tab:selected .tab-label {
+    -fx-text-fill: white; /* Texte blanc sur fond orange */
+    -fx-font-weight: bold;
+}
+
+/* Ligne sous les tabs (optionnel) */
+.tab-pane .tab-header-background {
+    -fx-background-color: rgba(255,255,255,0.1);
+}
+
+/* ===== STYLES POUR "Liste des hébergements" ===== */
+
+/* Titre de la section */
+.section-title {
+    -fx-text-fill: white; /* Texte en blanc */
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 0;
+}
+
+/* Ou si tu veux cibler spécifiquement ce label */
+#lblListeHebergements {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+/* ===== SI TU VAS UN LABEL GÉNÉRIQUE ===== */
+.label-title {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+/*behe css/*
+/* ================= HERO ================= */
+
+.hero {
+    -fx-background-color: linear-gradient(to right, #0b2d4a, #1e6fa8);
+    -fx-padding: 0 0 40 0; /* diminue ici */
+    -fx-alignment: center;
+}
+
+
+.hero-title {
+    -fx-text-fill: white;
+    -fx-font-size: 42px;
+    -fx-font-weight: bold;
+}
+
+.hero-subtitle {
+    -fx-text-fill: #e3f2fd;
+    -fx-font-size: 18px;
+}
+
+/* ================= SEARCH ================= */
+
+.search-container {
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-border-color: #ff8f00;
+    -fx-border-width: 4;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 25, 0.2, 0, 10);
+}
+
+.search-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #7f8c8d;
+}
+
+.search-field {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+    -fx-font-size: 15px;
+}
+
+.search-button {
+    -fx-background-color: linear-gradient(to right, #123d5a, #1f5f8b);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 12 35 12 35;
+    -fx-background-radius: 12;
+    -fx-cursor: hand;
+    -fx-pref-height: 48px;
+
+}
+
+.search-button:hover {
+    -fx-background-color: linear-gradient(to right, #0b2d4a, #1e6fa8);
+}
+
+
+/* ============================= */
+/* CALENDAR POPUP               */
+/* ============================= */
+
+.date-picker-popup {
+    -fx-background-color: white;
+    -fx-border-color: #2FA8FF;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-padding: 10;
+}
+
+/* Month header */
+.date-picker-popup .month-year-pane {
+    -fx-background-color: #1e6fa8;
+    -fx-text-fill: white;
+}
+
+/* Days header (Lun, Mar, etc) */
+.date-picker-popup .day-name-cell {
+    -fx-text-fill: #2FA8FF;
+    -fx-font-weight: bold;
+}
+
+/* Day cells */
+.date-picker-popup .day-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #0b2d4a;
+}
+
+.date-picker-popup .day-cell:hover {
+    -fx-background-color: #e3f2fd;
+    -fx-background-radius: 8;
+}
+
+/* Selected date */
+.date-picker-popup .day-cell:selected {
+    -fx-background-color: #1e5bbf;
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+}
+
+/* Today highlight */
+.date-picker-popup .today {
+    -fx-border-color: #1e5bbf;
+    -fx-border-radius: 8;
+}
+
+
+/* ================= RESULT PAGE ================= */
+
+/* HEADER */
+.results-header {
+    -fx-padding: 50 60 30 60;
+    -fx-background-color: linear-gradient(to bottom, #f8f9fb, #ffffff);
+}
+
+.results-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1f2d3d;
+}
+
+/* ================= SIDEBAR FILTER ================= */
+
+.filter-sidebar {
+    -fx-padding: 35;
+    -fx-background-color: white;
+    -fx-spacing: 18;
+    -fx-pref-width: 260;
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 20, 0.15, 0, 4);
+}
+
+.filter-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1f2d3d;
+    -fx-padding: 0 0 10 0;
+}
+
+.filter-sidebar CheckBox {
+    -fx-font-size: 14px;
+    -fx-text-fill: #4a4a4a;
+}
+
+.filter-sidebar CheckBox:selected {
+    -fx-text-fill: #1a5fb4;
+}
+.filter-sidebar .slider .track {
+    -fx-background-color: #e0e0e0;
+}
+
+.filter-sidebar .slider .thumb {
+    -fx-background-color: #1a5fb4;
+    -fx-background-radius: 10;
+}
+
+.filter-sidebar .radio-button .label {
+    -fx-text-fill: #4a4a4a;
+}
+.filter-sidebar .radio-button:selected .label {
+    -fx-text-fill: #1a5fb4;
+}
+/* ===== SCROLLPANE PRINCIPAL ===== */
+.main-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+}
+
+.main-scroll .viewport {
+    -fx-background-color: #0B2D4A;
+}
+
+.main-scroll .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-background-radius: 10;
+    -fx-pref-width: 12;
+}
+
+.main-scroll .scroll-bar:vertical .track {
+    -fx-background-color: rgba(255,255,255,0.1);
+    -fx-background-radius: 10;
+}
+
+.main-scroll .scroll-bar:vertical .thumb {
+    -fx-background-color: #FF8F00;
+    -fx-background-radius: 10;
+}
+
+.main-scroll .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #F57C00;
+}
+
+.main-scroll .scroll-bar .increment-button,
+.main-scroll .scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.main-scroll .scroll-bar .increment-arrow,
+.main-scroll .scroll-bar .decrement-arrow {
+    -fx-background-color: transparent;
+}
+
+/* ================= RESULTS LIST ================= */
+
+.results-list {
+    -fx-padding: 30;
+    -fx-background-color: #123d5a;
+}
+
+
+/* ================= GLOBAL BACKGROUND ================= */
+
+.root {
+    -fx-background-color: #123d5a;
+}
+
+/* ================= SIDEBAR ================= */
+
+
+/* Logo glow */
+.sidebar .image-view {
+    -fx-effect: dropshadow(gaussian, rgba(47,168,255,0.6), 25, 0.4, 0, 4);
+}
+
+/* ================= MENU BUTTONS ================= */
+
+.menu-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #A7E3FF;
+    -fx-font-size: 15px;
+    -fx-font-weight: 500;
+    -fx-padding: 12 15 12 15;
+    -fx-background-radius: 12;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(255,193,7,0.1), 10, 0.3, 0, 0);
+}
+
+
+.menu-btn:hover {
+    -fx-background-color: rgba(255,193,7,0.15);
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, #FFC107, 25, 0.6, 0, 0);
+}
+
+
+.menu-btn-active {
+    -fx-background-color: linear-gradient(to right, #FFC107, #FF8F00);
+    -fx-text-fill: #0B2D4A;
+    -fx-font-weight: bold;
+    -fx-background-radius: 25;
+    -fx-padding: 12 20 12 20;
+    -fx-effect: dropshadow(gaussian, #FFC107, 35, 0.7, 0, 0);
+}
+
+
+/* ================= TOP BAR FUSIONNÉE ================= */
+
+/* ================= USER SECTION ================= */
+
+.user-avatar {
+    -fx-fill: linear-gradient(to bottom right, #FF8F00, #FF8F00);
+    -fx-effect: dropshadow(gaussian, #FF8F00, 20, 0.6, 0, 0);
+}
+
+.user-name {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+}
+
+/* ================= ICON BUTTONS ================= */
+
+.top-icon-btn {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+}
+
+.top-icon-btn:hover {
+    -fx-effect: dropshadow(gaussian, #FFC107, 20, 0.6, 0, 0);
+}
+
+/* ================= CONTENT ================= */
+
+.content {
+    -fx-background-color: #123d5a;
+    -fx-padding: 0;
+}
+
+
+.title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0B2D4A;
+}
+
+.subtitle {
+    -fx-font-size: 15px;
+    -fx-text-fill: #1E6FA8;
+}
+
+/* ===== SIDEBAR + TOPBAR FUSION ===== */
+
+.sidebar {
+    -fx-background-color: #0B2D4A;
+}
+
+.topbar-fused {
+    -fx-background-color: linear-gradient(to right, #0b2d4a, #1e6fa8);}
+
+
+/* Supprimer toute séparation */
+.border-pane {
+    -fx-background-color: #123d5a;
+}
+
+/*fin sidebar*/
+
+/* ===== Resultats page ===== */
+/* ================= ROOT ================= */
+
+.results-root {
+    -fx-background-color: linear-gradient(to right, #0b2d4a, #1e6fa8);
+    -fx-font-family: "Segoe UI";
+}
+
+/* ================= TOP HEADER ================= */
+
+.results-topbar {
+    -fx-background-color: linear-gradient(to right, #123d5a, #1f5f8b);
+    -fx-background-radius: 0 0 25 25;
+}
+
+.results-title {
+    -fx-text-fill: white;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+
+
+/* ================= SEARCH BAR ================= */
+
+.results-searchbar {
+    -fx-background-color: white;
+    -fx-background-radius: 20;
+    -fx-padding: 18;
+    -fx-border-color: #ff8c00;
+    -fx-border-width: 4;
+    -fx-border-radius: 20;
+}
+
+.search-label {
+    -fx-text-fill: #555;
+    -fx-font-size: 12px;
+}
+
+.search-field {
+    -fx-background-radius: 10;
+    -fx-background-color: #f2f2f2;
+    -fx-padding: 8;
+}
+
+.search-button {
+    -fx-background-color: #1f5f8b;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 12;
+    -fx-padding: 10 20;
+}
+
+.search-button:hover {
+    -fx-background-color: #144b6b;
+}
+
+/* ================= MAIN LAYOUT ================= */
+
+.results-main {
+    -fx-padding: 30;
+}
+
+/* ================= FILTER SIDEBAR ================= */
+
+.filter-sidebar {
+    -fx-background-color: white;
+    -fx-padding: 20;
+    -fx-background-radius: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 20, 0.3, 0, 4);
+    -fx-min-width: 220;
+}
+
+.filter-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.filter-subtitle {
+    -fx-font-weight: bold;
+    -fx-text-fill: #1f5f8b;
+}
+
+/* ================= RESULT CONTAINER ================= */
+
+.results-container {
+    -fx-padding: 5;
+}
+
+/* ================= RESULT CARD ================= */
+
+.result-item {
+    -fx-background-color: white;
+    -fx-background-radius: 18;
+    -fx-border-radius: 18;
+    -fx-border-color: #ff8c00;
+    -fx-border-width: 4;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 12, 0, 0, 4);
+}
+
+/* Image */
+.result-image {
+    -fx-background-radius: 12;
+}
+
+/* Titre */
+.result-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #163a59;
+}
+
+/* Description */
+.result-description {
+    -fx-font-size: 14px;
+    -fx-text-fill: #444;
+}
+
+/* Prix */
+.result-price {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1ca24b;
+}
+
+/* Bouton réserver */
+.btn-reserver {
+    -fx-background-color: linear-gradient(to right, #ff8c00, #ff6a00);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+
+    -fx-font-size: 15px;              /* texte plus grand */
+    -fx-background-radius: 14;
+    -fx-padding: 12 35 12 35;         /* plus large */
+    -fx-min-width: 140px;             /* largeur minimale */
+    -fx-cursor: hand;
+}
+
+.btn-reserver:hover {
+    -fx-background-color: linear-gradient(to right, #ff6a00, #ff8c00);
+}
+
+/* ================= ZONE LISTE BLEUE ================= */
+
+.results-main {
+    -fx-background-color: linear-gradient(to bottom, #123c5e, #1f567f);
+    -fx-padding: 20;
+}
+
+.results-container {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+
+.btn-back {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-cursor: hand;
+}
+
+
+.btn-back:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+.result-item {
+    -fx-background-color: #F4F4F4;
+    -fx-background-radius: 25;
+    -fx-border-color: #ff8800;
+    -fx-border-width: 3;
+    -fx-border-radius: 25;
+}
+
+.result-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.result-description {
+    -fx-font-size: 14px;
+}
+
+.result-price {
+    -fx-text-fill: #16a34a;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.btn-modifier {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-background-radius: 20;
+    -fx-padding: 8 18;
+}
+
+.btn-supprimer {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-background-radius: 20;
+    -fx-padding: 8 18;
+}
+.counter-box {
+    -fx-background-color: rgba(255,255,255,0.08);
+    -fx-background-radius: 18;
+    -fx-padding: 4 10 4 10;
+}
+
+
+/* ================= SEARCH ICON BUTTON ================= */
+
+.btn-search-icon {
+    -fx-background-color: transparent;   /* enlève le gris */
+    -fx-border-color: transparent;       /* enlève bordure */
+    -fx-padding: 8;
+    -fx-cursor: hand;
+}
+
+/* hover moderne */
+.btn-search-icon:hover {
+    -fx-background-color: rgba(47,168,255,0.15);
+    -fx-background-radius: 10;
+}
+
+/* clic */
+.btn-search-icon:pressed {
+    -fx-background-color: rgba(47,168,255,0.30);
+}
+
+
+
+
+
+/* ================= ICON ACTION BUTTON ================= */
+
+.icon-action {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 8;
+    -fx-cursor: hand;
+}
+
+/* hover bleu (modifier) */
+.icon-edit:hover {
+    -fx-background-color: rgba(47,168,255,0.18);
+    -fx-background-radius: 10;
+}
+
+/* hover rouge (delete) */
+.icon-delete:hover {
+    -fx-background-color: rgba(231,76,60,0.20);
+    -fx-background-radius: 10;
+}
+
+/* petit effet clic */
+.icon-action:pressed {
+    -fx-scale-x: 0.92;
+    -fx-scale-y: 0.92;
+}
+/* ================= ADMIN LISTVIEW ================= */
+
+.admin-table {
+    -fx-background-color: #0B2D4A;
+    -fx-control-inner-background: #0B2D4A;
+    -fx-background-radius: 18;
+    -fx-padding: 10;
+}
+
+/* cellules */
+.admin-table .list-cell {
+    -fx-background-color: transparent;
+}
+
+/* sélection */
+.admin-table .list-cell:selected {
+    -fx-background-color: transparent;
+}
+
+/* zone interne (IMPORTANT sinon blanc reste) */
+.admin-table .virtual-flow {
+    -fx-background-color: #0B2D4A;
+}
+
+.admin-table .corner {
+    -fx-background-color: #0B2D4A;
+}
+
+/* scrollbar invisible propre */
+.admin-table .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.admin-table .scroll-bar:vertical .thumb {
+    -fx-background-color: #1E6FA8;
+    -fx-background-radius: 10;
+}
+.admin-root {
+    -fx-background-color: #163F5F;
+}
+.list-cell {
+    -fx-padding: 12 20 12 20;   /* espace autour */
+}
+
+.list-cell:filled {
+    -fx-background-color: transparent;
+}
+
+/* ================= ICON BUTTON + et -SANS CADRE ================= */
+.icon-button-flat {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+    -fx-border-color: transparent;
+    -fx-padding: 5;
+    -fx-cursor: hand;
+}
+
+/* effet hover moderne */
+.icon-button-flat:hover {
+    -fx-background-color: rgba(255,255,255,0.15);
+    -fx-background-radius: 8;
+}
+
+/* enlever focus bleu JavaFX */
+.icon-button-flat:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+
+.excursion-card {
+    -fx-background-color: white;
+    -fx-background-radius: 18;
+    -fx-padding: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15),12,0,0,4);
+    -fx-cursor: hand;
+    /* ✅ BORDURE */
+    -fx-border-color: #ff6a00;   /* gris clair moderne */
+    -fx-border-width: 3;
+    -fx-border-radius: 18;
+
+}
+
+.excursion-card:hover {
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+
+.card-title {
+    -fx-font-size:16px;
+    -fx-font-weight:bold;
+    -fx-text-fill:#0B2D4A;
+}
+
+.card-sub {
+    -fx-text-fill:#1E6FA8;
+}
+
+.card-price {
+    -fx-font-size:15px;
+    -fx-font-weight:bold;
+    -fx-text-fill:#FF8F00;
+}
+.card-button {
+    -fx-background-color: linear-gradient(to right,#1E6FA8,#2FA8FF);
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+
+    -fx-background-radius: 12;
+    -fx-padding: 10 25;
+
+    -fx-cursor: hand;
+}
+
+/* hover moderne */
+.card-button:hover {
+    -fx-background-color: linear-gradient(to right,#155a8a,#2492dd);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+
+/* click effect */
+.card-button:pressed {
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+}
+.recommend-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-padding: 10 0 25 0;
+}
+
+/* ===== SELECTED DATES ===== */
+.selected-dates {
+    -fx-background-color: #1E3B5A;
+    -fx-background-radius: 10;
+    -fx-padding: 10 15;
+}
+
+.date-info {
+    -fx-text-fill: #A7E3FF;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+/* ================= SIDEBAR STYLES ================= */
+.sidebar {
+    -fx-background-color: linear-gradient(to bottom, #1E3B5A, #2A4F6E);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 0);
+    -fx-pref-width: 100%;
+}
+
+.menu-section {
+    -fx-spacing: 5;
+    -fx-alignment: TOP_CENTER;
+    -fx-pref-width: 100%;
+}
+
+.menu-section-title {
+    -fx-text-fill: #A7E3FF;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 0 5 15;
+    -fx-alignment: center-left;
+    -fx-opacity: 0.7;
+}
+
+.menu-btn, .menu-btn-active {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 12 15;
+    -fx-alignment: CENTER_LEFT;
+    -fx-pref-width: Infinity;
+    -fx-cursor: hand;
+    -fx-background-radius: 0 30 30 0;
+    -fx-border-width: 0;
+}
+
+.menu-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+}
+
+.menu-btn-active {
+    -fx-background-color: #FF8F00;
+    -fx-effect: dropshadow(gaussian, rgba(255,143,0,0.3), 10, 0, 0, 0);
+}
+
+.menu-btn-active:hover {
+    -fx-background-color: #FFA726;
+}
+
+.menu-btn .label, .menu-btn-active .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.menu-btn .image-view, .menu-btn-active .image-view {
+    -fx-opacity: 1;
+}
+
+/* ================= USER SECTION ================= */
+.user-section {
+    -fx-padding: 20 10 10 10;
+    -fx-border-color: rgba(255,255,255,0.1);
+    -fx-border-width: 1 0 0 0;
+    -fx-spacing: 5;
+}
+
+.user-avatar {
+    -fx-fill: linear-gradient(to bottom right, #FF8F00, #FFB74D);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
+.user-avatar-large {
+    -fx-fill: linear-gradient(to bottom right, #FF8F00, #FFB74D);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
+/* ================= TOP BAR ================= */
+.topbar {
+    -fx-background-color: #1E3B5A;
+    -fx-border-color: rgba(255,255,255,0.1);
+    -fx-border-width: 0 0 1 0;
+}
+
+.user-info {
+    -fx-padding: 5 10;
+    -fx-background-color: rgba(255,255,255,0.05);
+    -fx-background-radius: 30;
+}
+
+.user-name {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.user-role {
+    -fx-text-fill: #A7E3FF;
+    -fx-font-size: 12px;
+}
+
+.notification-btn {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-padding: 5;
+}
+
+.notification-btn:hover {
+    -fx-background-color: rgba(255,255,255,0.1);
+    -fx-background-radius: 50%;
+}
+
+/* ================= CONTENT AREA ================= */
+.content-pane {
+    -fx-background-color: #0F2A3F;
+}
+
+/* Animation pour les boutons */
+.menu-btn, .menu-btn-active {
+    -fx-transition: all 0.3s ease;
+}
+
+/* ================= FILTRAGE STYLISÉ ================= */
+
+/* Conteneur principal des filtres */
+.filter-sidebar {
+    -fx-background-color: white;
+    -fx-background-radius: 20;
+    -fx-padding: 25;
+    -fx-spacing: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0.2, 0, 5);
+    -fx-border-color: #FF8F00;
+    -fx-border-width: 0 0 0 5;
+    -fx-border-radius: 20;
+}
+
+/* Titre "Filtrer par :" */
+.filter-title {
+    -fx-text-fill: #0B2D4A; /* Bleu foncé */
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 15 0;
+    -fx-border-color: #FF8F00;
+    -fx-border-width: 0 0 2 0;
+}
+
+/* Sous-titres (Pays, Prix minimum, Prix maximum, Trier par) */
+.filter-subtitle {
+    -fx-text-fill: #FF8F00; /* Orange */
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 0 5 0;
+}
+
+/* Combobox des pays */
+.filter-combo {
+    -fx-background-color: #F5F7FA;
+    -fx-background-radius: 12;
+    -fx-text-fill: #0B2D4A; /* Bleu foncé */
+    -fx-padding: 10;
+    -fx-border-color: #E0E0E0;
+    -fx-border-radius: 12;
+    -fx-font-size: 14px;
+}
+
+.filter-combo:focused {
+    -fx-border-color: #FF8F00;
+    -fx-effect: dropshadow(gaussian, rgba(255,143,0,0.3), 10, 0.3, 0, 0);
+}
+
+.filter-combo .arrow-button {
+    -fx-background-color: #FF8F00;
+    -fx-background-radius: 0 12 12 0;
+}
+
+.filter-combo .arrow {
+    -fx-background-color: white;
+}
+
+.filter-combo .list-cell {
+    -fx-text-fill: #0B2D4A;
+    -fx-background-color: white;
+}
+
+.filter-combo .list-cell:hover {
+    -fx-background-color: #FFE0B2;
+}
+
+/* ===== PRIX MINIMUM ET MAXIMUM ===== */
+
+/* Conteneur pour chaque prix */
+.prix-container {
+    -fx-background-color: #F8F9FC;
+    -fx-background-radius: 15;
+    -fx-padding: 15;
+    -fx-spacing: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0.1, 0, 2);
+}
+
+/* Titre (Prix minimum / Prix maximum) */
+.prix-title {
+    -fx-text-fill: #FF8F00; /* Orange */
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 5 0;
+}
+
+/* Zone du slider et valeur */
+.prix-slider-container {
+    -fx-alignment: center-left;
+    -fx-spacing: 15;
+}
+
+/* Valeur du prix (ex: 0 €) - SOUS LA BARRE */
+.prix-valeur {
+    -fx-text-fill: #0B2D4A; /* Bleu foncé */
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-color: #FFE0B2; /* Orange très clair */
+    -fx-padding: 5 15;
+    -fx-background-radius: 25;
+    -fx-min-width: 60;
+    -fx-alignment: center;
+    -fx-effect: dropshadow(gaussian, rgba(255,143,0,0.2), 5, 0.2, 0, 2);
+}
+
+/* Slider personnalisé */
+.prix-slider {
+    -fx-pref-width: 200;
+}
+
+.prix-slider .track {
+    -fx-background-color: #E0E0E0;
+    -fx-background-radius: 10;
+    -fx-pref-height: 6;
+}
+
+.prix-slider .thumb {
+    -fx-background-color: #FF8F00;
+    -fx-background-radius: 15;
+    -fx-pref-width: 20;
+    -fx-pref-height: 20;
+}
+
+.prix-slider .thumb:hover {
+    -fx-background-color: #F57C00;
+    -fx-effect: dropshadow(gaussian, #FF8F00, 10, 0.3, 0, 0);
+}
+
+/* ===== RADIO BUTTONS (Trier par) ===== */
+.filter-radio {
+    -fx-text-fill: #0B2D4A; /* Bleu foncé */
+    -fx-font-size: 14px;
+    -fx-padding: 5 0;
+}
+
+.filter-radio .radio {
+    -fx-border-color: #FF8F00;
+    -fx-border-radius: 10;
+    -fx-border-width: 2;
+    -fx-background-color: white;
+}
+
+.filter-radio:selected .radio .dot {
+    -fx-background-color: #FF8F00;
+    -fx-background-radius: 10;
+}
+
+.filter-radio:hover {
+    -fx-text-fill: #FF8F00;
+}
+
+/* ===== BOUTONS ===== */
+.btn-appliquer {
+    -fx-background-color: #FF8F00;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+    -fx-background-radius: 25;
+    -fx-padding: 12 25;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(255,143,0,0.3), 8, 0.3, 0, 2);
+}
+
+.btn-appliquer:hover {
+    -fx-background-color: #F57C00;
+    -fx-effect: dropshadow(gaussian, #FF8F00, 15, 0.5, 0, 0);
+}
+
+.btn-reinitialiser {
+    -fx-background-color: transparent;
+    -fx-text-fill: #0B2D4A;
+    -fx-font-weight: bold;
+    -fx-border-color: #FF8F00;
+    -fx-border-width: 2;
+    -fx-border-radius: 25;
+    -fx-padding: 10 25;
+    -fx-cursor: hand;
+}
+
+.btn-reinitialiser:hover {
+    -fx-background-color: #FFF1E0;
+}
+
+/* Séparateur optionnel */
+.filter-separator {
+    -fx-background-color: #FF8F00;
+    -fx-opacity: 0.3;
+    -fx-pref-height: 1;
+    -fx-padding: 5 0;
+}
+/* Valeur du prix (ex: 0 €) */
+.filter-value, #lblPrixMin, #lblPrixMax {
+    -fx-text-fill: #0B2D4A; /* Bleu foncé */
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-color: #FFE0B2; /* Orange très clair */
+    -fx-padding: 5 15;
+    -fx-background-radius: 25;
+    -fx-min-width: 60;
+    -fx-alignment: center;
+}

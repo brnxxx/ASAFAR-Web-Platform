@@ -1,0 +1,273 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réserver - {{ hebergement.nom }}{% endblock %}
+
+{% block body %}
+<style>
+    body { background: #0B2D4A !important; }
+
+    .create-page {
+        min-height: 100vh;
+        padding: 120px 24px 80px;
+        background: radial-gradient(ellipse at 30% 50%, rgba(11,45,74,0.95) 0%, rgba(8,38,62,0.98) 50%, #051621 100%);
+    }
+
+    .create-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    /* Back link */
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #2FA8FF;
+        text-decoration: none;
+        margin-bottom: 24px;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .back-link:hover { color: #FFC107; transform: translateX(-4px); }
+
+    /* Hebergement info card */
+    .heb-info-card {
+        background: rgba(255,255,255,0.05);
+        border: 1.5px solid rgba(255,193,7,0.15);
+        border-radius: 18px;
+        padding: 28px;
+        margin-bottom: 30px;
+        display: flex;
+        gap: 24px;
+        align-items: center;
+    }
+
+    .heb-info-img {
+        width: 140px;
+        height: 105px;
+        border-radius: 12px;
+        overflow: hidden;
+        flex-shrink: 0;
+        background: rgba(255,193,7,0.08);
+    }
+
+    .heb-info-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .heb-info-content h3 {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-size: 26px;
+        color: #FFC107;
+        margin: 0 0 6px;
+    }
+
+    .heb-info-meta {
+        display: flex;
+        gap: 18px;
+        font-size: 13px;
+        color: rgba(255,255,255,0.6);
+        margin-bottom: 8px;
+    }
+
+    .heb-info-price {
+        font-size: 22px;
+        font-weight: 800;
+        color: #34D399;
+    }
+
+    .heb-info-desc {
+        font-size: 13px;
+        color: rgba(255,255,255,0.5);
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    /* Form card */
+    .form-card {
+        background: rgba(255,255,255,0.05);
+        border: 1.5px solid rgba(255,193,7,0.15);
+        border-radius: 18px;
+        padding: 32px;
+    }
+
+    .form-card-title {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-size: 28px;
+        color: #FFC107;
+        margin: 0 0 24px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid rgba(255,193,7,0.15);
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .form-group.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .form-label {
+        font-size: 12px;
+        font-weight: 700;
+        color: rgba(255,193,7,0.8);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .form-input {
+        padding: 14px 16px;
+        background: rgba(255,255,255,0.06);
+        border: 1.5px solid rgba(255,193,7,0.2);
+        border-radius: 12px;
+        color: #fff;
+        font-size: 14px;
+        font-family: 'Poppins', sans-serif;
+        transition: all 0.3s ease;
+        outline: none;
+    }
+
+    .form-input:focus {
+        border-color: #FFC107;
+        box-shadow: 0 0 20px rgba(255,193,7,0.1);
+        background: rgba(255,255,255,0.1);
+    }
+
+    .form-input option {
+        background: #0B2D4A;
+        color: #fff;
+    }
+
+    .form-select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='%23FFC107'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 16px center;
+        padding-right: 40px;
+    }
+
+    .submit-btn {
+        margin-top: 28px;
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(135deg, #FFC107, #FF9800);
+        color: #0B2D4A;
+        border: none;
+        border-radius: 14px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        box-shadow: 0 10px 30px rgba(255,193,7,0.2);
+        font-family: 'Poppins', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 20px 50px rgba(255,193,7,0.3);
+    }
+
+    /* Flash messages */
+    .flash-error {
+        background: rgba(239,68,68,0.15);
+        border: 1px solid rgba(239,68,68,0.3);
+        color: #EF4444;
+        padding: 14px 20px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+        .create-page { padding: 100px 16px 60px; }
+        .heb-info-card { flex-direction: column; text-align: center; }
+        .form-grid { grid-template-columns: 1fr; }
+    }
+</style>
+
+<div class="create-page">
+    <div class="create-container">
+
+        <a href="{{ path('app_hebergement_detail', {'id': hebergement.idHebergement}) }}" class="back-link">
+            ← Retour à l'hébergement
+        </a>
+
+        {# Hebergement Info #}
+        <div class="heb-info-card">
+            <div class="heb-info-img">
+                {% if hebergement.imagePath %}
+                    <img src="{{ asset(hebergement.imagePath|trim('/')) }}" alt="{{ hebergement.nom }}">
+                {% else %}
+                    <span style="font-size:42px;">🏨</span>
+                {% endif %}
+            </div>
+            <div class="heb-info-content">
+                <h3>{{ hebergement.nom }}</h3>
+                <div class="heb-info-meta">
+                    <span>📍 {{ hebergement.localisation }}</span>
+                    <span>🏷️ {{ hebergement.type }}</span>
+                </div>
+                <div class="heb-info-price">{{ hebergement.prixParNuit }}€ / nuit</div>
+                <p class="heb-info-desc">{{ hebergement.description|slice(0, 200) }}{% if hebergement.description|length > 200 %}...{% endif %}</p>
+            </div>
+        </div>
+
+        {# Flash Errors #}
+        {% for message in app.flashes('error') %}
+            <div class="flash-error">{{ message }}</div>
+        {% endfor %}
+
+        {# Reservation Form #}
+        <div class="form-card">
+            <h2 class="form-card-title">📅 Votre Réservation</h2>
+
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">📅 Date d'arrivée</label>
+                        {{ form_widget(form.dateArrivee, {'attr': {'class': 'form-input'}}) }}
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">📅 Date de départ</label>
+                        {{ form_widget(form.dateDepart, {'attr': {'class': 'form-input'}}) }}
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">👤 Adultes</label>
+                        {{ form_widget(form.nbAdultes, {'attr': {'class': 'form-input'}}) }}
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">👶 Enfants</label>
+                        {{ form_widget(form.nbEnfants, {'attr': {'class': 'form-input'}}) }}
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">🍼 Bébés</label>
+                        {{ form_widget(form.nbBebes, {'attr': {'class': 'form-input'}}) }}
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">{{ form_label(form.statut) }}</label>
+                        {{ form_widget(form.statut, {'attr': {'class': 'form-input form-select'}}) }}
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">✅ Confirmer la Réservation</button>
+            {{ form_end(form) }}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

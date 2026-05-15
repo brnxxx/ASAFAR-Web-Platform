@@ -1,0 +1,690 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Transports - Admin ASAFAR{% endblock %}
+{% block page_icon %}transport-title-no-icon{% endblock %}
+
+{% block page_title %}Gestion des Transports{% endblock %}
+
+{% block content %}
+{% set totalTransports = transports|length %}
+{% set avionCount = 0 %}
+{% set voitureCount = 0 %}
+{% set totalPrice = 0 %}
+
+{% for transport in transports %}
+    {% if transport.type == 'AVION' %}
+        {% set avionCount = avionCount + 1 %}
+    {% elseif transport.type == 'VOITURE' %}
+        {% set voitureCount = voitureCount + 1 %}
+    {% endif %}
+    {% set totalPrice = totalPrice + (transport.prix|default(0)) %}
+{% endfor %}
+
+{% set prixMoyen = totalTransports > 0 ? (totalPrice / totalTransports) : 0 %}
+
+<div class="stats-grid">
+    <div class="stat-card blue">
+        <div class="stat-icon blue">
+            <i class="fas fa-plane"></i>
+        </div>
+        <div class="stat-value">{{ totalTransports }}</div>
+        <div class="stat-label">Total Transports</div>
+        <span class="stat-change positive">
+            <i class="fas fa-layer-group"></i>
+            Collection totale
+        </span>
+    </div>
+    <div class="stat-card green">
+        <div class="stat-icon green">
+            <i class="fas fa-plane-departure"></i>
+        </div>
+        <div class="stat-value">{{ avionCount }}</div>
+        <div class="stat-label">Avions</div>
+        <span class="stat-change positive">
+            <i class="fas fa-flying"></i>
+            Transport aérien
+        </span>
+    </div>
+    <div class="stat-card amber">
+        <div class="stat-icon amber">
+            <i class="fas fa-euro-sign"></i>
+        </div>
+        <div class="stat-value">{{ prixMoyen|number_format(0, '.', ' ') }}€</div>
+        <div class="stat-label">Prix Moyen</div>
+        <span class="stat-change positive">
+            <i class="fas fa-wallet"></i>
+            Par trajet
+        </span>
+    </div>
+    <div class="stat-card purple">
+        <div class="stat-icon purple">
+            <i class="fas fa-car"></i>
+        </div>
+        <div class="stat-value">{{ voitureCount }}</div>
+        <div class="stat-label">Voitures</div>
+        <span class="stat-change positive">
+            <i class="fas fa-road"></i>
+            Transport routier
+        </span>
+    </div>
+</div>
+
+<div class="toolbar">
+    <div class="toolbar-left">
+        <button class="filter-btn active" data-filter="all">
+            <i class="fas fa-plane"></i>
+            Tous
+        </button>
+        <button class="filter-btn" data-filter="avion">
+            <i class="fas fa-plane-departure"></i>
+            Avion
+        </button>
+        <button class="filter-btn" data-filter="voiture">
+            <i class="fas fa-car"></i>
+            Voiture
+        </button>
+    </div>
+    <div class="toolbar-right">
+        <form class="search-form" onsubmit="return false;">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Rechercher un transport..."
+                    aria-label="Rechercher un transport"
+                >
+            </div>
+        </form>
+
+        <div class="sort-dropdown">
+            <button type="button" class="btn-sort" aria-label="Trier les transports">
+                <i class="fas fa-sort"></i>
+            </button>
+            <div class="sort-menu">
+                <button type="button" class="sort-option active" data-sort="nom-asc">Nom A-Z</button>
+                <button type="button" class="sort-option" data-sort="nom-desc">Nom Z-A</button>
+                <button type="button" class="sort-option" data-sort="prix-asc">Prix croissant</button>
+                <button type="button" class="sort-option" data-sort="prix-desc">Prix decroissant</button>
+            </div>
+        </div>
+
+        <a href="{{ path('admin_transport_create') }}" class="btn btn-primary toolbar-add-btn js-open-transport-modal" data-modal-title="Ajouter un Transport">
+            <i class="fas fa-plus"></i>
+            <span>Ajouter</span>
+        </a>
+    </div>
+</div>
+
+{% if transports %}
+<div class="table-container">
+    <div class="table-header">
+        <div class="table-title">
+            <i class="fas fa-list"></i>
+            Liste des Transports
+        </div>
+        <div class="table-info">
+            Affichage de 1-{{ transports|length }} sur {{ transports|length }} transports
+        </div>
+    </div>
+    <table id="transportsTable">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Type</th>
+                <th>Prix</th>
+                <th>Départ</th>
+                <th>Destination</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transport in transports %}
+            <tr data-type="{{ transport.type|default('') }}" data-name="{{ transport.nom|lower }}" data-price="{{ transport.prix|default(0) }}">
+                <td>
+                    <strong style="color: var(--text-primary);">{{ transport.nom }}</strong>
+                </td>
+                <td>
+                    <span class="badge {% if transport.type == 'AVION' %}badge-success{% elseif transport.type == 'VOITURE' %}badge-info-custom{% else %}badge-danger{% endif %}">
+                        {% if transport.type == 'AVION' %}
+                            <i class="fas fa-plane-departure"></i>
+                        {% elseif transport.type == 'VOITURE' %}
+                            <i class="fas fa-car"></i>
+                        {% endif %}
+                        {{ transport.type|default('N/A') }}
+                    </span>
+                </td>
+                <td>
+                    <span style="color: #34D399; font-weight: 600;">{{ transport.prix|default('0') }}€</span>
+                </td>
+                {% if transport.type == 'AVION' %}
+                    <td>
+                        {% if transport.aeroportDepart %}
+                            <small style="color: rgba(244, 248, 252, 0.7);">
+                                {{ transport.aeroportDepart.nom }}<br>
+                                <span style="opacity: 0.6;">{{ transport.aeroportDepart.codeIata ?? 'N/A' }}</span>
+                            </small>
+                        {% else %}
+                            <small style="color: rgba(244, 248, 252, 0.4);">-</small>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if transport.aeroportDestination %}
+                            <small style="color: rgba(244, 248, 252, 0.7);">
+                                {{ transport.aeroportDestination.nom }}<br>
+                                <span style="opacity: 0.6;">{{ transport.aeroportDestination.codeIata ?? 'N/A' }}</span>
+                            </small>
+                        {% else %}
+                            <small style="color: rgba(244, 248, 252, 0.4);">-</small>
+                        {% endif %}
+                    </td>
+                {% else %}
+                    <td colspan="2">
+                        {% if transport.aeroportPriseEnCharge %}
+                            <small style="color: rgba(244, 248, 252, 0.7);">
+                                <i class="fas fa-map-pin"></i> {{ transport.aeroportPriseEnCharge.nom }}<br>
+                                <span style="opacity: 0.6;">{{ transport.aeroportPriseEnCharge.codeIata ?? 'N/A' }}</span>
+                            </small>
+                        {% else %}
+                            <small style="color: rgba(244, 248, 252, 0.4);">-</small>
+                        {% endif %}
+                    </td>
+                {% endif %}
+                <td>
+                    <small class="table-description">{{ transport.description|slice(0, 45) }}{% if transport.description|length > 45 %}...{% endif %}</small>
+                </td>
+                <td>
+                    <div class="action-buttons">
+                        <a href="{{ path('admin_transport_edit', {'id': transport.idTransport}) }}" class="btn-small btn-edit js-open-transport-modal" data-modal-title="Modifier Transport" title="Modifier">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <form method="POST" action="{{ path('admin_transport_delete', {'id': transport.idTransport}) }}" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr? Cette action est irréversible.');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ transport.idTransport) }}">
+                            <button type="submit" class="btn-small btn-delete" title="Supprimer">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="empty-state">
+    <i class="fas fa-inbox" style="display: block;"></i>
+    <p>Aucun transport trouvé</p>
+    <small style="color: rgba(244, 248, 252, 0.4); display: block; margin-bottom: 20px;">Commencez par créer votre premier transport</small>
+    <a href="{{ path('admin_transport_create') }}" class="btn btn-primary">
+        <i class="fas fa-plus"></i>
+        <span>Créer le premier transport</span>
+    </a>
+</div>
+{% endif %}
+
+<div id="transportModal" class="transport-modal-overlay" aria-hidden="true">
+    <div class="transport-modal-card" role="dialog" aria-modal="true" aria-labelledby="transportModalTitle">
+        <div class="transport-modal-header">
+            <h3 id="transportModalTitle">Transport</h3>
+            <button type="button" id="transportModalClose" class="transport-modal-close" aria-label="Fermer">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="transport-modal-body">
+            <iframe id="transportModalFrame" title="Formulaire Transport"></iframe>
+        </div>
+    </div>
+</div>
+
+<style>
+    .top-bar-title .transport-title-no-icon {
+        display: none;
+    }
+
+    .table-description {
+        display: block;
+        color: rgba(244, 248, 252, 0.6);
+        margin-top: 4px;
+        font-size: 12px;
+    }
+
+    .search-form {
+        margin: 0;
+        min-width: 260px;
+        flex: 1;
+    }
+
+    .toolbar-right {
+        margin-left: auto;
+    }
+
+    .toolbar-right .search-box {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 15px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .toolbar-right .search-box i {
+        color: #A7E3FF;
+        font-size: 14px;
+    }
+
+    .toolbar-right .search-box input {
+        width: 220px;
+        min-width: 0;
+        background: transparent;
+        border: none;
+        color: var(--text-primary);
+        outline: none;
+        font-size: 14px;
+    }
+
+    .toolbar-right .search-box input::placeholder {
+        color: rgba(167, 227, 255, 0.5);
+    }
+
+    .sort-dropdown {
+        width: 100%;
+        max-width: max-content;
+        position: relative;
+    }
+
+    .btn-sort {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 10px 14px;
+        border-radius: 10px;
+        color: #A7E3FF;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .btn-sort:hover {
+        background: rgba(47, 168, 255, 0.15);
+        color: #2FA8FF;
+    }
+
+    .sort-menu {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        background: #0B2D4A;
+        border-radius: 10px;
+        display: none;
+        flex-direction: column;
+        min-width: 170px;
+        z-index: 3000;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(47, 168, 255, 0.2);
+        overflow: hidden;
+    }
+
+    .sort-menu.open {
+        display: flex;
+    }
+
+    .sort-option {
+        border: none;
+        background: transparent;
+        padding: 11px 16px;
+        color: #A7E3FF;
+        text-align: left;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+        transition: background 0.2s;
+        cursor: pointer;
+    }
+
+    .sort-option:hover,
+    .sort-option.active {
+        background: rgba(47, 168, 255, 0.15);
+        color: #2FA8FF;
+    }
+
+    .toolbar-add-btn {
+        margin-left: 2px;
+        white-space: nowrap;
+    }
+
+    .badge-info-custom {
+        background: rgba(255, 193, 7, 0.2);
+        color: #FFC107;
+        border: 1px solid #FFC107;
+    }
+
+    .transport-modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(5, 20, 33, 0.72);
+        backdrop-filter: blur(6px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        z-index: 1900;
+    }
+
+    .transport-modal-overlay.active {
+        display: flex;
+    }
+
+    .transport-modal-card {
+        width: min(1100px, 100%);
+        max-height: calc(100vh - 48px);
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 193, 7, 0.28);
+        box-shadow: 0 30px 90px rgba(0, 0, 0, 0.45);
+        background: rgba(11, 45, 74, 0.98);
+        animation: modalIn 0.22s ease;
+    }
+
+    @keyframes modalIn {
+        from {
+            transform: translateY(16px) scale(0.98);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+    }
+
+    .transport-modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 18px;
+        border-bottom: 1px solid rgba(255, 193, 7, 0.2);
+        background: rgba(7, 27, 46, 0.95);
+    }
+
+    .transport-modal-header h3 {
+        margin: 0;
+        color: var(--text-primary);
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+    .transport-modal-close {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 193, 7, 0.3);
+        background: rgba(255, 255, 255, 0.03);
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .transport-modal-close:hover {
+        color: var(--text-primary);
+        border-color: rgba(255, 193, 7, 0.6);
+        background: rgba(255, 193, 7, 0.12);
+    }
+
+    .transport-modal-body {
+        height: calc(100vh - 126px);
+        min-height: 520px;
+        background: rgba(5, 20, 33, 0.9);
+    }
+
+    #transportModalFrame {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        background: transparent;
+    }
+
+    .action-buttons .btn-small {
+        min-width: 36px;
+        justify-content: center;
+        padding: 8px 10px;
+    }
+
+    @media (max-width: 768px) {
+        .toolbar-right {
+            width: 100%;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .search-form {
+            width: 100%;
+            order: 1;
+        }
+
+        .toolbar-right .search-box input {
+            width: 100%;
+        }
+
+        .sort-dropdown {
+            order: 2;
+        }
+
+        .toolbar-add-btn {
+            order: 3;
+            margin-left: auto;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .btn-small span {
+            display: none;
+        }
+
+        .transport-modal-overlay {
+            padding: 10px;
+        }
+
+        .transport-modal-body {
+            min-height: 420px;
+            height: calc(100vh - 110px);
+        }
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const filterButtons = document.querySelectorAll('.filter-btn[data-filter]');
+    const tbody = document.querySelector('#transportsTable tbody');
+    const rows = Array.from(document.querySelectorAll('#transportsTable tbody tr'));
+    const sortBtn = document.querySelector('.btn-sort');
+    const sortMenu = document.querySelector('.sort-menu');
+    const sortOptions = document.querySelectorAll('.sort-option');
+    const modalTriggers = document.querySelectorAll('.js-open-transport-modal');
+    const modal = document.getElementById('transportModal');
+    const modalTitle = document.getElementById('transportModalTitle');
+    const modalClose = document.getElementById('transportModalClose');
+    const modalFrame = document.getElementById('transportModalFrame');
+    let activeToolbarFilter = 'all';
+    let activeSort = 'nom-asc';
+    let modalOpened = false;
+
+    function sortRows(sortKey) {
+        if (!tbody || rows.length === 0) {
+            return;
+        }
+
+        const sortedRows = [...rows].sort((a, b) => {
+            const nameA = a.dataset.name || '';
+            const nameB = b.dataset.name || '';
+            const priceA = parseFloat(a.dataset.price || '0');
+            const priceB = parseFloat(b.dataset.price || '0');
+
+            switch (sortKey) {
+                case 'nom-desc':
+                    return nameB.localeCompare(nameA, 'fr', { sensitivity: 'base' });
+                case 'prix-asc':
+                    return priceA - priceB;
+                case 'prix-desc':
+                    return priceB - priceA;
+                case 'nom-asc':
+                default:
+                    return nameA.localeCompare(nameB, 'fr', { sensitivity: 'base' });
+            }
+        });
+
+        sortedRows.forEach(row => tbody.appendChild(row));
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            applyFilters();
+        });
+    }
+
+    function applyFilters() {
+        const searchTerm = (searchInput ? searchInput.value : '').toLowerCase().trim();
+
+        rows.forEach(row => {
+            const name = row.dataset.name || '';
+            const type = row.dataset.type || '';
+            const typeLower = type.toLowerCase();
+
+            const matchesSearch = name.includes(searchTerm);
+            const matchesToolbar = activeToolbarFilter === 'all' || typeLower === activeToolbarFilter;
+
+            row.style.display = matchesSearch && matchesToolbar ? '' : 'none';
+        });
+
+        sortRows(activeSort);
+    }
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            activeToolbarFilter = this.dataset.filter;
+            applyFilters();
+        });
+    });
+
+    if (sortBtn && sortMenu) {
+        sortBtn.addEventListener('click', function(event) {
+            event.stopPropagation();
+            sortMenu.classList.toggle('open');
+        });
+
+        sortOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                sortOptions.forEach(item => item.classList.remove('active'));
+                this.classList.add('active');
+                activeSort = this.dataset.sort;
+                sortMenu.classList.remove('open');
+                applyFilters();
+            });
+        });
+
+        document.addEventListener('click', function(event) {
+            if (!sortMenu.contains(event.target) && !sortBtn.contains(event.target)) {
+                sortMenu.classList.remove('open');
+            }
+        });
+    }
+
+    applyFilters();
+
+    function openModal(url, title) {
+        if (!modal || !modalFrame) {
+            window.location.href = url;
+            return;
+        }
+
+        modalTitle.textContent = title || 'Transport';
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        modalOpened = true;
+        modalFrame.src = url;
+    }
+
+    function closeModal() {
+        if (!modal || !modalFrame) {
+            return;
+        }
+
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+        modalFrame.src = 'about:blank';
+        document.body.style.overflow = '';
+        modalOpened = false;
+    }
+
+    modalTriggers.forEach(function(trigger) {
+        trigger.addEventListener('click', function(event) {
+            event.preventDefault();
+            openModal(this.href, this.dataset.modalTitle || 'Transport');
+        });
+    });
+
+    if (modalClose) {
+        modalClose.addEventListener('click', closeModal);
+    }
+
+    if (modal) {
+        modal.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+    }
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && modalOpened) {
+            closeModal();
+        }
+    });
+
+    if (modalFrame) {
+        modalFrame.addEventListener('load', function() {
+            try {
+                const frameDocument = modalFrame.contentDocument;
+                if (frameDocument && !frameDocument.getElementById('transport-modal-frame-style')) {
+                    const cleanupStyle = frameDocument.createElement('style');
+                    cleanupStyle.id = 'transport-modal-frame-style';
+                    cleanupStyle.textContent = [
+                        '.sidebar, .top-bar { display: none !important; }',
+                        '.main-content { margin-left: 0 !important; width: 100% !important; }',
+                        '.page-content { padding: 18px !important; }',
+                        '.content-header, .breadcrumb { display: none !important; }',
+                        '.search-box, .notification-btn, .settings-btn { display: none !important; }'
+                    ].join(' ');
+
+                    frameDocument.head.appendChild(cleanupStyle);
+
+                    const cancelButton = frameDocument.querySelector('.btn-cancel');
+                    if (cancelButton) {
+                        cancelButton.addEventListener('click', function(event) {
+                            event.preventDefault();
+                            closeModal();
+                        });
+                    }
+                }
+
+                const frameUrl = new URL(modalFrame.contentWindow.location.href);
+                const isBackToIndex = frameUrl.pathname.endsWith('/admin/transports');
+
+                if (modalOpened && isBackToIndex) {
+                    closeModal();
+                    window.location.reload();
+                }
+            } catch (e) {
+                // Keep modal open if iframe URL cannot be inspected.
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

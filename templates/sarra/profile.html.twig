@@ -1,0 +1,571 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Profil{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .form-group {
+        position: relative;
+    }
+    .error-msg {
+        color: #ff4d4d;
+        font-size: 12px;
+        display: none;
+        margin-top: 5px;
+    }
+    .form-group input.input-error {
+        border-bottom-color: #ff4d4d !important;
+    }
+    .form-group input:focus {
+        border-bottom-color: #d4af37;
+    }
+</style>
+<link rel="stylesheet" href="{{ asset('sarra-css/profile.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+
+<div class="profile-container">
+<main class="profile-main">
+<div class="profile-card">
+
+    <div class="profile-layout">
+
+        {# ══════════════════════════════
+           COLONNE GAUCHE
+           ══════════════════════════════ #}
+        <div class="profile-left">
+
+            {# COVER BANDEAU #}
+            <div class="left-cover">
+                <div class="cover-pattern"></div>
+                <div class="cover-glow"></div>
+            </div>
+
+            {# AVATAR #}
+            <div class="profile-image-wrapper">
+            
+
+                {% if profile.image %}
+<img src="http://localhost/uploads/{{ profile.image }}" class="profile-photo">
+                {% else %}
+                    <div class="avatar-placeholder">
+                        <span>{{ profile.prenom|first|upper }}{{ profile.nom|first|upper }}</span>
+                    </div>
+                {% endif %}
+                <form id="photoForm" enctype="multipart/form-data">
+                    <label for="photoUpload" class="edit-photo-btn" title="Changer la photo">
+                        <i class="fas fa-camera"></i>
+                    </label>
+                    <input type="file" id="photoUpload" name="image" accept="image/*">
+                </form>
+            </div>
+
+            {# NOM #}
+            <h1 class="profile-name">{{ profile.prenom }} {{ profile.nom }}</h1>
+
+            {# DATE + STATUT #}
+            <div class="profile-meta">
+                <span class="gold-text">
+                    <i class="fas fa-calendar-alt"></i>
+                    Membre depuis {{ profile.dateInscription|date('d M Y') }}
+                </span>
+                <div class="status-badge status-{{ profile.statut|lower }}">
+                    {{ profile.statut }}
+                </div>
+            </div>
+
+            {# TRUST SCORE #}
+            <div class="trust-score-badge">
+                <div class="trust-header">
+                    <i class="fas fa-shield-alt" style="color:var(--gold)"></i>
+                    <span>Score de Confiance</span>
+                    <strong class="gold-text">{{ profile.trustScore }}/100</strong>
+                </div>
+                <div class="trust-bar">
+                    <div class="trust-progress" style="width: {{ profile.trustScore }}%"></div>
+                </div>
+                <div class="trust-labels">
+                    <span>0</span>
+                    <span>50</span>
+                    <span>100</span>
+                </div>
+            </div>
+{# FIDELITY SCORE #}
+<div class="trust-score-badge" style="margin-top:15px;">
+{# QUIZ SCORE #}
+<div class="trust-score-badge" style="margin-top:15px;">
+
+    <div class="trust-header">
+        <i class="fas fa-brain" style="color:#00d4ff"></i>
+        <span>Score Quiz</span>
+        <strong class="gold-text">{{ totalQuizScore }}</strong>
+    </div>
+
+    {% set percentQuiz = totalQuizScore %}
+    {% if percentQuiz > 100 %}{% set percentQuiz = 100 %}{% endif %}
+    {% if percentQuiz < 0 %}{% set percentQuiz = 0 %}{% endif %}
+
+    <div class="trust-bar">
+        <div class="trust-progress" style="width: {{ percentQuiz }}%"></div>
+    </div>
+
+    <div class="trust-labels">
+        <span>0</span>
+        <span>50</span>
+        <span>100</span>
+    </div>
+
+</div>
+
+
+    <div class="trust-header">
+        <i class="fas fa-star" style="color:gold"></i>
+        <span>Score de Fidélité</span>
+        <strong class="gold-text">{{ score }}/100</strong>
+        {% if promo %}
+    <div style="margin-top:10px; background:#FFC107; padding:10px; border-radius:8px; color:#0B2D4A;">Code actif :
+        <strong>{{ promo.code }}</strong>
+        (-{{ promo.percent }}%)
+    </div>
+{% else %}
+    <div style="margin-top:10px; background:#ccc; padding:10px; border-radius:8px;">
+        Aucun code disponible
+    </div>
+{% endif %}
+    </div>
+
+    {# 🔥 score déjà entre 0 et 100 #}
+    {% set percent = score %}
+    {% if percent > 100 %}{% set percent = 100 %}{% endif %}
+    {% if percent < 0 %}{% set percent = 0 %}{% endif %}
+
+    <div class="trust-bar">
+        <div class="trust-progress" style="width: {{ percent }}%"></div>
+    </div>
+
+    <div class="trust-labels">
+        <span>0</span>
+        <span>50</span>
+        <span>100</span>
+    </div>
+
+
+</div>
+</div>{# end .profile-left #}
+
+        {# ══════════════════════════════
+           COLONNE DROITE
+           ══════════════════════════════ #}
+        <div class="profile-right">
+
+            {# TITRE SECTION #}
+            <div class="right-title">
+                <div class="right-title-icon">
+                    <i class="fas fa-id-card"></i>
+                </div>
+                <div>
+                    <span class="right-title-label">Espace personnel</span>
+                    <h2 class="right-title-text">Informations personnelles</h2>
+                </div>
+            </div>
+
+            {# SÉPARATEUR #}
+            <div class="gold-divider"></div>
+
+            {# INFO GRID #}
+            <div class="info-grid">
+
+                <div class="info-card">
+                    <div class="info-card-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span class="info-label">Nom complet</span>
+                    <span class="info-value">{{ profile.prenom }} {{ profile.nom }}</span>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-card-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <span class="info-label">Email</span>
+                    <span class="info-value">{{ profile.email }}</span>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-card-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <span class="info-label">Téléphone</span>
+                    <span class="info-value">{{ profile.telephone }}</span>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-card-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <span class="info-label">Date d'inscription</span>
+                    <span class="info-value">{{ profile.dateInscription|date('d F Y') }}</span>
+                </div>
+
+                <div class="info-card info-card-wide">
+                    <div class="info-card-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <span class="info-label">Mot de passe</span>
+                    <div class="password-row">
+                        <span class="info-value">••••••••••</span>
+                        <button onclick="openModal('passwordModal')" title="Changer le mot de passe" class="icon-btn">
+                            <i class="fas fa-pen"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            {# ACTIONS CÔTE À CÔTE #}
+            <div class="right-actions">
+                <button class="action-btn edit-profile-btn" onclick="openModal('editModal')">
+                    <i class="fas fa-pen"></i> Modifier Profil
+                </button>
+                <button class="action-btn danger-btn" onclick="openModal('deleteModal')">
+                    <i class="fas fa-trash"></i> Supprimer Compte
+                </button>
+            </div>
+
+        </div>{# end .profile-right #}
+
+    </div>{# end .profile-layout #}
+</div>{# end .profile-card #}
+</main>
+</div>
+
+
+{# ══ MODAL MODIFIER PROFIL ══ #}
+<div class="modal-overlay" id="editModal">
+    <div class="modal-container">
+        <button type="button" class="modal-close-btn" onclick="closeModal('editModal')">
+            <i class="fas fa-times"></i>
+        </button>
+        <h3>Modifier Profil</h3>
+        <form id="editProfileForm"novalidate>
+            <div class="form-group">
+                <label for="edit-nom">Nom</label>
+                <input type="text" id="edit-nom" name="nom" value="{{ profile.nom }}" placeholder="Entrez votre nom">
+                <span class="error-msg" id="edit-nom-error"></span>
+            </div>
+            <div class="form-group">
+                <label for="edit-prenom">Prénom</label>
+                <input type="text" id="edit-prenom" name="prenom" value="{{ profile.prenom }}" placeholder="Entrez votre prénom">
+                <span class="error-msg" id="edit-prenom-error"></span>
+            </div>
+            <div class="form-group">
+                <label for="edit-email">Email</label>
+                <input type="email" id="edit-email" name="email" value="{{ profile.email }}" placeholder="Entrez votre email">
+                <span class="error-msg" id="edit-email-error"></span>
+            </div>
+            <div class="form-group">
+                <label for="edit-telephone">Téléphone</label>
+                <input type="text" id="edit-telephone" name="telephone" value="{{ profile.telephone }}" placeholder="Entrez votre téléphone">
+                <span class="error-msg" id="edit-telephone-error"></span>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-cancel" onclick="closeModal('editModal')">Annuler</button>
+                <button type="submit" class="btn-save">Enregistrer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{# ══ MODAL MOT DE PASSE ══ #}
+<div class="modal-overlay" id="passwordModal">
+    <div class="modal-container">
+        <button type="button" class="modal-close-btn" onclick="closeModal('passwordModal')">
+            <i class="fas fa-times"></i>
+        </button>
+        <h3>Changer Mot de Passe</h3>
+        <form id="passwordForm">
+            <div class="form-group">
+                <label for="current-password">Mot de passe actuel</label>
+                <input type="password" id="current-password" name="current_password" placeholder="Entrez le mot de passe actuel" required>
+                <div id="error-current_password" style="color:red"></div>
+
+            </div>
+            <div class="form-group">
+                <label for="new-password">Nouveau mot de passe</label>
+                <input type="password" id="new-password" name="new_password" placeholder="Entrez le nouveau mot de passe" required>
+<div id="error-new_password" style="color:red"></div>
+
+            </div>
+            <div class="form-group">
+                <label for="confirm-password">Confirmer mot de passe</label>
+                <input type="password" id="confirm-password" name="confirm_password" placeholder="Confirmez le nouveau mot de passe" required>
+<div id="error-confirm_password" style="color:red"></div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-cancel" onclick="closeModal('passwordModal')">Annuler</button>
+                <button type="submit" class="btn-save">Enregistrer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{# ══ MODAL SUPPRIMER ══ #}
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal-container">
+        <button type="button" class="modal-close-btn" onclick="closeModal('deleteModal')">
+            <i class="fas fa-times"></i>
+        </button>
+        <h3>Supprimer Compte</h3>
+        <p class="warning-text">
+            <i class="fas fa-exclamation-triangle"></i>
+            Cette action est irréversible. Toutes vos données seront supprimées définitivement.
+        </p>
+<form id="deleteForm">
+            <div class="form-group">
+                <label for="delete-password">Confirmer avec votre mot de passe</label>
+                <input type="password" id="delete-password" name="password" placeholder="Entrez votre mot de passe" required>
+                <div id="error-delete_password" style="color:red"></div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-cancel" onclick="closeModal('deleteModal')">Annuler</button>
+                <button type="submit" class="btn-delete">Supprimer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// Validation utilities - based on User.php entity constraints
+function showError(fieldId, message) {
+    var field = document.getElementById(fieldId);
+    var errorSpan = document.getElementById(fieldId + '-error');
+    if (field && errorSpan) {
+        field.classList.add('input-error');
+        errorSpan.textContent = message;
+        errorSpan.style.display = 'block';
+    }
+}
+
+function clearError(fieldId) {
+    var field = document.getElementById(fieldId);
+    var errorSpan = document.getElementById(fieldId + '-error');
+    if (field && errorSpan) {
+        field.classList.remove('input-error');
+        errorSpan.textContent = '';
+        errorSpan.style.display = 'none';
+    }
+}
+
+function validateNom(value) {
+    if (!value || value.trim().length === 0) {
+        return "Le nom est obligatoire";
+    }
+    if (value.trim().length < 3) {
+        return "Le nom doit contenir au moins 2 caractères";
+    }
+    if (!/^[A-Za-zÀ-ÿ\s\-]+$/.test(value)) {
+        return "Le nom ne doit contenir que des lettres";
+    }
+    return null;
+}
+
+function validatePrenom(value) {
+    if (!value || value.trim().length === 0) {
+        return "Le prénom est obligatoire";
+    }
+    if (value.trim().length < 3) {
+        return "Le prénom doit contenir au moins 2 caractères";
+    }
+    if (!/^[A-Za-zÀ-ÿ\s\-]+$/.test(value)) {
+        return "Le prénom ne doit contenir que des lettres";
+    }
+    return null;
+}
+
+function validateEmail(value) {
+    if (!value || value.trim().length === 0) {
+        return "Email obligatoire";
+    }
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(value)) {
+        return "Email invalide";
+    }
+    return null;
+}
+
+function validateTelephone(value) {
+    if (!value || value.trim().length === 0) {
+        return "Téléphone obligatoire";
+    }
+    var phoneRegex = /^[0-9]{8}$/;
+    if (!phoneRegex.test(value)) {
+        return "Le numéro doit contenir 8 chiffres";
+    }
+    return null;
+}
+
+// Real-time validation on blur
+document.getElementById('edit-nom').addEventListener('blur', function() {
+    var error = validateNom(this.value);
+    if (error) showError('edit-nom', error);
+    else clearError('edit-nom');
+});
+
+document.getElementById('edit-prenom').addEventListener('blur', function() {
+    var error = validatePrenom(this.value);
+    if (error) showError('edit-prenom', error);
+    else clearError('edit-prenom');
+});
+
+document.getElementById('edit-email').addEventListener('blur', function() {
+    var error = validateEmail(this.value);
+    if (error) showError('edit-email', error);
+    else clearError('edit-email');
+});
+
+document.getElementById('edit-telephone').addEventListener('blur', function() {
+    var error = validateTelephone(this.value);
+    if (error) showError('edit-telephone', error);
+    else clearError('edit-telephone');
+});
+
+// Form submission validation
+document.getElementById('editProfileForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    var isValid = true;
+
+    var nomError = validateNom(document.getElementById('edit-nom').value);
+    if (nomError) { showError('edit-nom', nomError); isValid = false; }
+    else clearError('edit-nom');
+
+    var prenomError = validatePrenom(document.getElementById('edit-prenom').value);
+    if (prenomError) { showError('edit-prenom', prenomError); isValid = false; }
+    else clearError('edit-prenom');
+
+    var emailError = validateEmail(document.getElementById('edit-email').value);
+    if (emailError) { showError('edit-email', emailError); isValid = false; }
+    else clearError('edit-email');
+
+    var telephoneError = validateTelephone(document.getElementById('edit-telephone').value);
+    if (telephoneError) { showError('edit-telephone', telephoneError); isValid = false; }
+    else clearError('edit-telephone');
+
+    if (isValid) {
+        fetch("{{ path('profile_update') }}", { method: 'POST', body: new FormData(this) })
+            .then(function() { location.reload(); });
+    }
+});
+
+function openModal(id) {
+    document.getElementById(id).classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+function closeModal(id) {
+    document.getElementById(id).classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+document.querySelectorAll('.modal-overlay').forEach(function(overlay) {
+    overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) closeModal(overlay.id);
+    });
+});
+document.getElementById('photoUpload').addEventListener('change', function () {
+    var formData = new FormData();
+    formData.append('image', this.files[0]);
+    fetch("{{ path('profile_update') }}", { method: 'POST', body: formData })
+        .then(function() { location.reload(); });
+});
+// current password
+document.getElementById('current-password').addEventListener('input', function() {
+    document.getElementById('error-current_password').textContent = "";
+});
+
+// new password
+document.getElementById('new-password').addEventListener('input', function() {
+
+    if (this.value.length < 8) {
+        document.getElementById('error-new_password').textContent = "Au moins 8 caractères";
+    } else {
+        document.getElementById('error-new_password').textContent = "";
+    }
+});
+
+// confirm password
+document.getElementById('confirm-password').addEventListener('input', function() {
+
+    const newPassword = document.getElementById('new-password').value;
+
+    if (this.value !== newPassword) {
+        document.getElementById('error-confirm_password').textContent = "Les mots de passe ne correspondent pas";
+    } else {
+        document.getElementById('error-confirm_password').textContent = "";
+    }
+});
+document.getElementById('passwordForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // vider anciennes erreurs
+    document.getElementById('error-current_password').textContent = "";
+    document.getElementById('error-new_password').textContent = "";
+    document.getElementById('error-confirm_password').textContent = "";
+
+    fetch("{{ path('profile_change_password') }}", {
+        method: 'POST',
+        body: new FormData(this)
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        if (!data.success) {
+
+            // afficher erreur sous le bon champ
+            if (data.field) {
+                document.getElementById('error-' + data.field).textContent = data.message;
+            }
+
+        } else {
+            alert("Mot de passe modifié !");
+            closeModal('passwordModal');
+        }
+
+    });
+});
+window.addEventListener('load', function() {
+    var bar = document.querySelector('.trust-progress');
+    if (bar) {
+        var target = bar.style.width;
+        bar.style.width = '0%';
+        setTimeout(function() { bar.style.width = target; }, 500);
+    }
+});
+
+document.getElementById('deleteForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // vider erreur
+    document.getElementById('error-delete_password').textContent = "";
+
+    fetch("{{ path('profile_delete') }}", {
+        method: 'POST',
+        body: new FormData(this)
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        if (!data.success) {
+            document.getElementById('error-delete_password').textContent = data.message;
+        } else {
+            window.location.href = data.redirect;
+        }
+
+    });
+});
+</script>
+
+{% endblock %}
